@@ -17,7 +17,7 @@ export const Sidebar = ({ children, collapsed }) => {
                 </Link>
 
                 <SidearContext.Provider value={{ collapsed }}>
-                    <ul className='flex-1 px-3 '>{children}</ul>
+                    <div className='flex-1 px-3 '>{children}</div>
                 </SidearContext.Provider>
             </nav>
         </aside>

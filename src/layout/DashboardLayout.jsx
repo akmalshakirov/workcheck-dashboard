@@ -4,8 +4,8 @@ import { LiaUserEditSolid } from "react-icons/lia";
 import { MdDashboard } from "react-icons/md";
 import { RiShieldUserLine } from "react-icons/ri";
 import { Outlet } from "react-router-dom";
-import { Header } from "../components/Header/Header";
-import { Sidebar, SidebarItem } from "../components/Sidebar/Sidebar";
+import { Header } from "../components/ui/Header/Header";
+import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
 import "./DashboardLayout.css";
 
 const DashboardLayout = ({ children }) => {
