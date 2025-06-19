@@ -8,7 +8,7 @@ import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
 import "./DashboardLayout.css";
 
-const DashboardLayout = ({ children }) => {
+const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(
         localStorage.getItem("sidebar") == "true"
     );
@@ -43,7 +43,9 @@ const DashboardLayout = ({ children }) => {
             </Sidebar>
             <div className='flex-1'>
                 <Header collapsed={collapsed} setCollapsed={setCollapsed} />
-                <Outlet>{children}</Outlet>
+                <main className='p-4 bg-white rounded-lg my-3 dark:bg-black/90 dark:text-white text-black'>
+                    <Outlet />
+                </main>
             </div>
         </div>
     );

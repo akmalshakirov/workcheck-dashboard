@@ -7,7 +7,7 @@ const SidearContext = createContext();
 export const Sidebar = ({ children, collapsed }) => {
     return (
         <aside className={`${styles.sidebar}`}>
-            <nav className='h-full flex flex-col bg-white rounded-lg shadow-sm'>
+            <nav className='h-full flex flex-col bg-white dark:bg-black/90 dark:text-white rounded-lg shadow-sm dark:duration-400'>
                 <Link
                     to={"/"}
                     className='p-4 pb-2 flex justify-center items-center'>
@@ -32,8 +32,8 @@ export const SidebarItem = ({ icon, text, link }) => {
             className={({ isActive }) =>
                 `relative flex items-center py-2.5 px-3 whitespace-nowrap my-1 font-medium rounded-lg cursor-pointer transition-all group ${
                     isActive
-                        ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800"
-                        : "hover:bg-indigo-50 text-gray-600"
+                        ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800 dark:bg-gradient-to-tl dark:from-gray-300 dark:to-gray-400/90"
+                        : "hover:bg-indigo-50 text-gray-600 dark:hover:bg-gray-900 dark:text-white/70"
                 }`
             }>
             {({ isActive }) => (
@@ -52,8 +52,10 @@ export const SidebarItem = ({ icon, text, link }) => {
                     </span>
                     {!collapsed ? (
                         <div
-                            className={`whitespace-nowrap absolute left-full rounded-lg p-2 ml-1.5 bg-gradient-to-tl from-blue-400 to-indigo-600 text-white text-sm invisible opacity-20 -translate-x-3 transition-all duration-100 group-hover:visible group-hover:opacity-100 group-hover:translate-x-0`}>
-                            {text}
+                            className={`whitespace-nowrap absolute left-full z-[9999999] invisible opacity-20 -translate-x-3 transition-all duration-100 group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 `}>
+                            <span className='ml-2 p-2 bg-gradient-to-tl from-blue-400 to-indigo-600 text-white text-sm rounded-lg dark:to-black/80 dark:from-black/80'>
+                                {text}
+                            </span>
                         </div>
                     ) : null}
                 </>

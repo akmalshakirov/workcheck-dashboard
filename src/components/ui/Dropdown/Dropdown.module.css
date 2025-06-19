@@ -1,0 +1,133 @@
+/* CustomDropdown.module.css */
+
+/* Keyframe animatsiyalar */
+@keyframes slide-fade-in-dropdown {
+    0% {
+        transform: translateY(-10px) scale(0.95);
+        opacity: 0;
+        transform-origin: top center;
+    }
+    100% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        transform-origin: top center;
+    }
+}
+
+@keyframes slide-fade-out-dropdown {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        transform-origin: top center;
+    }
+    100% {
+        transform: translateY(-10px) scale(0.95);
+        opacity: 0;
+        transform-origin: top center;
+    }
+}
+
+@keyframes spin-in {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(180deg);
+    }
+}
+
+@keyframes spin-out {
+    0% {
+        transform: rotate(180deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
+/* Mavjud stillar... */
+.dropdownContainer {
+    position: relative;
+    width: 256px;
+}
+
+.dropdownButton {
+    width: 100%;
+    padding: 10px 16px;
+    text-align: left;
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    outline: none;
+    transition: all 111ms ease-in-out;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Elementlarni ikki tomonga ajratish */
+}
+
+.dropdownButton:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+.dropdownButton:hover {
+    border-color: #9ca3af;
+}
+
+.dropdownIcon {
+    width: 20px;
+    height: 20px;
+    color: #6b7280;
+    transform: rotate(0deg); /* Boshlang'ich holat */
+    transition: transform 111ms ease-out; /* Oddiy o'tish */
+}
+
+.dropdownIconSpinIn {
+    animation: spin-in 111ms ease-out forwards;
+}
+
+.dropdownIconSpinOut {
+    animation: spin-out 111ms ease-in forwards;
+}
+
+.dropdownMenu {
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    margin-top: 4px;
+    background-color: #fff;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    max-height: 240px;
+    overflow-y: auto;
+    outline: none;
+}
+
+.dropdownMenuEnter {
+    animation: slide-fade-in-dropdown 111ms ease-out forwards;
+}
+
+.dropdownMenuExit {
+    animation: slide-fade-out-dropdown 111ms ease-in forwards;
+}
+
+.dropdownList {
+    list-style: none;
+    padding: 4px 0;
+    margin: 0;
+}
+
+.dropdownItem {
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out, color 0.15s ease-in-out;
+}
+
+.dropdownItem:hover {
+    background-color: #eff6ff;
+    color: #1d4ed8;
+}

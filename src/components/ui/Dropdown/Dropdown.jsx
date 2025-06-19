@@ -1,27 +1,62 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import styles from "./Dropdown.module.css";
 
 const Dropdown = ({ options, placeholder = "Tanlang..." }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
+    const dropdownRef = useRef(null);
+    const [animateOut, setAnimateOut] = useState(false);
 
     const handleToggle = () => {
-        setIsOpen(!isOpen);
+        if (isOpen) {
+            setAnimateOut(true);
+        } else {
+            setAnimateOut(false);
+            setIsOpen(true);
+        }
     };
 
     const handleOptionClick = (option) => {
         setSelectedOption(option);
-        setIsOpen(false);
+        setAnimateOut(true);
+    };
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
+                if (isOpen) {
+                    setAnimateOut(true);
+                }
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isOpen]);
+
+    const handleAnimationEnd = () => {
+        if (animateOut) {
+            setIsOpen(false);
+            setAnimateOut(false);
+        }
     };
 
     return (
-        <div className='relative w-64'>
-            <button
-                onClick={handleToggle}
-                className='w-full px-4 py-2 text-left bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200 ease-in-out hover:border-gray-400'>
-                {selectedOption ? selectedOption.label : placeholder}
+        <div className={styles.dropdownContainer} ref={dropdownRef}>
+            <button onClick={handleToggle} className={styles.dropdownButton}>
+                <span>
+                    {selectedOption ? selectedOption.label : placeholder}
+                </span>
                 <svg
-                    className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500 transition-transform duration-200 ${
-                        isOpen ? "rotate-180" : ""
+                    className={`${styles.dropdownIcon} ${
+                        isOpen
+                            ? styles.dropdownIconSpinIn
+                            : styles.dropdownIconSpinOut
                     }`}
                     xmlns='http://www.w3.org/2000/svg'
                     viewBox='0 0 20 20'
@@ -34,14 +69,20 @@ const Dropdown = ({ options, placeholder = "Tanlang..." }) => {
                 </svg>
             </button>
 
-            {isOpen && (
-                <div className='absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto focus:outline-none'>
-                    <ul className='py-1'>
+            {(isOpen || animateOut) && (
+                <div
+                    className={`${styles.dropdownMenu} ${
+                        animateOut
+                            ? styles.dropdownMenuExit
+                            : styles.dropdownMenuEnter
+                    }`}
+                    onAnimationEnd={handleAnimationEnd}>
+                    <ul className={styles.dropdownList}>
                         {options.map((option) => (
                             <li
                                 key={option.value}
                                 onClick={() => handleOptionClick(option)}
-                                className='px-4 py-2 cursor-pointer hover:bg-blue-50 hover:text-blue-700 transition-colors duration-150 ease-in-out'>
+                                className={styles.dropdownItem}>
                                 {option.label}
                             </li>
                         ))}
