@@ -6,6 +6,7 @@ import {
 } from "react-icons/tb";
 import styles from "./Header.module.css";
 import { CgDarkMode } from "react-icons/cg";
+import { RiArrowDropDownLine } from "react-icons/ri";
 
 function useClickOutside(ref, handler) {
     useEffect(() => {
@@ -153,7 +154,12 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     onClick={() =>
                         toggleDropdown(langOpen, setLangOpen, setLangClosing)
                     }>
-                    {selectedLang.label}
+                    <div className='flex items-center justify-center'>
+                        {selectedLang.label}
+                        <span>
+                            <RiArrowDropDownLine className='text-3xl' />
+                        </span>
+                    </div>
                     {(langOpen || langClosing) && (
                         <ul
                             className={`${styles.dropdown} ${
@@ -197,7 +203,12 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     onClick={() =>
                         toggleDropdown(notifOpen, setNotifOpen, setNotifClosing)
                     }>
-                    Xabarlar ({notifications.length})
+                    <div className='flex items-center justify-center'>
+                        Xabarlar ({notifications.length})
+                        <span>
+                            <RiArrowDropDownLine className='text-3xl' />
+                        </span>
+                    </div>
                     {(notifOpen || notifClosing) && (
                         <ul
                             className={`${styles.dropdown} ${styles.notif} ${
@@ -240,7 +251,12 @@ export const Header = ({ collapsed, setCollapsed }) => {
                             setProfileClosing
                         )
                     }>
-                    Profile
+                    <div className='flex items-center justify-center'>
+                        Profile
+                        <span>
+                            <RiArrowDropDownLine className='text-3xl' />
+                        </span>
+                    </div>
                     {(profileOpen || profileClosing) && (
                         <ul
                             className={`${styles.dropdown} ${
