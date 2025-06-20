@@ -38,30 +38,34 @@ export const SidebarItem = ({ icon, text, link }) => {
                 }`
             }>
             {({ isActive }) => (
-                <Ripple className='py-2.5 px-3 overflow-hidden rounded-lg'>
-                    <>
-                        <span
-                            className={`${isActive ? "scale-120" : ""} ${
-                                collapsed ? "mr-2" : "mr-0"
-                            }`}>
-                            {icon}
-                        </span>
-                        <span
-                            className={`overflow-hidden transition-all ${
-                                collapsed ? "" : "w-0"
-                            }`}>
-                            {text}
-                        </span>
+                <>
+                    <Ripple className='py-2.5 px-3 relative rounded-lg'>
+                        <>
+                            <span
+                                className={`${isActive ? "scale-120" : ""} ${
+                                    collapsed ? "mr-2" : "mr-0"
+                                }`}>
+                                {icon}
+                            </span>
+                            <span
+                                className={`overflow-hidden transition-all ${
+                                    collapsed ? "" : "w-0"
+                                }`}>
+                                {text}
+                            </span>
+                        </>
+                    </Ripple>
+                    <span>
                         {!collapsed ? (
                             <div
-                                className={`whitespace-nowrap absolute left-full z-[9999999] invisible opacity-20 -translate-x-3 transition-all duration-100 group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 `}>
+                                className={`whitespace-nowrap absolute top-[22%] left-full z-[9999999] invisible opacity-20 -translate-x-3 transition-all duration-100 group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 `}>
                                 <span className='ml-2 p-2 bg-gradient-to-tl from-blue-400 to-indigo-600 text-white text-sm rounded-lg dark:to-black/80 dark:from-black/80'>
                                     {text}
                                 </span>
                             </div>
                         ) : null}
-                    </>
-                </Ripple>
+                    </span>
+                </>
             )}
         </NavLink>
     );

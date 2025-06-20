@@ -71,7 +71,9 @@ const Dropdown = ({ options, placeholder = "Tanlang..." }) => {
 
             {(isOpen || animateOut) && (
                 <div
-                    className={`${styles.dropdownMenu} ${
+                    className={`dark:bg-black dark:text-white ${
+                        styles.dropdownMenu
+                    } ${
                         animateOut
                             ? styles.dropdownMenuExit
                             : styles.dropdownMenuEnter

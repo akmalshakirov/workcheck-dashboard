@@ -1,6 +1,11 @@
+import { useEffect } from "react";
 import Dropdown from "../../components/ui/Dropdown/Dropdown";
 
 const DashboardAdmins = () => {
+    useEffect(() => {
+        document.title = "WorkCheck - Dashboard | Adminlar";
+    }, []);
+
     const dropdownOptions = [
         { value: "option1", label: "Birinchi variant" },
         { value: "option2", label: "Ikkinchi variant" },
