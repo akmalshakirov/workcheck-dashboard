@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { BiExitFullscreen, BiFullscreen } from "react-icons/bi";
-import {
-    TbLayoutSidebarLeftCollapse,
-    TbLayoutSidebarRightCollapse,
-} from "react-icons/tb";
-import styles from "./Header.module.css";
 import { CgDarkMode } from "react-icons/cg";
-import { RiArrowDropDownLine } from "react-icons/ri";
+import { GrLanguage } from "react-icons/gr";
+import { IoIosNotifications } from "react-icons/io";
+import { IoCloseOutline } from "react-icons/io5";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { useAuth } from "../../../hooks/useAuth";
+import DropdowIcon from "../Icons/Dropdown";
+import styles from "./Header.module.css";
+import EN from "/en.webp";
+import RU from "/ru.webp";
+import UZ from "/uz.webp";
+import { FaRegUser } from "react-icons/fa";
 
 function useClickOutside(ref, handler) {
     useEffect(() => {
@@ -21,11 +26,12 @@ function useClickOutside(ref, handler) {
 }
 
 export const Header = ({ collapsed, setCollapsed }) => {
+    const { logOut } = useAuth();
     const [langOpen, setLangOpen] = useState(false);
     const [langClosing, setLangClosing] = useState(false);
     const [selectedLang, setSelectedLang] = useState({
         code: "uz",
-        label: "Oʻzbekcha",
+        img: UZ,
     });
 
     const [notifOpen, setNotifOpen] = useState(false);
@@ -34,7 +40,9 @@ export const Header = ({ collapsed, setCollapsed }) => {
     const [profileOpen, setProfileOpen] = useState(false);
     const [profileClosing, setProfileClosing] = useState(false);
 
-    const [isDark, setIsDark] = useState(false);
+    const [isDark, setIsDark] = useState(
+        localStorage.getItem("isDark") == "true"
+    );
     const [isFull, setIsFull] = useState(false);
 
     const langRef = useRef();
@@ -71,6 +79,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
 
     useEffect(() => {
         document.documentElement.classList.toggle("dark", isDark);
+        localStorage.setItem("isDark", isDark);
     }, [isDark]);
 
     useEffect(() => {
@@ -91,9 +100,9 @@ export const Header = ({ collapsed, setCollapsed }) => {
     };
 
     const languages = [
-        { code: "en", label: "English" },
-        { code: "uz", label: "Oʻzbekcha" },
-        { code: "ru", label: "Русский" },
+        { code: "en", img: EN },
+        { code: "uz", img: UZ },
+        { code: "ru", img: RU },
     ];
     const notifications = [
         { id: 1, text: "Sizga yangi xabar keldi" },
@@ -107,14 +116,14 @@ export const Header = ({ collapsed, setCollapsed }) => {
             onClick: () => alert("Profile clicked"),
         },
         {
-            id: "settings",
-            label: "Settings",
-            onClick: () => alert("Settings clicked"),
+            id: "lockscreen",
+            label: "Lock screen",
+            onClick: () => alert("fUK"),
         },
         {
             id: "logout",
             label: "Logout",
-            onClick: () => alert("Logging out..."),
+            onClick: () => logOut,
         },
     ];
 
@@ -125,15 +134,15 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     onClick={() => {
                         setCollapsed(!collapsed);
                     }}
-                    className='p-1 hover:bg-gray-700/30 duration-50 border border-gray-700 rounded-lg'
+                    className='p-1 hover:bg-gray-700/30 border border-gray-700 rounded-lg'
                     title={collapsed ? "Menyuni ochish" : "Menyuni yopish"}
                     aria-label={
                         collapsed ? "Menyuni ochish" : "Menyuni yopish"
                     }>
                     {collapsed ? (
-                        <TbLayoutSidebarLeftCollapse size={22} />
+                        <RxHamburgerMenu size={22} />
                     ) : (
-                        <TbLayoutSidebarRightCollapse size={22} />
+                        <IoCloseOutline size={22} />
                     )}
                 </button>
                 <div>
@@ -150,14 +159,15 @@ export const Header = ({ collapsed, setCollapsed }) => {
             <div className='flex items-center gap-2.5'>
                 <div
                     ref={langRef}
-                    className={`${styles.item} dark:text-white`}
+                    className={`${styles.item} dark:text-white p-1 border dark:border-white/40 border-black/30 rounded-lg`}
                     onClick={() =>
                         toggleDropdown(langOpen, setLangOpen, setLangClosing)
                     }>
-                    <div className='flex items-center justify-center'>
-                        {selectedLang.label}
+                    <div className='flex items-center justify-center pl-2 py-1'>
+                        <GrLanguage size={18} className='mr-1' />
+                        {selectedLang.code}
                         <span>
-                            <RiArrowDropDownLine className='text-3xl' />
+                            <DropdowIcon className='dark:fill-white' />
                         </span>
                     </div>
                     {(langOpen || langClosing) && (
@@ -166,30 +176,37 @@ export const Header = ({ collapsed, setCollapsed }) => {
                                 langClosing
                                     ? styles.dropdownExit
                                     : styles.dropdownEnter
-                            } dark:text-white bg-white/70 backdrop-blur-xs dark:bg-black/70 p-1`}>
+                            } dark:text-white bg-white/70 backdrop-blur-xs p-1 dark:bg-black/70`}>
                             {languages.map((lang) => (
-                                <li
-                                    key={lang.code}
-                                    onClick={() => {
-                                        setSelectedLang(lang);
-                                        closeDropdown(
-                                            true,
-                                            setLangOpen,
-                                            setLangClosing
-                                        );
-                                    }}
-                                    className='dark:hover:bg-white/20 rounded-lg hover:bg-black/10'>
-                                    {lang.label}
-                                </li>
+                                <>
+                                    <li
+                                        key={lang.code}
+                                        onClick={() => {
+                                            setSelectedLang(lang);
+                                            closeDropdown(
+                                                true,
+                                                setLangOpen,
+                                                setLangClosing
+                                            );
+                                        }}
+                                        className='dark:hover:bg-white/20 px-6! rounded-lg hover:bg-black/10'>
+                                        {/* <img
+                                            src={lang.img}
+                                            alt={lang.code}
+                                            className='w-15 object-contain'
+                                        /> */}
+                                        {lang.code}
+                                    </li>
+                                </>
                             ))}
                         </ul>
                     )}
                 </div>
 
                 <button
-                    className='p-2'
                     onClick={toggleFullscreen}
-                    title='Toggle Fullscreen'>
+                    title='Toggle Fullscreen'
+                    className='p-2.5 border border-black/30 dark:border-white/40 rounded-lg'>
                     {isFull ? (
                         <BiExitFullscreen size={20} />
                     ) : (
@@ -203,10 +220,11 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     onClick={() =>
                         toggleDropdown(notifOpen, setNotifOpen, setNotifClosing)
                     }>
-                    <div className='flex items-center justify-center'>
-                        Xabarlar ({notifications.length})
+                    <div className='flex items-center justify-center p-1 py-2 border dark:border-white/40 border-black/30 rounded-lg'>
+                        <IoIosNotifications size={22} /> ({notifications.length}
+                        )
                         <span>
-                            <RiArrowDropDownLine className='text-3xl' />
+                            <DropdowIcon className='dark:fill-white' />
                         </span>
                     </div>
                     {(notifOpen || notifClosing) && (
@@ -227,18 +245,22 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     )}
                 </div>
 
-                <label className={styles.switch} htmlFor='switch'>
-                    <input
-                        id='switch'
-                        type='checkbox'
-                        checked={isDark}
-                        onChange={() => setIsDark((d) => !d)}
-                    />
-                    <span className={styles.slider}>
-                        <span className='rounded-full'>
-                            <CgDarkMode size={20} />
+                <label
+                    htmlFor='switch'
+                    className='border cursor-pointer dark:border-white/30 border-black/30 p-1 py-2 rounded-lg'>
+                    <div className={styles.switch}>
+                        <input
+                            id='switch'
+                            type='checkbox'
+                            checked={isDark}
+                            onChange={() => setIsDark((d) => !d)}
+                        />
+                        <span className={styles.slider}>
+                            <span className='rounded-full'>
+                                <CgDarkMode size={20} />
+                            </span>
                         </span>
-                    </span>
+                    </div>
                 </label>
 
                 <div
@@ -251,10 +273,10 @@ export const Header = ({ collapsed, setCollapsed }) => {
                             setProfileClosing
                         )
                     }>
-                    <div className='flex items-center justify-center'>
-                        Profile
+                    <div className='flex items-center justify-center p-1 border dark:border-white/40 border-black/30 rounded-lg pl-2.5 py-2'>
+                        <FaRegUser />
                         <span>
-                            <RiArrowDropDownLine className='text-3xl' />
+                            <DropdowIcon className='dark:fill-white' />
                         </span>
                     </div>
                     {(profileOpen || profileClosing) && (
@@ -263,7 +285,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                                 profileClosing
                                     ? styles.dropdownExit
                                     : styles.dropdownEnter
-                            } bg-white/70 backdrop-blur-xs dark:bg-black/70 dark:text-white p-1`}>
+                            } bg-white/70 backdrop-blur-xs whitespace-nowrap dark:bg-black/70 dark:text-white p-1`}>
                             {profileActions.map((a) => (
                                 <li
                                     key={a.id}

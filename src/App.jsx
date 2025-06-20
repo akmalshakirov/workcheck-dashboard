@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Preloader from "./components/ui/Preloader/Preloader";
+import { useAuth } from "./hooks/useAuth";
 
 const DashboardLayout = React.lazy(() => import("./layout/DashboardLayout"));
 const DashboardAdmins = React.lazy(() =>
@@ -18,6 +19,17 @@ const DashboardHome = React.lazy(() =>
 const Login = React.lazy(() => import("./pages/Login/Login"));
 
 const App = () => {
+    const { logedIn } = useAuth();
+    const navigate = useNavigate();
+
+    // useEffect(() => {
+    //     if (logedIn) {
+    //         navigate("/", { replace: true });
+    //     } else {
+    //         navigate("/login", { replace: true });
+    //     }
+    // }, []);
+
     return (
         <>
             <Suspense
@@ -33,8 +45,8 @@ const App = () => {
                         <Route path='admins' element={<DashboardAdmins />} />
                         <Route path='workers' element={<DashboardWorkers />} />
                         <Route path='profile' element={<DashboardProfile />} />
+                        <Route path='*' element={<h1>Page Not Found</h1>} />
                     </Route>
-                    <Route path='*' element={<h1>Page Not Found</h1>} />
                 </Routes>
             </Suspense>
         </>

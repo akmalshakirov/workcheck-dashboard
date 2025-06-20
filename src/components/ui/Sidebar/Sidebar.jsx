@@ -33,7 +33,7 @@ export const SidebarItem = ({ icon, text, link }) => {
             className={({ isActive }) =>
                 `relative flex items-center rounded-lg whitespace-nowrap my-1 font-medium cursor-pointer transition-all group ${
                     isActive
-                        ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 rounded-lg text-indigo-800 dark:bg-gradient-to-tl dark:from-gray-300 dark:to-gray-400/90"
+                        ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 rounded-lg text-indigo-800 dark:bg-gradient-to-tl dark:from-[#f2f2f2]/80 dark:to-[#f2f2f2]"
                         : "hover:bg-indigo-50 text-gray-600 dark:hover:bg-gray-900 dark:text-white/70"
                 }`
             }>

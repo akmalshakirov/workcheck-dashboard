@@ -1,24 +1,44 @@
-import { useEffect } from "react";
-import Dropdown from "../../components/ui/Dropdown/Dropdown";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 const DashboardAdmins = () => {
+    const [admins, setAdmins] = useState([]);
+
+    // useEffect(() => {
+    //     try {
+    //         const resposne = axios.get(`${baseURL}/admins`, {
+    //             withCredentials: true,
+    //         });
+
+    //         if (resposne.status === 200) {
+    //             setAdmins(resposne.data.admins);
+    //         } else {
+    //             setAdmins("EROOOOOOR");
+    //         }
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }, []);
+
     useEffect(() => {
         document.title = "WorkCheck - Dashboard | Adminlar";
     }, []);
 
-    const dropdownOptions = [
-        { value: "option1", label: "Birinchi variant" },
-        { value: "option2", label: "Ikkinchi variant" },
-        { value: "option3", label: "Uchinchi variant" },
-        { value: "option4", label: "Toʻrtinchi variant" },
-        { value: "option5", label: "Beshinchi variant" },
-    ];
+    const { t, i18n } = useTranslation();
+
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+    };
     return (
         <div>
-            <Dropdown
-                options={dropdownOptions}
-                placeholder='Viloyatni tanlang'
-            />
+            {/* {admins?.map((admin) => (
+                <div>{admin?.username}</div>
+            ))} */}
+            DashboardAdmins
+            <button onClick={() => changeLanguage("en")}>
+                OKOOKOOKOKOKKOOKOKOKKO
+            </button>
+            <h1>{t("welcome")}</h1>
         </div>
     );
 };
