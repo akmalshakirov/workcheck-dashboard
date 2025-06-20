@@ -18,7 +18,7 @@ const DashboardLayout = () => {
     }, [collapsed]);
 
     return (
-        <div className='dashboard p-2.5 gap-3'>
+        <div className='dashboard p-2.5 gap-3 bg-[#5f73e2] dark:bg-[#3a3b3b] transition-colors duration-300'>
             <Sidebar collapsed={collapsed} setCollapsed={setCollapsed}>
                 <SidebarItem
                     icon={<MdDashboard size={22} />}

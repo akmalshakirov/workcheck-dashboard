@@ -1,6 +1,7 @@
 import { createContext, useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styles from "./Sidebar.module.css";
+import Ripple from "../Ripple/Ripple";
 
 const SidearContext = createContext();
 
@@ -30,35 +31,37 @@ export const SidebarItem = ({ icon, text, link }) => {
         <NavLink
             to={link}
             className={({ isActive }) =>
-                `relative flex items-center py-2.5 px-3 whitespace-nowrap my-1 font-medium rounded-lg cursor-pointer transition-all group ${
+                `relative flex items-center rounded-lg whitespace-nowrap my-1 font-medium cursor-pointer transition-all group ${
                     isActive
-                        ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 text-indigo-800 dark:bg-gradient-to-tl dark:from-gray-300 dark:to-gray-400/90"
+                        ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 rounded-lg text-indigo-800 dark:bg-gradient-to-tl dark:from-gray-300 dark:to-gray-400/90"
                         : "hover:bg-indigo-50 text-gray-600 dark:hover:bg-gray-900 dark:text-white/70"
                 }`
             }>
             {({ isActive }) => (
-                <>
-                    <span
-                        className={`${isActive ? "scale-120" : ""} ${
-                            collapsed ? "mr-2" : "mr-0"
-                        }`}>
-                        {icon}
-                    </span>
-                    <span
-                        className={`overflow-hidden transition-all ${
-                            collapsed ? "" : "w-0"
-                        }`}>
-                        {text}
-                    </span>
-                    {!collapsed ? (
-                        <div
-                            className={`whitespace-nowrap absolute left-full z-[9999999] invisible opacity-20 -translate-x-3 transition-all duration-100 group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 `}>
-                            <span className='ml-2 p-2 bg-gradient-to-tl from-blue-400 to-indigo-600 text-white text-sm rounded-lg dark:to-black/80 dark:from-black/80'>
-                                {text}
-                            </span>
-                        </div>
-                    ) : null}
-                </>
+                <Ripple className='py-2.5 px-3 overflow-hidden rounded-lg'>
+                    <>
+                        <span
+                            className={`${isActive ? "scale-120" : ""} ${
+                                collapsed ? "mr-2" : "mr-0"
+                            }`}>
+                            {icon}
+                        </span>
+                        <span
+                            className={`overflow-hidden transition-all ${
+                                collapsed ? "" : "w-0"
+                            }`}>
+                            {text}
+                        </span>
+                        {!collapsed ? (
+                            <div
+                                className={`whitespace-nowrap absolute left-full z-[9999999] invisible opacity-20 -translate-x-3 transition-all duration-100 group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 `}>
+                                <span className='ml-2 p-2 bg-gradient-to-tl from-blue-400 to-indigo-600 text-white text-sm rounded-lg dark:to-black/80 dark:from-black/80'>
+                                    {text}
+                                </span>
+                            </div>
+                        ) : null}
+                    </>
+                </Ripple>
             )}
         </NavLink>
     );

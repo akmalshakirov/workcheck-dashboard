@@ -1,6 +1,7 @@
 import React, { Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import Preloader from "./components/ui/Preloader/Preloader";
+
 const DashboardLayout = React.lazy(() => import("./layout/DashboardLayout"));
 const DashboardAdmins = React.lazy(() =>
     import("./pages/Dashboard/DashboardAdmins")
@@ -14,6 +15,7 @@ const DashboardProfile = React.lazy(() =>
 const DashboardHome = React.lazy(() =>
     import("./pages/Dashboard/DashboardHome")
 );
+const Login = React.lazy(() => import("./pages/Login/Login"));
 
 const App = () => {
     return (
@@ -25,16 +27,13 @@ const App = () => {
                     </>
                 }>
                 <Routes>
-                    {/* <Route path='/' element={} /> */}
-                    {/* <Route path='/login' element={<LoginPage />} /> */}
-
-                    <Route element={<DashboardLayout />}>
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/' element={<DashboardLayout />}>
                         <Route path='/' element={<DashboardHome />} />
                         <Route path='admins' element={<DashboardAdmins />} />
                         <Route path='workers' element={<DashboardWorkers />} />
                         <Route path='profile' element={<DashboardProfile />} />
                     </Route>
-                    <Route path='/loader' element={<Preloader />} />
                     <Route path='*' element={<h1>Page Not Found</h1>} />
                 </Routes>
             </Suspense>

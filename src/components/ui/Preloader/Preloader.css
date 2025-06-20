@@ -10,7 +10,6 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    animation: fadeOut 1s;
     transition: 1s linear;
 }
 
@@ -59,14 +58,5 @@
 @keyframes l23 {
     100% {
         transform: rotate(1turn);
-    }
-}
-
-@keyframes fadeOut {
-    80% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
     }
 }

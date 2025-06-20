@@ -1,0 +1,26 @@
+.ripple-container {
+    position: relative;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.ripple {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.555);
+    border-radius: 50%;
+    z-index: 9999999999999;
+    transform: scale(0);
+    animation: ripple-effect 555ms ease;
+    pointer-events: none;
+}
+
+@keyframes ripple-effect {
+    to {
+        transform: scale(7);
+        opacity: 0;
+    }
+}
