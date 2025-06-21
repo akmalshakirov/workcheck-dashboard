@@ -1,17 +1,24 @@
+import {
+    Bell,
+    Globe,
+    LockKeyhole,
+    LogOut,
+    Maximize,
+    Menu,
+    Minimize2,
+    Moon,
+    Sun,
+    User,
+    UserPen,
+    X,
+} from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { BiExitFullscreen, BiFullscreen } from "react-icons/bi";
-import { CgDarkMode } from "react-icons/cg";
-import { GrLanguage } from "react-icons/gr";
-import { IoIosNotifications } from "react-icons/io";
-import { IoCloseOutline } from "react-icons/io5";
-import { RxHamburgerMenu } from "react-icons/rx";
 import { useAuth } from "../../../hooks/useAuth";
 import DropdowIcon from "../Icons/Dropdown";
 import styles from "./Header.module.css";
 import EN from "/en.webp";
 import RU from "/ru.webp";
 import UZ from "/uz.webp";
-import { FaRegUser } from "react-icons/fa";
 
 function useClickOutside(ref, handler) {
     useEffect(() => {
@@ -26,7 +33,7 @@ function useClickOutside(ref, handler) {
 }
 
 export const Header = ({ collapsed, setCollapsed }) => {
-    const { logOut } = useAuth();
+    const { logout } = useAuth();
     const [langOpen, setLangOpen] = useState(false);
     const [langClosing, setLangClosing] = useState(false);
     const [selectedLang, setSelectedLang] = useState({
@@ -114,16 +121,19 @@ export const Header = ({ collapsed, setCollapsed }) => {
             id: "profile",
             label: "Profile",
             onClick: () => alert("Profile clicked"),
+            icon: <UserPen size={20} />,
         },
         {
             id: "lockscreen",
             label: "Lock screen",
             onClick: () => alert("fUK"),
+            icon: <LockKeyhole size={20} />,
         },
         {
             id: "logout",
             label: "Logout",
-            onClick: () => logOut,
+            onClick: () => logout(),
+            icon: <LogOut size={20} />,
         },
     ];
 
@@ -139,11 +149,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     aria-label={
                         collapsed ? "Menyuni ochish" : "Menyuni yopish"
                     }>
-                    {collapsed ? (
-                        <RxHamburgerMenu size={22} />
-                    ) : (
-                        <IoCloseOutline size={22} />
-                    )}
+                    {collapsed ? <Menu size={22} /> : <X size={22} />}
                 </button>
                 <div>
                     <input
@@ -164,7 +170,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                         toggleDropdown(langOpen, setLangOpen, setLangClosing)
                     }>
                     <div className='flex items-center justify-center pl-2 py-1'>
-                        <GrLanguage size={18} className='mr-1' />
+                        <Globe className='mr-1' size={22} />
                         {selectedLang.code}
                         <span>
                             <DropdowIcon className='dark:fill-white' />
@@ -178,26 +184,24 @@ export const Header = ({ collapsed, setCollapsed }) => {
                                     : styles.dropdownEnter
                             } dark:text-white bg-white/70 backdrop-blur-xs p-1 dark:bg-black/70`}>
                             {languages.map((lang) => (
-                                <>
-                                    <li
-                                        key={lang.code}
-                                        onClick={() => {
-                                            setSelectedLang(lang);
-                                            closeDropdown(
-                                                true,
-                                                setLangOpen,
-                                                setLangClosing
-                                            );
-                                        }}
-                                        className='dark:hover:bg-white/20 px-6! rounded-lg hover:bg-black/10'>
-                                        {/* <img
-                                            src={lang.img}
-                                            alt={lang.code}
-                                            className='w-15 object-contain'
-                                        /> */}
-                                        {lang.code}
-                                    </li>
-                                </>
+                                <li
+                                    key={lang.code}
+                                    onClick={() => {
+                                        setSelectedLang(lang);
+                                        closeDropdown(
+                                            true,
+                                            setLangOpen,
+                                            setLangClosing
+                                        );
+                                    }}
+                                    className='dark:hover:bg-white/20 px-6! rounded-lg hover:bg-black/10'>
+                                    {/* <img
+                                        src={lang.img}
+                                        alt={lang.code}
+                                        className='w-15 object-contain'
+                                    /> */}
+                                    {lang.code}
+                                </li>
                             ))}
                         </ul>
                     )}
@@ -207,11 +211,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     onClick={toggleFullscreen}
                     title='Toggle Fullscreen'
                     className='p-2.5 border border-black/30 dark:border-white/40 rounded-lg'>
-                    {isFull ? (
-                        <BiExitFullscreen size={20} />
-                    ) : (
-                        <BiFullscreen size={20} />
-                    )}
+                    {isFull ? <Minimize2 size={20} /> : <Maximize size={20} />}
                 </button>
 
                 <div
@@ -221,8 +221,8 @@ export const Header = ({ collapsed, setCollapsed }) => {
                         toggleDropdown(notifOpen, setNotifOpen, setNotifClosing)
                     }>
                     <div className='flex items-center justify-center p-1 py-2 border dark:border-white/40 border-black/30 rounded-lg'>
-                        <IoIosNotifications size={22} /> ({notifications.length}
-                        )
+                        <Bell size={22} className='mr-1' /> (
+                        {notifications.length})
                         <span>
                             <DropdowIcon className='dark:fill-white' />
                         </span>
@@ -257,7 +257,14 @@ export const Header = ({ collapsed, setCollapsed }) => {
                         />
                         <span className={styles.slider}>
                             <span className='rounded-full'>
-                                <CgDarkMode size={20} />
+                                {isDark ? (
+                                    <Sun size={20} />
+                                ) : (
+                                    <Moon
+                                        size={20}
+                                        className='bg-transparent'
+                                    />
+                                )}
                             </span>
                         </span>
                     </div>
@@ -274,7 +281,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                         )
                     }>
                     <div className='flex items-center justify-center p-1 border dark:border-white/40 border-black/30 rounded-lg pl-2.5 py-2'>
-                        <FaRegUser />
+                        <User />
                         <span>
                             <DropdowIcon className='dark:fill-white' />
                         </span>
@@ -290,7 +297,8 @@ export const Header = ({ collapsed, setCollapsed }) => {
                                 <li
                                     key={a.id}
                                     onClick={a.onClick}
-                                    className='dark:hover:bg-white/20 rounded-lg hover:bg-black/10'>
+                                    className='flex items-center gap-2 dark:hover:bg-white/20 rounded-lg hover:bg-black/10'>
+                                    {a.icon}
                                     {a.label}
                                 </li>
                             ))}

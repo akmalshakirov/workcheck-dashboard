@@ -34,11 +34,23 @@ const DashboardAdmins = () => {
             {/* {admins?.map((admin) => (
                 <div>{admin?.username}</div>
             ))} */}
-            DashboardAdmins
-            <button onClick={() => changeLanguage("en")}>
-                OKOOKOOKOKOKKOOKOKOKKO
+            <h2>{t("dashboard_admins")}</h2>
+            <button
+                onClick={() => changeLanguage("en")}
+                className='border rounded-lg p-2'>
+                {t("ui.change_language")}
             </button>
-            <h1>{t("welcome")}</h1>
+            <button
+                onClick={() => changeLanguage("ru")}
+                className='border rounded-lg p-2'>
+                {t("ui.change_language")}
+            </button>
+            <button
+                onClick={() => changeLanguage("uz")}
+                className='border rounded-lg p-2'>
+                {t("ui.change_language")}
+            </button>
+            <h1>{t("hello")}</h1>
         </div>
     );
 };

@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
                 },
             });
 
-            if (resposne.status === 200 || resposne.status === 201) {
+            if (resposne.status === 200) {
                 setLogedIn(true);
                 navigate("/");
             }
@@ -32,6 +32,8 @@ export function AuthProvider({ children }) {
 
     const logout = async () => {
         await axios.get(`${baseURL}/logout`);
+        setLogedIn(false);
+        navigate("/login");
     };
 
     return (

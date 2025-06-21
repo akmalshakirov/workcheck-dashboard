@@ -77,8 +77,6 @@
 
 .slider {
     position: absolute;
-    /* top: 0; */
-    /* margin-right: 50px; */
     background: #e5e7eb;
     width: 45px;
     height: 24px;
@@ -94,7 +92,7 @@
 }
 
 .switch input:checked + .slider {
-    background: #6366f1;
+    background: #555;
 }
 
 .switch input:checked + .slider span {
