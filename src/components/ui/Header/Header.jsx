@@ -16,9 +16,6 @@ import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../../hooks/useAuth";
 import DropdowIcon from "../Icons/Dropdown";
 import styles from "./Header.module.css";
-import EN from "/en.webp";
-import RU from "/ru.webp";
-import UZ from "/uz.webp";
 
 function useClickOutside(ref, handler) {
     useEffect(() => {
@@ -38,7 +35,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
     const [langClosing, setLangClosing] = useState(false);
     const [selectedLang, setSelectedLang] = useState({
         code: "uz",
-        img: UZ,
+        label: "UZ",
     });
 
     const [notifOpen, setNotifOpen] = useState(false);
@@ -107,9 +104,9 @@ export const Header = ({ collapsed, setCollapsed }) => {
     };
 
     const languages = [
-        { code: "en", img: EN },
-        { code: "uz", img: UZ },
-        { code: "ru", img: RU },
+        { code: "en", label: "EN" },
+        { code: "uz", label: "UZ" },
+        { code: "ru", label: "RU" },
     ];
     const notifications = [
         { id: 1, text: "Sizga yangi xabar keldi" },
@@ -126,7 +123,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
         {
             id: "lockscreen",
             label: "Lock screen",
-            onClick: () => alert("fUK"),
+            onClick: () => alert("Lock screen"),
             icon: <LockKeyhole size={20} />,
         },
         {
@@ -209,6 +206,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
 
                 <button
                     onClick={toggleFullscreen}
+                    aria-label='Toggle Fullscreen'
                     title='Toggle Fullscreen'
                     className='p-2.5 border border-black/30 dark:border-white/40 rounded-lg'>
                     {isFull ? <Minimize2 size={20} /> : <Maximize size={20} />}

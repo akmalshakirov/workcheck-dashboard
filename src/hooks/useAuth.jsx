@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createContext, useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 export const baseURL = "http://localhost:7000";
 
 const AuthContext = createContext();
@@ -9,24 +10,47 @@ export function AuthProvider({ children }) {
     const [logedIn, setLogedIn] = useState(false);
     const navigate = useNavigate();
 
-    const login = async (username, password) => {
+    const login = async (
+        username,
+        password,
+        setLoading,
+        setError,
+        setSuccess
+    ) => {
         const formData = new FormData();
         formData.append("username", username);
         formData.append("password", password);
         try {
-            const resposne = await axios.post(`${baseURL}/login`, formData, {
+            const response = await axios.post(`${baseURL}/login`, formData, {
                 withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
 
-            if (resposne.status === 200) {
+            if (response.status === 200) {
                 setLogedIn(true);
-                navigate("/");
+                setTimeout(() => {
+                    navigate("/");
+                }, 10000);
+                // navigate("/");
+                toast.success(response.data.message);
+                setSuccess(response.data.message);
+                console.log(response.data.message);
             }
         } catch (error) {
-            console.error("Login failed:", error);
+            toast.error(
+                error.code === "ERR_NETWORK"
+                    ? "Server ishlamayabdi"
+                    : error.response.data.error
+            );
+            setError(
+                error.code === "ERR_NETWORK"
+                    ? "Server ishlamayabdi"
+                    : error.response.data.error
+            );
+        } finally {
+            setLoading(false);
         }
     };
 

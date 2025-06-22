@@ -1,5 +1,5 @@
 import { Eye, EyeOff, LoaderCircle } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuth } from "../../hooks/useAuth";
 
 const Login = () => {
@@ -9,19 +9,20 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError("");
         try {
-            await login(username, password);
-        } catch (err) {
-            setError("Login yoki parol noto'g'ri yoki serverda xatolik.");
-        } finally {
-            setLoading(false);
-        }
+            await login(username, password, setLoading, setError, setSuccess);
+        } catch {}
     };
+
+    useEffect(() => {
+        document.title = "WorkCheck - Tizimga kirish";
+    }, []);
 
     return (
         <div className='flex items-center justify-center min-h-screen bg-[#5f73e2]'>
@@ -29,10 +30,18 @@ const Login = () => {
                 <h1 className='text-2xl font-bold text-center text-gray-800 mb-6'>
                     Tizimga kirish
                 </h1>
-                {error && (
-                    <div className='mb-4 text-red-600 text-center font-medium'>
-                        {error}
-                    </div>
+                <p
+                    className={`text-red-900 mb-2 text-center p-1 border border-red-400 rounded-lg bg-red-200 ${
+                        error
+                            ? "opacity-100 pointer-events-auto -translate-x-2.5"
+                            : "opacity-0 pointer-events-none -translate-x-0"
+                    }`}>
+                    {error}
+                </p>
+                {success && (
+                    <p className='text-green-900 mb-2 text-center p-1 border border-green-400 rounded-lg bg-green-200'>
+                        {success}
+                    </p>
                 )}
                 <form onSubmit={handleSubmit} className='space-y-5'>
                     <div>
@@ -66,9 +75,14 @@ const Login = () => {
                             required
                             className='w-full px-4 py-2 border outline-none transition rounded-lg focus:border-blue-500'
                             autoComplete='new-password'
+                            min='8'
+                            max='30'
                             disabled={loading}
                         />
                         <button
+                            name='Show password button'
+                            aria-label='Show password button'
+                            title='Show password'
                             type='button'
                             onClick={() => setShowPassword(!showPassword)}
                             className='absolute top-8 ml-2 right-3 text-gray-500 hover:text-gray-700'
@@ -82,17 +96,20 @@ const Login = () => {
                         </button>
                     </div>
                     <button
+                        name='Submit button'
+                        aria-label='Submit button'
+                        title='Submit'
                         type='submit'
-                        className={`w-full bg-blue-500 text-white py-2 rounded-lg transition duration-300 flex items-center justify-center ${
+                        className={`w-full bg-blue-400 text-white py-2 rounded-lg transition duration-300 flex items-center justify-center ${
                             loading
-                                ? "opacity-60 cursor-not-allowed"
+                                ? "opacity-60 cursor-not-allowed!"
                                 : "hover:bg-blue-600"
                         }`}
                         disabled={loading}>
                         {loading ? (
                             <span className='flex items-center gap-2'>
                                 <LoaderCircle className='animate-spin' />
-                                Yuklanmoqda...
+                                Tekshirilmoqda...
                             </span>
                         ) : (
                             "Kirish"
