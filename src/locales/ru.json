@@ -1,4 +1,6 @@
 {
-    "dashboard_admins": "Админы",
-    "hello": "Привет"
+    "sidebar_dashboard": "Главная",
+    "sidebar_admins": "Админы",
+    "sidebar_workers": "Рабочие",
+    "sidebar_profile": "Мой профиль"
 }

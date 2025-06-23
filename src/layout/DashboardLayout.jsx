@@ -1,5 +1,6 @@
 import { LayoutDashboard, ShieldUser, UserCog, Users } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
 import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
@@ -14,27 +15,29 @@ const DashboardLayout = () => {
         localStorage.setItem("sidebar", collapsed);
     }, [collapsed]);
 
+    const { t } = useTranslation();
+
     return (
         <div className='dashboard p-2.5 gap-3 bg-[#5f73e2] dark:bg-[#3a3b3b] transition-colors duration-300'>
             <Sidebar collapsed={collapsed} setCollapsed={setCollapsed}>
                 <SidebarItem
                     icon={<LayoutDashboard size={22} />}
-                    text='Bosh sahifa'
+                    text={t("sidebar_dashboard")}
                     link={"/"}
                 />
                 <SidebarItem
                     icon={<ShieldUser size={22} />}
                     link={"/admins"}
-                    text='Adminlar'
+                    text={t("sidebar_admins")}
                 />
                 <SidebarItem
                     icon={<Users size={22} />}
-                    text='Ishchilar'
+                    text={t("sidebar_workers")}
                     link={"/workers"}
                 />
                 <SidebarItem
                     icon={<UserCog size={22} />}
-                    text='Mening profilim'
+                    text={t("sidebar_profile")}
                     link={"/profile"}
                 />
             </Sidebar>

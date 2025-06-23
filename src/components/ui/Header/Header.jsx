@@ -13,9 +13,10 @@ import {
     X,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useAuth } from "../../../hooks/useAuth";
+import { useTranslation } from "react-i18next";
 import DropdowIcon from "../Icons/Dropdown";
 import styles from "./Header.module.css";
+import { useAuth } from "../../../hooks/useAuth";
 
 function useClickOutside(ref, handler) {
     useEffect(() => {
@@ -30,28 +31,28 @@ function useClickOutside(ref, handler) {
 }
 
 export const Header = ({ collapsed, setCollapsed }) => {
-    const { logout } = useAuth();
     const [langOpen, setLangOpen] = useState(false);
     const [langClosing, setLangClosing] = useState(false);
     const [selectedLang, setSelectedLang] = useState({
         code: "uz",
         label: "UZ",
     });
-
+    const { i18n } = useTranslation();
+    const changeLanguage = (lng) => {
+        i18n.changeLanguage(lng);
+    };
     const [notifOpen, setNotifOpen] = useState(false);
     const [notifClosing, setNotifClosing] = useState(false);
-
     const [profileOpen, setProfileOpen] = useState(false);
     const [profileClosing, setProfileClosing] = useState(false);
-
     const [isDark, setIsDark] = useState(
         localStorage.getItem("isDark") == "true"
     );
     const [isFull, setIsFull] = useState(false);
-
     const langRef = useRef();
     const notifRef = useRef();
     const profileRef = useRef();
+    const { logout } = useAuth();
 
     const closeDropdown = (open, setOpen, setClosing) => {
         if (open) {
@@ -190,6 +191,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                                             setLangOpen,
                                             setLangClosing
                                         );
+                                        changeLanguage(lang.code);
                                     }}
                                     className='dark:hover:bg-white/20 px-6! rounded-lg hover:bg-black/10'>
                                     {/* <img

@@ -1,4 +1,6 @@
 {
-    "dashboard_admins": "Adminlar",
-    "hello": "Salom"
+    "sidebar_dashboard": "Bosh sahifa",
+    "sidebar_admins": "Adminlar",
+    "sidebar_workers": "Ishchilar",
+    "sidebar_profile": "Mening profilim"
 }

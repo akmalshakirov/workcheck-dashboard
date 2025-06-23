@@ -1,13 +1,20 @@
-import { Navigate, useLocation } from "react-router-dom";
+import React from "react";
 import { useAuth } from "../../hooks/useAuth";
+import Login from "../../pages/Login/Login";
+import Preloader from "../ui/Preloader/Preloader";
 
-const PrivateRoute = ({ children }) => {
-    const { logedIn } = useAuth();
-    const location = useLocation();
-    if (!logedIn) {
-        return <Navigate to='/login' replace state={{ from: location }} />;
+const ProtectedRoute = ({ children }) => {
+    const { isAuthenticated, isLoading } = useAuth();
+
+    if (isLoading) {
+        return <Preloader />;
     }
+
+    if (!isAuthenticated) {
+        return <Login />;
+    }
+
     return children;
 };
 
-export default PrivateRoute;
+export default ProtectedRoute;

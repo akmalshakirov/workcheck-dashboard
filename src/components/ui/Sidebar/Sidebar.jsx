@@ -8,7 +8,10 @@ const SidearContext = createContext();
 export const Sidebar = ({ children, collapsed }) => {
     return (
         <aside className={`${styles.sidebar}`}>
-            <nav className='h-full flex flex-col bg-white dark:bg-black/90 dark:text-white rounded-lg shadow-sm dark:duration-400'>
+            <nav
+                className={`h-full flex flex-col bg-white dark:bg-black/90 dark:text-white rounded-lg shadow-sm dark:duration-400 ${
+                    collapsed ? "min-w-52" : "min-w-auto"
+                }`}>
                 <Link
                     to={"/"}
                     className='p-4 pb-2 flex justify-center items-center'>
@@ -33,7 +36,7 @@ export const SidebarItem = ({ icon, text, link }) => {
             className={({ isActive }) =>
                 `relative flex items-center rounded-lg whitespace-nowrap my-1 font-medium cursor-pointer transition-all group ${
                     isActive
-                        ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 rounded-lg text-indigo-800 dark:bg-gradient-to-tl dark:from-[#f2f2f2]/80 dark:to-[#f2f2f2]"
+                        ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 rounded-lg text-indigo-800 dark:bg-gradient-to-tl dark:from-[#f2f2f2] dark:to-[#f2f2f2]"
                         : "hover:bg-indigo-50 text-gray-600 dark:hover:bg-gray-900 dark:text-white/70"
                 }`
             }>

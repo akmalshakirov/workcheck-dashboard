@@ -1,56 +1,35 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { baseURL } from "../../App";
+import Table from "../../components/ui/Table/Table";
 
 const DashboardAdmins = () => {
     const [admins, setAdmins] = useState([]);
-
-    // useEffect(() => {
-    //     try {
-    //         const resposne = axios.get(`${baseURL}/admins`, {
-    //             withCredentials: true,
-    //         });
-
-    //         if (resposne.status === 200) {
-    //             setAdmins(resposne.data.admins);
-    //         } else {
-    //             setAdmins("EROOOOOOR");
-    //         }
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // }, []);
+    const { t } = useTranslation();
 
     useEffect(() => {
+        const getAdmins = async () => {
+            try {
+                const resposne = await axios.get(`${baseURL}/admins`, {
+                    withCredentials: true,
+                });
+
+                setAdmins(resposne.data.admins);
+                console.log(resposne.data.admins);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        getAdmins();
         document.title = "WorkCheck - Dashboard | Adminlar";
     }, []);
 
-    const { t, i18n } = useTranslation();
-
-    const changeLanguage = (lng) => {
-        i18n.changeLanguage(lng);
-    };
     return (
         <div>
-            {/* {admins?.map((admin) => (
-                <div>{admin?.username}</div>
-            ))} */}
-            <h2>{t("dashboard_admins")}</h2>
-            <button
-                onClick={() => changeLanguage("en")}
-                className='border rounded-lg p-2'>
-                {t("ui.change_language")}
-            </button>
-            <button
-                onClick={() => changeLanguage("ru")}
-                className='border rounded-lg p-2'>
-                {t("ui.change_language")}
-            </button>
-            <button
-                onClick={() => changeLanguage("uz")}
-                className='border rounded-lg p-2'>
-                {t("ui.change_language")}
-            </button>
-            <h1>{t("hello")}</h1>
+            <div>
+                <Table data={admins} />
+            </div>
         </div>
     );
 };

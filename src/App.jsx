@@ -1,9 +1,8 @@
-import React, { Suspense, useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import React, { Suspense } from "react";
+import { Route, Routes } from "react-router-dom";
+import { Slide, ToastContainer } from "react-toastify";
 import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Preloader from "./components/ui/Preloader/Preloader";
-import { useAuth } from "./hooks/useAuth";
-import { Slide, ToastContainer } from "react-toastify";
 
 const DashboardLayout = React.lazy(() => import("./layout/DashboardLayout"));
 const DashboardAdmins = React.lazy(() =>
@@ -20,25 +19,15 @@ const DashboardHome = React.lazy(() =>
 );
 const Login = React.lazy(() => import("./pages/Login/Login"));
 
+export const baseURL = "http://localhost:7000";
+
 const App = () => {
-    const { logedIn } = useAuth();
-    const navigate = useNavigate();
-
-    // useEffect(() => {
-    //     if (logedIn && window.location.pathname === "/login") {
-    //         navigate("/", { replace: true });
-    //     }
-    // }, [logedIn, navigate]);
-
     return (
         <Suspense fallback={<Preloader />}>
-            {/* <ToastContainer autoClos={10000} limit={3} draggable aria-label="it's toast" newestOnTop position="top-right" transition={}/> */}
             <ToastContainer
                 position='top-right'
                 autoClose={10000}
                 limit={3}
-                hideProgressBar
-                newestOnTop
                 closeOnClick={false}
                 rtl={false}
                 pauseOnFocusLoss

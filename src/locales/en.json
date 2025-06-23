@@ -1,4 +1,6 @@
 {
-    "dashboard_admins": "Admins",
-    "hello": "Hello"
+    "sidebar_dashboard": "Dashboard",
+    "sidebar_admins": "Admins",
+    "sidebar_workers": "Workers",
+    "sidebar_profile": "My profile"
 }
