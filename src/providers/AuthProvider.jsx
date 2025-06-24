@@ -1,8 +1,8 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { AuthContext } from "../hooks/useAuth";
-import { baseURL } from "../App";
 import { useNavigate } from "react-router-dom";
+import { baseURL } from "../App";
+import { AuthContext } from "../hooks/useAuth";
 
 const AuthProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -114,6 +114,7 @@ const AuthProvider = ({ children }) => {
 
     const contextValue = {
         isAuthenticated,
+        setIsAuthenticated,
         isLoading,
         user,
         error,

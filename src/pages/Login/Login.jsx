@@ -2,26 +2,17 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { baseURL } from "../../App";
+import { useAuth } from "../../hooks/useAuth";
 
 const Login = () => {
+    const { setIsAuthenticated } = useAuth();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    // const [isLoggedIn, setIsloggedIn] = useState(null);
-    const navigate = useNavigate();
-
-    // useEffect(() => {
-    //     if (isLoggedIn) {
-    //         navigate("/", { replace: true });
-    //     } else {
-    //         navigate("/login", { replace: true });
-    //     }
-    // }, [isLoggedIn, setIsloggedIn]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -40,10 +31,8 @@ const Login = () => {
             });
 
             if (response.status === 200) {
-                // setIsloggedIn(true);
+                setIsAuthenticated(true);
                 toast.success(response.data.message);
-                navigate("/");
-                window.location.reload();
             }
         } catch (error) {
             setError(
