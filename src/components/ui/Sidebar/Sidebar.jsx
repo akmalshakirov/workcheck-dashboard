@@ -7,7 +7,7 @@ const SidearContext = createContext();
 
 export const Sidebar = ({ children, collapsed }) => {
     return (
-        <aside className={`${styles.sidebar}`}>
+        <aside className={`${styles.sidebar} p-2.5 h-screen sticky top-0`}>
             <nav
                 className={`h-full flex flex-col bg-white dark:bg-black/90 dark:text-white rounded-lg shadow-sm dark:duration-400 ${
                     collapsed ? "min-w-52" : "min-w-auto"

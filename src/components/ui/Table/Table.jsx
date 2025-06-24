@@ -142,7 +142,7 @@ const Table = () => {
     };
 
     return (
-        <div className='bg-gradient-to-br from-slate-50 to-slate-100 p-4 rounded-lg'>
+        <div className='p-4 rounded-lg overflow-x-hidden'>
             <div className='max-w-6xl mx-auto'>
                 <div className='mb-8'>
                     <h1 className='text-3xl font-bold text-slate-800 mb-2'>
@@ -150,29 +150,7 @@ const Table = () => {
                     </h1>
                 </div>
 
-                <div className='bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6'>
-                    <div className='flex flex-col sm:flex-row gap-4 items-center justify-between'>
-                        <div className='relative flex-1 max-w-md'>
-                            <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4' />
-                            <input
-                                type='text'
-                                placeholder='Qidirish...'
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                className='w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors'
-                            />
-                        </div>
-                        <div className='flex items-center gap-2'>
-                            <button className='flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors'>
-                                <Filter className='w-4 h-4' />
-                                Filter
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Table */}
-                <div className='bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden'>
+                <div className='bg-white rounded-xl shadow-sm border border-slate-200'>
                     <div className='overflow-x-auto'>
                         <table className='w-full'>
                             <thead className='bg-slate-50 border-b border-slate-200'>

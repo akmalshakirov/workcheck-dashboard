@@ -5,6 +5,7 @@ import { Outlet } from "react-router-dom";
 import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
 import "./DashboardLayout.css";
+import Footer from "../components/ui/Footer/Footer";
 
 const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(
@@ -18,7 +19,7 @@ const DashboardLayout = () => {
     const { t } = useTranslation();
 
     return (
-        <div className='dashboard p-2.5 gap-3 bg-[#5f73e2] dark:bg-[#3a3b3b] transition-colors duration-300'>
+        <div className='flex bg-[#5f73e2] dark:bg-[#3a3b3b] transition-colors duration-300'>
             <Sidebar collapsed={collapsed} setCollapsed={setCollapsed}>
                 <SidebarItem
                     icon={<LayoutDashboard size={22} />}
@@ -41,11 +42,12 @@ const DashboardLayout = () => {
                     link={"/profile"}
                 />
             </Sidebar>
-            <div className='flex-1'>
+            <div className='flex-1 p-2.5 pl-1'>
                 <Header collapsed={collapsed} setCollapsed={setCollapsed} />
-                <main className='p-4 bg-white rounded-lg my-3 dark:bg-black/90 dark:text-white text-black'>
+                <main className='p-4 bg-white rounded-lg mt-3 dark:bg-black/90 dark:text-white text-black'>
                     <Outlet />
                 </main>
+                <Footer />
             </div>
         </div>
     );

@@ -18,20 +18,22 @@ const AuthProvider = ({ children }) => {
             });
 
             if (response.status === 200) {
-                setUser(response.data.user);
+                setUser(response.data.admins);
                 setIsAuthenticated(true);
                 setError(null);
-                navigate("/", { replace: true });
                 return true;
             } else {
                 setIsAuthenticated(false);
                 setUser(null);
                 return false;
             }
-        } catch (err) {
+        } catch (error) {
             setError("Tarmoq xatosi yuz berdi");
             setIsAuthenticated(false);
             setUser(null);
+            if (error.response === 401) {
+                navigate("/login");
+            }
             return false;
         }
     };
@@ -53,16 +55,19 @@ const AuthProvider = ({ children }) => {
                 setUser(response.data.user);
                 setIsAuthenticated(true);
                 setError(null);
-                navigate("/", { replace: true });
+                navigate("/");
                 return { success: true };
             } else {
                 setError(response.data.message || "Login xatosi");
                 return { success: false, error: response.data.message };
             }
-        } catch (err) {
+        } catch (error) {
             const errorMessage =
-                err.response?.data?.message || "Tarmoq xatosi yuz berdi";
+                error.response?.data?.message || "Tarmoq xatosi yuz berdi";
             setError(errorMessage);
+            if (error.resposne.data.status === 401) {
+                navigate("/login");
+            }
             return { success: false, error: errorMessage };
         } finally {
             setIsLoading(false);
@@ -83,7 +88,7 @@ const AuthProvider = ({ children }) => {
         } finally {
             setIsAuthenticated(false);
             setUser(null);
-            window.location.href = "/login";
+            navigate("/login", { replace: true });
         }
     };
 
@@ -101,7 +106,7 @@ const AuthProvider = ({ children }) => {
         if (isAuthenticated) {
             const interval = setInterval(() => {
                 validateToken();
-            }, 5 * 60 * 1000);
+            }, 1 * 60 * 1000);
 
             return () => clearInterval(interval);
         }

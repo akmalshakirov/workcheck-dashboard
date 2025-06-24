@@ -48,8 +48,8 @@ const App = () => {
                     <Route path='admins' element={<DashboardAdmins />} />
                     <Route path='workers' element={<DashboardWorkers />} />
                     <Route path='profile' element={<DashboardProfile />} />
-                    <Route path='*' element={<h1>Page Not Found</h1>} />
                 </Route>
+                <Route path='*' element={<h1>Page Not Found</h1>} />
             </Routes>
         </Suspense>
     );

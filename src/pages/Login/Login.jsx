@@ -12,7 +12,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
-    const [isLoggedIn, setIsloggedIn] = useState(null);
+    // const [isLoggedIn, setIsloggedIn] = useState(null);
     const navigate = useNavigate();
 
     // useEffect(() => {
@@ -40,9 +40,10 @@ const Login = () => {
             });
 
             if (response.status === 200) {
-                setIsloggedIn(true);
+                // setIsloggedIn(true);
                 toast.success(response.data.message);
-                navigate("/", { replace: true });
+                navigate("/");
+                window.location.reload();
             }
         } catch (error) {
             setError(

@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import DropdowIcon from "../Icons/Dropdown";
 import styles from "./Header.module.css";
 import { useAuth } from "../../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 function useClickOutside(ref, handler) {
     useEffect(() => {
@@ -53,6 +54,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
     const notifRef = useRef();
     const profileRef = useRef();
     const { logout } = useAuth();
+    const navigate = useNavigate();
 
     const closeDropdown = (open, setOpen, setClosing) => {
         if (open) {
@@ -118,7 +120,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
         {
             id: "profile",
             label: "Profile",
-            onClick: () => alert("Profile clicked"),
+            onClick: () => navigate("/profile"),
             icon: <UserPen size={20} />,
         },
         {
@@ -136,7 +138,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
     ];
 
     return (
-        <div className='p-2.5 flex-1 flex items-center justify-between max-h-max bg-white rounded-lg !w-full dark:bg-black/90 dark:text-white'>
+        <div className='p-2.5 flex-1 flex items-center justify-between max-h-max bg-white rounded-lg !w-full dark:bg-black/90 dark:text-white sticky top-2.5 z-50 shadow-sm'>
             <div className='flex gap-2.5'>
                 <button
                     onClick={() => {
