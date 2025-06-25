@@ -138,7 +138,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
     ];
 
     return (
-        <div className='p-2.5 flex-1 flex items-center justify-between max-h-max bg-white rounded-lg !w-full dark:bg-black/90 dark:text-white sticky top-2.5 z-50 shadow-sm'>
+        <div className='p-2.5 flex-1 flex items-center justify-between max-h-max bg-white rounded-lg !w-full dark:bg-[#111] dark:text-white sticky top-2.5 z-50 shadow-sm'>
             <div className='flex gap-2.5'>
                 <button
                     onClick={() => {

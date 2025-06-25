@@ -1,7 +1,7 @@
-import React, { Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
+import React, { Suspense, use, useEffect } from "react";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { Slide, ToastContainer } from "react-toastify";
-import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+// import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Preloader from "./components/ui/Preloader/Preloader";
 import { useAuth } from "./hooks/useAuth";
 
@@ -24,6 +24,8 @@ export const baseURL = "http://localhost:7000";
 
 const App = () => {
     const { isAuthenticated } = useAuth();
+    const navigate = useNavigate();
+
     return (
         <Suspense fallback={<Preloader />}>
             <ToastContainer
@@ -38,18 +40,8 @@ const App = () => {
                 transition={Slide}
             />
             <Routes>
-                <Route
-                    path='/login'
-                    // element={!isAuthenticated ? <Login /> : <Navigate to='/' />}
-                    element={<Login />}
-                />
-                <Route
-                    path='/'
-                    element={
-                        <PrivateRoute>
-                            <DashboardLayout />
-                        </PrivateRoute>
-                    }>
+                <Route path='/login' element={<Login />} />
+                <Route path='/' element={<DashboardLayout />}>
                     <Route index element={<DashboardHome />} />
                     <Route path='admins' element={<DashboardAdmins />} />
                     <Route path='workers' element={<DashboardWorkers />} />

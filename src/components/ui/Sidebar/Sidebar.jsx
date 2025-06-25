@@ -11,10 +11,10 @@ export const Sidebar = ({ children, collapsed }) => {
         <motion.div
             initial={!collapsed ? { width: "5.8rem" } : { width: "16rem" }}
             animate={!collapsed ? { width: "5.8rem" } : { width: "16rem" }}
-            transition={{ duration: 0.3, type: "keyframes", stiffness: 100 }}>
+            transition={{ duration: 0.3, type: "keyframes", stiffness: 5000 }}>
             <aside className={`${styles.sidebar} p-2.5 h-screen sticky top-0`}>
                 <nav
-                    className={`h-full flex flex-col bg-white dark:bg-black/90 dark:text-white rounded-lg shadow-sm dark:duration-400 ${
+                    className={`h-full flex flex-col bg-white dark:bg-[#111] dark:text-white rounded-lg shadow-sm dark:duration-400 ${
                         collapsed ? "min-w-52" : "min-w-auto"
                     }`}>
                     <Link
@@ -42,8 +42,8 @@ export const SidebarItem = ({ icon, text, link }) => {
             className={({ isActive }) =>
                 `relative flex items-center rounded-lg whitespace-nowrap my-1 font-medium cursor-pointer transition-all group ${
                     isActive
-                        ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 rounded-lg text-indigo-800 dark:bg-gradient-to-tl dark:from-[#f2f2f2] dark:to-[#f2f2f2]"
-                        : "hover:bg-indigo-50 text-gray-600 dark:hover:bg-gray-900 dark:text-white/70"
+                        ? "bg-gradient-to-tr from-indigo-200 to-indigo-100 rounded-lg text-indigo-800 dark:bg-gradient-to-tl dark:from-[#333] dark:to-[#333] dark:text-white"
+                        : "hover:bg-indigo-50 text-gray-600 dark:hover:bg-white/10 dark:text-white/70"
                 }`
             }>
             {({ isActive }) => (

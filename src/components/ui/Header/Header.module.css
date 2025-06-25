@@ -92,7 +92,7 @@
 }
 
 .switch input:checked + .slider {
-    background: #555;
+    background: #222;
 }
 
 .switch input:checked + .slider span {

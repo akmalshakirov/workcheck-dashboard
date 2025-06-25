@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { baseURL } from "../../App";
 import { useAuth } from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
     const { setIsAuthenticated } = useAuth();
@@ -13,6 +14,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,10 +32,11 @@ const Login = () => {
                 },
             });
 
-            if (response.status === 200) {
-                setIsAuthenticated(true);
-                toast.success(response.data.message);
-            }
+            // if (response.status === 200) {
+            setIsAuthenticated(true);
+            toast.success(response.data.message);
+            navigate("/", { replace: true });
+            // }
         } catch (error) {
             setError(
                 error.code === "ERR_NETWORK"

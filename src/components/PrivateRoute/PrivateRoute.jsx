@@ -1,20 +1,21 @@
-import React from "react";
-import { Navigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import Preloader from "../ui/Preloader/Preloader";
+// import React from "react";
+// import { Navigate, useNavigate } from "react-router-dom";
+// import { useAuth } from "../../hooks/useAuth";
+// import Preloader from "../ui/Preloader/Preloader";
 
-const ProtectedRoute = ({ children }) => {
-    const { isAuthenticated, isLoading } = useAuth();
+// const ProtectedRoute = ({ children }) => {
+//     const { isAuthenticated, isLoading } = useAuth();
+//     const navigate = useNavigate();
 
-    if (isLoading) {
-        return <Preloader />;
-    }
+//     if (isLoading) {
+//         return <Preloader />;
+//     }
 
-    if (!isAuthenticated) {
-        return <Navigate to='/login' replace />;
-    }
+//     if (!isAuthenticated) {
+//         return navigate("/login");
+//     }
 
-    return children;
-};
+//     return children;
+// };
 
-export default ProtectedRoute;
+// export default ProtectedRoute;

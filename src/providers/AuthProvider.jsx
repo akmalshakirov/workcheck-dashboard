@@ -1,73 +1,42 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { baseURL } from "../App";
+import Preloader from "../components/ui/Preloader/Preloader";
 import { AuthContext } from "../hooks/useAuth";
 
 const AuthProvider = ({ children }) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
-    const [user, setUser] = useState(null);
-    const [error, setError] = useState(null);
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
+    const [preLoader, setPreLoader] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
 
-    // const validateToken = async () => {
+    // const login = async (username, password) => {
+    //     setPreLoader(true);
+
+    //     const formData = new FormData();
+    //     formData.append("username", username);
+    //     formData.append("password", password);
+
     //     try {
-    //         const response = await axios.get(`${baseURL}/check-auth`, {
+    //         await axios.post(`${baseURL}/login`, formData, {
     //             withCredentials: true,
     //         });
 
-    //         if (response.status === 200) {
-    //             setUser(response.data.admins);
-    //             setIsAuthenticated(true);
-    //             setError(null);
-    //             return true;
-    //         }
+    //         setIsAuthenticated(true);
+    //         navigate("/");
+    //         await checkAuth();
     //     } catch (error) {
-    //         setError("Tarmoq xatosi yuz berdi");
-    //         setIsAuthenticated(false);
-    //         setUser(null);
-    //         if (error.response === 401) {
-    //             navigate("/login");
-    //         }
-    //         return false;
+    //         const errorMessage =
+    //             error.response?.data?.error || "Tarmoq xatosi yuz berdi";
+    //         return { success: false, error: errorMessage };
+    //     } finally {
+    //         setPreLoader(false);
     //     }
     // };
 
-    const login = async (username, password) => {
-        setIsLoading(true);
-        setError(null);
-
-        const formData = new FormData();
-        formData.append("username", username);
-        formData.append("password", password);
-
-        try {
-            const response = await axios.post(`${baseURL}/login`, formData, {
-                withCredentials: true,
-            });
-
-            // if (response.status === 200) {
-            setUser(response.data.user);
-            setIsAuthenticated(true);
-            setError(null);
-            navigate("/");
-            // return { success: true };
-            // }
-        } catch (error) {
-            const errorMessage =
-                error.response?.data?.message || "Tarmoq xatosi yuz berdi";
-            setError(errorMessage);
-            // if (error.resposne.data.status === 401) {
-            //     navigate("/login");
-            // }
-            return { success: false, error: errorMessage };
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     const logout = async () => {
+        setPreLoader(true);
         try {
             await axios.post(
                 `${baseURL}/logout`,
@@ -76,40 +45,61 @@ const AuthProvider = ({ children }) => {
                     withCredentials: true,
                 }
             );
-        } catch (err) {
-            console.error("Logout xatosi:", err);
         } finally {
             setIsAuthenticated(false);
-            setUser(null);
-            // navigate("/login", { replace: true });
+            setPreLoader(false);
+            navigate("/login");
         }
     };
-
-    useEffect(() => {
-        const checkAuth = async () => {
-            setIsLoading(true);
-            // await validateToken();
-            setIsLoading(false);
-        };
-
-        checkAuth();
-    }, []);
 
     const contextValue = {
         isAuthenticated,
         setIsAuthenticated,
-        isLoading,
-        user,
-        error,
-        login,
+        // login,
         logout,
-        // validateToken,
     };
 
+    // CHECK AUTH FUNCTION HERE
+    const checkAuth = async () => {
+        setPreLoader(true);
+        try {
+            const response = await axios.get(`${baseURL}/check-auth`, {
+                withCredentials: true,
+            });
+
+            if (response.status === 200) {
+                setIsAuthenticated(true);
+            } else {
+                setIsAuthenticated(false);
+            }
+        } finally {
+            setTimeout(() => {
+                setPreLoader(false);
+            }, 100);
+        }
+    };
+    useEffect(() => {
+        checkAuth();
+        if (isAuthenticated === null) {
+            setPreLoader(true);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (isAuthenticated !== null) {
+            navigate(isAuthenticated ? location.pathname : "/login", {
+                replace: true,
+            });
+        }
+    }, [isAuthenticated]);
+
     return (
-        <AuthContext.Provider value={contextValue}>
-            {children}
-        </AuthContext.Provider>
+        <>
+            <AuthContext.Provider value={contextValue}>
+                {preLoader ? <Preloader /> : null}
+                {children}
+            </AuthContext.Provider>
+        </>
     );
 };
 

@@ -1,15 +1,18 @@
+import axios from "axios";
 import { LayoutDashboard, ShieldUser, UserCog, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+import { baseURL } from "../App";
+import Footer from "../components/ui/Footer/Footer";
 import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
-import Footer from "../components/ui/Footer/Footer";
 
 const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(
         localStorage.getItem("sidebar") == "true"
     );
+    const navigate = useNavigate();
 
     useEffect(() => {
         localStorage.setItem("sidebar", collapsed);
@@ -17,8 +20,23 @@ const DashboardLayout = () => {
 
     const { t } = useTranslation();
 
+    useEffect(() => {
+        const getProfile = async () => {
+            try {
+                await axios.get(`${baseURL}/profile`, {
+                    withCredentials: true,
+                });
+            } catch (error) {
+                if (error.response.status === 401) {
+                    navigate("/login", { replace: true });
+                }
+            }
+        };
+        getProfile();
+    }, []);
+
     return (
-        <div className='flex bg-[#5f73e2] dark:bg-[#3a3b3b] transition-colors duration-300'>
+        <div className='flex bg-[#5f73e2] dark:bg-black transition-colors duration-300'>
             <Sidebar collapsed={collapsed} setCollapsed={setCollapsed}>
                 <SidebarItem
                     icon={<LayoutDashboard size={22} />}
@@ -43,7 +61,7 @@ const DashboardLayout = () => {
             </Sidebar>
             <div className='flex-1 p-2.5 pl-1'>
                 <Header collapsed={collapsed} setCollapsed={setCollapsed} />
-                <main className='p-4 bg-white rounded-lg mt-3 dark:bg-black/90 dark:text-white text-black'>
+                <main className='p-4 bg-white rounded-lg mt-3 dark:bg-[#111] dark:text-white text-black'>
                     <Outlet />
                 </main>
                 <Footer />

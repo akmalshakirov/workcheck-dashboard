@@ -11,6 +11,7 @@
     align-items: center;
     justify-content: center;
     transition: 1s linear;
+    z-index: 777;
 }
 
 .preloader h1 {
