@@ -24,7 +24,6 @@ export const baseURL = "http://localhost:7000";
 
 const App = () => {
     const { isAuthenticated } = useAuth();
-    console.log(isAuthenticated);
     return (
         <Suspense fallback={<Preloader />}>
             <ToastContainer

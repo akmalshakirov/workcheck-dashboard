@@ -11,32 +11,28 @@ const AuthProvider = ({ children }) => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    const validateToken = async () => {
-        try {
-            const response = await axios.get(`${baseURL}/check-auth`, {
-                withCredentials: true,
-            });
+    // const validateToken = async () => {
+    //     try {
+    //         const response = await axios.get(`${baseURL}/check-auth`, {
+    //             withCredentials: true,
+    //         });
 
-            if (response.status === 200) {
-                setUser(response.data.admins);
-                setIsAuthenticated(true);
-                setError(null);
-                return true;
-            } else {
-                setIsAuthenticated(false);
-                setUser(null);
-                return false;
-            }
-        } catch (error) {
-            setError("Tarmoq xatosi yuz berdi");
-            setIsAuthenticated(false);
-            setUser(null);
-            if (error.response === 401) {
-                navigate("/login");
-            }
-            return false;
-        }
-    };
+    //         if (response.status === 200) {
+    //             setUser(response.data.admins);
+    //             setIsAuthenticated(true);
+    //             setError(null);
+    //             return true;
+    //         }
+    //     } catch (error) {
+    //         setError("Tarmoq xatosi yuz berdi");
+    //         setIsAuthenticated(false);
+    //         setUser(null);
+    //         if (error.response === 401) {
+    //             navigate("/login");
+    //         }
+    //         return false;
+    //     }
+    // };
 
     const login = async (username, password) => {
         setIsLoading(true);
@@ -95,22 +91,12 @@ const AuthProvider = ({ children }) => {
     useEffect(() => {
         const checkAuth = async () => {
             setIsLoading(true);
-            await validateToken();
+            // await validateToken();
             setIsLoading(false);
         };
 
         checkAuth();
     }, []);
-
-    useEffect(() => {
-        if (isAuthenticated) {
-            const interval = setInterval(() => {
-                validateToken();
-            }, 1 * 60 * 1000);
-
-            return () => clearInterval(interval);
-        }
-    }, [isAuthenticated]);
 
     const contextValue = {
         isAuthenticated,
@@ -120,7 +106,7 @@ const AuthProvider = ({ children }) => {
         error,
         login,
         logout,
-        validateToken,
+        // validateToken,
     };
 
     return (

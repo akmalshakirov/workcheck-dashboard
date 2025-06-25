@@ -2,29 +2,35 @@ import { createContext, useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
 import styles from "./Sidebar.module.css";
 import Ripple from "../Ripple/Ripple";
+import { motion } from "framer-motion";
 
 const SidearContext = createContext();
 
 export const Sidebar = ({ children, collapsed }) => {
     return (
-        <aside className={`${styles.sidebar} p-2.5 h-screen sticky top-0`}>
-            <nav
-                className={`h-full flex flex-col bg-white dark:bg-black/90 dark:text-white rounded-lg shadow-sm dark:duration-400 ${
-                    collapsed ? "min-w-52" : "min-w-auto"
-                }`}>
-                <Link
-                    to={"/"}
-                    className='p-4 pb-2 flex justify-center items-center'>
-                    <span className='overflow-hidden transition-all duration-300 text-2xl font-bold mx-auto'>
-                        {collapsed ? "WorkCheck" : "W"}
-                    </span>
-                </Link>
+        <motion.div
+            initial={!collapsed ? { width: "5.8rem" } : { width: "16rem" }}
+            animate={!collapsed ? { width: "5.8rem" } : { width: "16rem" }}
+            transition={{ duration: 0.3, type: "keyframes", stiffness: 100 }}>
+            <aside className={`${styles.sidebar} p-2.5 h-screen sticky top-0`}>
+                <nav
+                    className={`h-full flex flex-col bg-white dark:bg-black/90 dark:text-white rounded-lg shadow-sm dark:duration-400 ${
+                        collapsed ? "min-w-52" : "min-w-auto"
+                    }`}>
+                    <Link
+                        to={"/"}
+                        className='p-4 pb-2 flex justify-center items-center'>
+                        <span className='overflow-hidden transition-all duration-300 text-2xl font-bold mx-auto'>
+                            {collapsed ? "WorkCheck" : "W"}
+                        </span>
+                    </Link>
 
-                <SidearContext.Provider value={{ collapsed }}>
-                    <div className='flex-1 px-3 '>{children}</div>
-                </SidearContext.Provider>
-            </nav>
-        </aside>
+                    <SidearContext.Provider value={{ collapsed }}>
+                        <div className='flex-1 px-3 '>{children}</div>
+                    </SidearContext.Provider>
+                </nav>
+            </aside>
+        </motion.div>
     );
 };
 
