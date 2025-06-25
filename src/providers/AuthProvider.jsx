@@ -61,9 +61,9 @@ const AuthProvider = ({ children }) => {
             const errorMessage =
                 error.response?.data?.message || "Tarmoq xatosi yuz berdi";
             setError(errorMessage);
-            if (error.resposne.data.status === 401) {
-                navigate("/login");
-            }
+            // if (error.resposne.data.status === 401) {
+            //     navigate("/login");
+            // }
             return { success: false, error: errorMessage };
         } finally {
             setIsLoading(false);
@@ -84,7 +84,7 @@ const AuthProvider = ({ children }) => {
         } finally {
             setIsAuthenticated(false);
             setUser(null);
-            navigate("/login", { replace: true });
+            // navigate("/login", { replace: true });
         }
     };
 

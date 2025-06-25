@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
 import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
-import "./DashboardLayout.css";
 import Footer from "../components/ui/Footer/Footer";
 
 const DashboardLayout = () => {
