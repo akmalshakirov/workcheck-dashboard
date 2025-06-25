@@ -47,16 +47,13 @@ const AuthProvider = ({ children }) => {
                 withCredentials: true,
             });
 
-            if (response.status === 200) {
-                setUser(response.data.user);
-                setIsAuthenticated(true);
-                setError(null);
-                navigate("/");
-                return { success: true };
-            } else {
-                setError(response.data.message || "Login xatosi");
-                return { success: false, error: response.data.message };
-            }
+            // if (response.status === 200) {
+            setUser(response.data.user);
+            setIsAuthenticated(true);
+            setError(null);
+            navigate("/");
+            // return { success: true };
+            // }
         } catch (error) {
             const errorMessage =
                 error.response?.data?.message || "Tarmoq xatosi yuz berdi";
