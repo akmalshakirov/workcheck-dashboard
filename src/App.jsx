@@ -1,5 +1,5 @@
-import React, { Suspense, use, useEffect } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import React, { Suspense } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { Slide, ToastContainer } from "react-toastify";
 // import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Preloader from "./components/ui/Preloader/Preloader";
@@ -20,7 +20,7 @@ const DashboardHome = React.lazy(() =>
 );
 const Login = React.lazy(() => import("./pages/Login/Login"));
 
-export const baseURL = "http://localhost:7000";
+export const baseURL = process.env.BASE_URL;
 
 const App = () => {
     const { isAuthenticated } = useAuth();

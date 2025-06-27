@@ -14,10 +14,10 @@ import {
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../../hooks/useAuth";
 import DropdowIcon from "../Icons/Dropdown";
 import styles from "./Header.module.css";
-import { useAuth } from "../../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 
 function useClickOutside(ref, handler) {
     useEffect(() => {
