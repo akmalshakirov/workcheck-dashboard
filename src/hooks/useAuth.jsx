@@ -1,16 +1,16 @@
-import { createContext, useContext } from "react";
+// import { createContext, useContext } from "react";
 
-const AuthContext = createContext();
+// const AuthContext = createContext();
 
-const useAuth = () => {
-    const context = useContext(AuthContext);
-    if (!context) {
-        throw new Error(
-            "useAuth hook faqat AuthProvider ichida ishlatilishi kerak"
-        );
-    }
-    return context;
-};
+// const useAuth = () => {
+//     const context = useContext(AuthContext);
+//     if (!context) {
+//         throw new Error(
+//             "useAuth hook faqat AuthProvider ichida ishlatilishi kerak"
+//         );
+//     }
+//     return context;
+// };
 
-export { AuthContext, useAuth };
-export default AuthContext;
+// export { AuthContext, useAuth };
+// export default AuthContext;

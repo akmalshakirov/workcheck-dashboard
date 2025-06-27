@@ -1,9 +1,7 @@
-import axios from "axios";
 import { LayoutDashboard, ShieldUser, UserCog, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate } from "react-router-dom";
-import { baseURL } from "../App";
 import Footer from "../components/ui/Footer/Footer";
 import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
@@ -21,18 +19,19 @@ const DashboardLayout = () => {
     const { t } = useTranslation();
 
     useEffect(() => {
-        const getProfile = async () => {
-            try {
-                await axios.get(`${baseURL}/profile`, {
-                    withCredentials: true,
-                });
-            } catch (error) {
-                if (error.response.status === 401) {
-                    navigate("/login", { replace: true });
-                }
-            }
-        };
-        getProfile();
+        const token = localStorage.getItem("token");
+        // const getProfile = async () => {
+        //     try {
+        //         await axios.get(`${baseURL}/profile`, {
+        //             headers: { Authorization: `Bearer ${token}` },
+        //         });
+        //     } catch (error) {
+        //         if (error.response.status === 401) {
+        //             navigate("/login", { replace: true });
+        //         }
+        //     }
+        // };
+        // getProfile();
     }, []);
 
     return (

@@ -1,9 +1,7 @@
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { Slide, ToastContainer } from "react-toastify";
-// import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 import Preloader from "./components/ui/Preloader/Preloader";
-import { useAuth } from "./hooks/useAuth";
 
 const DashboardLayout = React.lazy(() => import("./layout/DashboardLayout"));
 const DashboardAdmins = React.lazy(() =>
@@ -20,9 +18,18 @@ const DashboardHome = React.lazy(() =>
 );
 const Login = React.lazy(() => import("./pages/Login/Login"));
 
-export const baseURL = "https://workcheck.onrender.com";
+export const baseURL = "http://localhost:7000";
 
 const App = () => {
+    const token = localStorage.getItem("token");
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!token) {
+            navigate("/login", { replace: true });
+        }
+    }, []);
+
     return (
         <Suspense fallback={<Preloader />}>
             <ToastContainer

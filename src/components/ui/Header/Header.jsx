@@ -15,7 +15,6 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../../hooks/useAuth";
 import DropdowIcon from "../Icons/Dropdown";
 import styles from "./Header.module.css";
 
@@ -32,6 +31,7 @@ function useClickOutside(ref, handler) {
 }
 
 export const Header = ({ collapsed, setCollapsed }) => {
+    const token = localStorage.getItem("token");
     const [langOpen, setLangOpen] = useState(false);
     const [langClosing, setLangClosing] = useState(false);
     const [selectedLang, setSelectedLang] = useState({
@@ -53,7 +53,6 @@ export const Header = ({ collapsed, setCollapsed }) => {
     const langRef = useRef();
     const notifRef = useRef();
     const profileRef = useRef();
-    const { logout } = useAuth();
     const navigate = useNavigate();
 
     const closeDropdown = (open, setOpen, setClosing) => {
@@ -106,6 +105,11 @@ export const Header = ({ collapsed, setCollapsed }) => {
         }
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/login", { replace: true });
+    };
+
     const languages = [
         { code: "en", label: "EN" },
         { code: "uz", label: "UZ" },
@@ -132,7 +136,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
         {
             id: "logout",
             label: "Logout",
-            onClick: () => logout(),
+            onClick: () => handleLogout(),
             icon: <LogOut size={20} />,
         },
     ];
@@ -249,7 +253,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
 
                 <label
                     htmlFor='switch'
-                    className='border cursor-pointer dark:border-white/30 border-black/30 p-1 py-2 rounded-lg'>
+                    className='border cursor-pointer dark:border-white/30 border-black/30 p-1 py-2 rounded-lg dark:bg-red'>
                     <div className={styles.switch}>
                         <input
                             id='switch'

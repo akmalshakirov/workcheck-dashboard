@@ -2,13 +2,11 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, LoaderCircle } from "lucide-react";
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { baseURL } from "../../App";
-import { useAuth } from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
 
 const Login = () => {
-    const { setIsAuthenticated } = useAuth();
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -20,29 +18,29 @@ const Login = () => {
         e.preventDefault();
         setLoading(true);
         setError("");
+
         const formData = new FormData();
         formData.append("username", username);
         formData.append("password", password);
 
         try {
+            console.log(formData);
             const response = await axios.post(`${baseURL}/login`, formData, {
                 withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
                 },
             });
-
-            // if (response.status === 200) {
-            setIsAuthenticated(true);
-            toast.success(response.data.message);
-            navigate("/", { replace: true });
-            // }
+            if (response.status === 200) {
+                localStorage.setItem("token", response.data.token);
+                toast.success(response.data.message);
+                navigate("/");
+            }
         } catch (error) {
-            setError(
-                error.code === "ERR_NETWORK"
-                    ? "Server ishlamayabdi"
-                    : error.response.data.error
-            );
+            if (error.code === "ERR_NETWORK") {
+                setError("Server bilan aloqa yo'q!");
+            }
+            setError(error.response.data.error);
         } finally {
             setLoading(false);
         }
@@ -53,9 +51,9 @@ const Login = () => {
     }, []);
 
     return (
-        <div className='flex items-center justify-center min-h-screen bg-[#5f73e2]'>
+        <div className='flex items-center justify-center min-h-screen bg-[#5f73e2] max-md:px-5 max-sm:px-2'>
             <div className='w-full max-w-md bg-white rounded-lg shadow-lg p-6'>
-                <h1 className='text-2xl font-bold text-center text-gray-800 mb-3'>
+                <h1 className='text-2xl max-sm:text-md font-bold text-center text-gray-800 mb-3'>
                     Tizimga kirish
                 </h1>
                 {error && (
@@ -74,7 +72,9 @@ const Login = () => {
                         {error}
                     </motion.p>
                 )}
-                <form onSubmit={handleSubmit} className='space-y-5'>
+                <form
+                    onSubmit={handleSubmit}
+                    className='space-y-5 max-md:space-y-3 max-sm:space-y-2'>
                     <div>
                         <label
                             className='text-sm font-medium text-gray-700'

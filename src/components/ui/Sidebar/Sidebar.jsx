@@ -1,8 +1,8 @@
+import { motion } from "framer-motion";
 import { createContext, useContext } from "react";
 import { Link, NavLink } from "react-router-dom";
-import styles from "./Sidebar.module.css";
 import Ripple from "../Ripple/Ripple";
-import { motion } from "framer-motion";
+import styles from "./Sidebar.module.css";
 
 const SidearContext = createContext();
 
@@ -21,7 +21,12 @@ export const Sidebar = ({ children, collapsed }) => {
                         to={"/"}
                         className='p-4 pb-2 flex justify-center items-center'>
                         <span className='overflow-hidden transition-all duration-300 text-2xl font-bold mx-auto'>
-                            {collapsed ? "WorkCheck" : "W"}
+                            <motion.span
+                                initial={{ translateX: 0 }}
+                                animate={{ translateX: collapsed ? -100 : 0 }}
+                                transition={{ duration: 1000 }}>
+                                {collapsed ? "WorkCheck" : "W"}
+                            </motion.span>
                         </span>
                     </Link>
 
