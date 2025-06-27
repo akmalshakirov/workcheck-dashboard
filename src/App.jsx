@@ -23,6 +23,7 @@ export const baseURL = "https://workcheck.onrender.com";
 
 const App = () => {
     const token = localStorage.getItem("token");
+    const theme = localStorage.getItem("isDark");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -42,7 +43,8 @@ const App = () => {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
-                transition={Slide}
+                // transition={Slide}
+                theme={theme === "true" ? "dark" : "light"}
             />
             <Routes>
                 <Route path='/login' element={<Login />} />
