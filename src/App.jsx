@@ -20,12 +20,9 @@ const DashboardHome = React.lazy(() =>
 );
 const Login = React.lazy(() => import("./pages/Login/Login"));
 
-export const baseURL = process.env.BASE_URL;
+export const baseURL = "https://workcheck.onrender.com";
 
 const App = () => {
-    const { isAuthenticated } = useAuth();
-    const navigate = useNavigate();
-
     return (
         <Suspense fallback={<Preloader />}>
             <ToastContainer
