@@ -18,7 +18,8 @@ const DashboardHome = React.lazy(() =>
 );
 const Login = React.lazy(() => import("./pages/Login/Login"));
 
-export const baseURL = "http://localhost:7000";
+// export const baseURL = "http://localhost:7000";
+export const baseURL = "https://workcheck.onrender.com";
 
 const App = () => {
     const token = localStorage.getItem("token");
@@ -45,7 +46,9 @@ const App = () => {
             />
             <Routes>
                 <Route path='/login' element={<Login />} />
-                <Route path='/' element={<DashboardLayout />}>
+                <Route
+                    path='/'
+                    element={token ? <DashboardLayout /> : <Login />}>
                     <Route index element={<DashboardHome />} />
                     <Route path='admins' element={<DashboardAdmins />} />
                     <Route path='workers' element={<DashboardWorkers />} />
