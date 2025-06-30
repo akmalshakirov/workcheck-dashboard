@@ -19,11 +19,11 @@ const DashboardAdmins = () => {
             });
 
             setAdmins(response?.data?.admins);
-            console.log(response?.data?.admins);
         } catch (error) {
-            console.log(error);
             if (error.code === "ERR_NETWORK") {
-                toast.info("Internet aloqasi yo'q", { position: "top-center" });
+                toast.info("Internet aloqasi yo'q");
+            } else if (error.response.status === 401) {
+                toast.info(error.response.data.error);
             }
         } finally {
             setPreloader(false);
@@ -42,7 +42,7 @@ const DashboardAdmins = () => {
                 <div>
                     {admins.length > 0 &&
                         admins.map((admin) => (
-                            <div>
+                            <div key={admin.id}>
                                 <div>{admin.username}</div>
                                 <div>{admin.name}</div>
                                 <div>{admin.phone}</div>

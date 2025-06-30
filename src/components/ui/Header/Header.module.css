@@ -92,10 +92,9 @@
 }
 
 .switch input:checked + .slider {
-    background: #444;
+    background: #222;
 }
 
 .switch input:checked + .slider span {
-    transform: translateX(1.25rem);
-    background: #1f2937;
+    transform: translateX(1.25rem) rotate(90deg);
 }

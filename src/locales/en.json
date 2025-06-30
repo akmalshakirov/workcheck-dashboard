@@ -1,6 +1,10 @@
 {
+    "preloader": "Loading",
     "sidebar_dashboard": "Dashboard",
     "sidebar_admins": "Admins",
     "sidebar_workers": "Workers",
-    "sidebar_profile": "My profile"
+    "sidebar_profile": "My profile",
+    "dropdown_profile": "My profile",
+    "dropdown_lockscreen": "Lock screen",
+    "dropdown_logout": "Logout"
 }

@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import { Slide, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import Preloader from "./components/ui/Preloader/Preloader";
 
 const DashboardLayout = React.lazy(() => import("./layout/DashboardLayout"));
@@ -43,11 +43,11 @@ const App = () => {
                 pauseOnFocusLoss
                 draggable
                 pauseOnHover
-                // transition={Slide}
                 theme={theme === "true" ? "dark" : "light"}
             />
             <Routes>
                 <Route path='/login' element={<Login />} />
+                <Route path='/loader' element={<Preloader />} />
                 <Route
                     path='/'
                     element={token ? <DashboardLayout /> : <Login />}>

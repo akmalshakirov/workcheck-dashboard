@@ -1,6 +1,10 @@
 {
+    "preloader": "Ma'lumotlar yuklanmoqda",
     "sidebar_dashboard": "Bosh sahifa",
     "sidebar_admins": "Adminlar",
     "sidebar_workers": "Ishchilar",
-    "sidebar_profile": "Mening profilim"
+    "sidebar_profile": "Mening profilim",
+    "dropdown_profile": "Profilim",
+    "dropdown_lockscreen": "Ekranni qulflash",
+    "dropdown_logout": "Chiqish"
 }

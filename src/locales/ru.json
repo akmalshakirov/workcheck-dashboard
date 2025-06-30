@@ -1,6 +1,10 @@
 {
+    "preloader": "Загрузка",
     "sidebar_dashboard": "Главная",
     "sidebar_admins": "Админы",
     "sidebar_workers": "Рабочие",
-    "sidebar_profile": "Мой профиль"
+    "sidebar_profile": "Мой профиль",
+    "dropdown_profile": "Мой профиль",
+    "dropdown_lockscreen": "Экран блокировки",
+    "dropdown_logout": "Выйти"
 }

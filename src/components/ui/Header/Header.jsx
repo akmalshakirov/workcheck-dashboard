@@ -31,7 +31,6 @@ function useClickOutside(ref, handler) {
 }
 
 export const Header = ({ collapsed, setCollapsed }) => {
-    const token = localStorage.getItem("token");
     const [langOpen, setLangOpen] = useState(false);
     const [langClosing, setLangClosing] = useState(false);
     const [selectedLang, setSelectedLang] = useState({
@@ -54,6 +53,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
     const notifRef = useRef();
     const profileRef = useRef();
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const closeDropdown = (open, setOpen, setClosing) => {
         if (open) {
@@ -123,26 +123,26 @@ export const Header = ({ collapsed, setCollapsed }) => {
     const profileActions = [
         {
             id: "profile",
-            label: "Profile",
+            label: t("dropdown_profile"),
             onClick: () => navigate("/profile"),
             icon: <UserPen size={20} />,
         },
         {
             id: "lockscreen",
-            label: "Lock screen",
+            label: t("dropdown_lockscreen"),
             onClick: () => alert("Lock screen"),
             icon: <LockKeyhole size={20} />,
         },
         {
             id: "logout",
-            label: "Logout",
+            label: t("dropdown_logout"),
             onClick: () => handleLogout(),
             icon: <LogOut size={20} />,
         },
     ];
 
     return (
-        <div className='p-2.5 flex-1 flex items-center justify-between max-h-max bg-white rounded-lg !w-full dark:bg-[#111] dark:text-white sticky top-2.5 z-50 shadow-sm'>
+        <div className='p-2.5 flex-1 flex items-center justify-between max-h-max bg-white rounded-lg !w-full dark:bg-[#111] dark:text-white sticky top-2.5 shadow-sm'>
             <div className='flex gap-2.5'>
                 <button
                     onClick={() => {
@@ -200,11 +200,6 @@ export const Header = ({ collapsed, setCollapsed }) => {
                                         changeLanguage(lang.code);
                                     }}
                                     className='dark:hover:bg-white/20 px-6! rounded-lg hover:bg-black/10'>
-                                    {/* <img
-                                        src={lang.img}
-                                        alt={lang.code}
-                                        className='w-15 object-contain'
-                                    /> */}
                                     {lang.code}
                                 </li>
                             ))}
@@ -253,7 +248,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
 
                 <label
                     htmlFor='switch'
-                    className='border cursor-pointer dark:border-white/30 border-black/30 p-1 py-2 rounded-lg dark:bg-red'>
+                    className='border cursor-pointer dark:border-white/40 border-black/30 p-1 py-2 rounded-lg dark:bg-red'>
                     <div className={styles.switch}>
                         <input
                             id='switch'
@@ -266,10 +261,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                                 {isDark ? (
                                     <Sun size={20} />
                                 ) : (
-                                    <Moon
-                                        size={20}
-                                        className='bg-transparent'
-                                    />
+                                    <Moon size={20} />
                                 )}
                             </span>
                         </span>
