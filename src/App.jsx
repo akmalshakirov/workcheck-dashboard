@@ -47,7 +47,6 @@ const App = () => {
             />
             <Routes>
                 <Route path='/login' element={<Login />} />
-                <Route path='/loader' element={<Preloader />} />
                 <Route
                     path='/'
                     element={token ? <DashboardLayout /> : <Login />}>

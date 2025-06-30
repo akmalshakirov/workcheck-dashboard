@@ -10,20 +10,23 @@ export const Sidebar = ({ children, collapsed }) => {
         <motion.div
             initial={!collapsed ? { width: "5.8rem" } : { width: "14.3rem" }}
             animate={!collapsed ? { width: "5.8rem" } : { width: "14.3rem" }}
-            transition={{ duration: 0.2 }}>
-            <aside className='p-2.5 h-screen sticky top-0 z-1'>
+            transition={{
+                duration: 0.2,
+                type: "tween",
+            }}>
+            <aside className='p-2.5 h-screen sticky top-0 z-1 duration-200'>
                 <nav
-                    className={`h-full flex flex-col bg-white dark:bg-[#111] dark:text-white rounded-lg shadow-sm duration-400 `}>
+                    className={`h-full flex flex-col bg-white dark:bg-[#111] dark:text-white rounded-lg shadow-sm duration-200`}>
                     <Link
                         to={"/"}
-                        className='p-4 pb-2 flex justify-center items-center'>
-                        <span className='overflow-hidden transition-all duration-300 text-2xl font-bold mx-auto'>
+                        className='p-4 pb-2 flex justify-center items-center overflow-hidden relative'>
+                        <span className={`text-2xl font-bold mx-auto`}>
                             {collapsed ? "WorkCheck" : "W"}
                         </span>
                     </Link>
 
                     <SidearContext.Provider value={{ collapsed }}>
-                        <div className='flex-1 px-3 '>{children}</div>
+                        <div className='flex-1 px-3'>{children}</div>
                     </SidearContext.Provider>
                 </nav>
             </aside>
