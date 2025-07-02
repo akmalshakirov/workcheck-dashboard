@@ -6,5 +6,12 @@
     "sidebar_profile": "Мой профиль",
     "dropdown_profile": "Мой профиль",
     "dropdown_lockscreen": "Экран блокировки",
-    "dropdown_logout": "Выйти"
+    "dropdown_logout": "Выйти",
+    "add_admin": "Добавить админ",
+    "cancel": "Отмен",
+    "ok": "Отправить",
+    "search": "Поиск",
+    "open_sidebar": "Открыть меню",
+    "close_sidebar": "Закрыть меню",
+    "no_admins_error": "Админы не найдены или еще не добавлены"
 }

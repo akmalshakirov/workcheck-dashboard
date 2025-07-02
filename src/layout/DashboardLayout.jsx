@@ -60,7 +60,7 @@ const DashboardLayout = () => {
             </Sidebar>
             <div className='flex-1 p-2.5 pl-1'>
                 <Header collapsed={collapsed} setCollapsed={setCollapsed} />
-                <main className='p-4 bg-white rounded-lg mt-3 dark:bg-[#111] dark:text-white text-black duration-200'>
+                <main className='p-5 bg-white rounded-lg mt-3 dark:bg-[#111] dark:text-white text-black duration-200'>
                     <Outlet />
                 </main>
                 <Footer />

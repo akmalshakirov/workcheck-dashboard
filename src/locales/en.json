@@ -6,5 +6,12 @@
     "sidebar_profile": "My profile",
     "dropdown_profile": "My profile",
     "dropdown_lockscreen": "Lock screen",
-    "dropdown_logout": "Logout"
+    "dropdown_logout": "Logout",
+    "add_admin": "Add admin",
+    "cancel": "Cancel",
+    "ok": "Ok",
+    "search": "Search",
+    "open_sidebar": "Open sidebar",
+    "close_sidebar": "Close sidebar",
+    "no_admins_error": "Admins not found or not added yet"
 }

@@ -6,5 +6,12 @@
     "sidebar_profile": "Mening profilim",
     "dropdown_profile": "Profilim",
     "dropdown_lockscreen": "Ekranni qulflash",
-    "dropdown_logout": "Chiqish"
+    "dropdown_logout": "Chiqish",
+    "add_admin": "Admin qo'shish",
+    "cancel": "Bekor qilish",
+    "ok": "Yuborish",
+    "search": "Qidirish",
+    "open_sidebar": "Menyuni ochish",
+    "close_sidebar": "Menyuni yopish",
+    "no_admins_error": "Adminlar topilmadi yoki hali qo'shilmagan"
 }

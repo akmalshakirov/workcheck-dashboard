@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import DropdowIcon from "../Icons/Dropdown";
 import styles from "./Header.module.css";
+import { motion } from "framer-motion";
 
 function useClickOutside(ref, handler) {
     useEffect(() => {
@@ -148,10 +149,10 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     onClick={() => {
                         setCollapsed(!collapsed);
                     }}
-                    className='p-1 hover:bg-gray-700/30 border border-gray-700 rounded-lg'
-                    title={collapsed ? "Menyuni ochish" : "Menyuni yopish"}
+                    className='p-1 hover:bg-gray-700/30 border border-gray-700 rounded-lg duration-200'
+                    title={!collapsed ? t("open_sidebar") : t("close_sidebar")}
                     aria-label={
-                        collapsed ? "Menyuni ochish" : "Menyuni yopish"
+                        !collapsed ? t("open_sidebar") : t("close_sidebar")
                     }>
                     {collapsed ? <Menu size={22} /> : <X size={22} />}
                 </button>
@@ -159,7 +160,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     <input
                         type='text'
                         className='px-2 py-1 border border-gray-700 rounded-lg outline-none focus:bg-gray-800/10 transition-colors placeholder-black/30 dark:placeholder-white/30 dark:focus:bg-gray-600/40'
-                        placeholder='Qidirish...'
+                        placeholder={t("search")}
                         name='search'
                         id='search'
                     />
@@ -221,7 +222,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     onClick={() =>
                         toggleDropdown(notifOpen, setNotifOpen, setNotifClosing)
                     }>
-                    <div className='flex items-center justify-center p-1 py-2 border dark:border-white/40 border-black/30 rounded-lg'>
+                    <div className='flex items-center justify-center p-1 pl-2 py-2 border dark:border-white/40 border-black/30 rounded-lg'>
                         <Bell size={22} className='mr-1' /> (
                         {notifications.length})
                         <span>

@@ -11,8 +11,10 @@ export const Sidebar = ({ children, collapsed }) => {
             initial={!collapsed ? { width: "5.8rem" } : { width: "14.3rem" }}
             animate={!collapsed ? { width: "5.8rem" } : { width: "14.3rem" }}
             transition={{
-                duration: 0.2,
-                type: "tween",
+                duration: 0.4,
+                type: "spring",
+                stiffness: 400,
+                damping: 30,
             }}>
             <aside className='p-2.5 h-screen sticky top-0 z-1 duration-200'>
                 <nav

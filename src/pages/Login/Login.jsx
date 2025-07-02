@@ -89,6 +89,8 @@ const Login = () => {
                             required
                             className='w-full px-4 py-2 border outline-none transition rounded-lg focus:border-blue-500'
                             autoComplete='username'
+                            minLength={3}
+                            maxLength={15}
                             disabled={loading}
                         />
                     </div>
@@ -106,8 +108,8 @@ const Login = () => {
                             required
                             className='w-full px-4 py-2 border outline-none transition rounded-lg focus:border-blue-500'
                             autoComplete='new-password'
-                            min='8'
-                            max='30'
+                            minLength={3}
+                            maxLength={15}
                             disabled={loading}
                         />
                         <button

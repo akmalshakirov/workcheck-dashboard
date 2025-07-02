@@ -11,7 +11,7 @@ const Preloader = () => {
                 isDark ? "bg-black text-[#f1f1f1]" : "bg-[#5f73e3] text-white"
             }`}>
             <div className='loader'></div>
-            <h1>{t("preloader")}</h1>
+            <h1>{t("preloader")}...</h1>
         </div>
     );
 };

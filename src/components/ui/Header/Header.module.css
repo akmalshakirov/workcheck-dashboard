@@ -96,5 +96,5 @@
 }
 
 .switch input:checked + .slider span {
-    transform: translateX(1.25rem) rotate(90deg);
+    transform: translateX(1.25rem) rotate(180deg);
 }
