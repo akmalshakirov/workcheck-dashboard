@@ -6,6 +6,7 @@ import { baseURL } from "../../App";
 import Modal from "../../components/ui/Modal/Modal";
 import Preloader from "../../components/ui/Preloader/Preloader";
 import Table from "../../components/ui/Table/Table";
+// import FileUpload from "../../components/ui/UploadImage/UploadImage";
 
 const DashboardAdmins = () => {
     const token = localStorage.getItem("token");
@@ -13,6 +14,12 @@ const DashboardAdmins = () => {
     const [preloader, setPreloader] = useState(false);
     const [addAdminModal, setAddAdminModal] = useState(false);
     const [createAdminLoading, setCreateAdminLoading] = useState(false);
+    const [adminName, setAdminName] = useState("");
+    const [adminUsername, setAdminUsername] = useState("");
+    const [adminPassword, setAdminPassword] = useState("");
+    const [adminPhone, setAdminPhone] = useState("");
+    const [adminRole, setAdminRole] = useState("");
+    const [adminImage, setAdminImage] = useState(null);
     const { t } = useTranslation();
 
     const getAdmins = async () => {
@@ -26,7 +33,6 @@ const DashboardAdmins = () => {
 
             setAdmins(response?.data?.admins);
         } catch (error) {
-            toast.info(error.response.data.error);
             if (error.code === "ERR_NETWORK") {
                 toast.info("Internet aloqasi yo'q");
             } else if (error.response.status === 401) {
@@ -59,29 +65,32 @@ const DashboardAdmins = () => {
 
     const createAdmin = async () => {
         setCreateAdminLoading(true);
+
+        const formData = new FormData();
+        formData.append("name", adminName);
+        formData.append("username", adminUsername);
+        formData.append("password", adminPassword);
+        formData.append("image", adminImage);
+        formData.append("phone", String(adminPhone));
+        formData.append("role", adminRole);
+
         try {
             const response = await axios.post(
                 `${baseURL}/admin/create`,
-                {
-                    username: "AJJI",
-                    name: "sujji",
-                    phone: "+998997772122",
-                    image: "https://www.foodbusinessnews.net/ext/resources/2024/11/04/WOLFF.jpg?height=667&t=1730727348&width=1080",
-                    password: "ajjibek1",
-                    role: "ADMIN",
-                },
+                formData,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
+                        "Content-Type": "multipart/form-data",
                     },
                 }
             );
-            if (response.status === 200) {
+            if (response.status === 201) {
                 toast.success(response.data.message);
             }
         } catch (error) {
-            toast.error(error.response.data.error);
             console.log(error);
+            toast.error(error.response.data.error);
         } finally {
             setCreateAdminLoading(false);
         }
@@ -102,7 +111,7 @@ const DashboardAdmins = () => {
                             {t("sidebar_admins")}
                         </h1>
                         <button
-                            className='border rounded-lg p-1 px-2'
+                            className='border rounded-lg border-gray-500/70 p-1 px-2 bg-blue-800 text-white'
                             onClick={() => setAddAdminModal(true)}>
                             {t("add_admin")}
                         </button>
@@ -114,26 +123,133 @@ const DashboardAdmins = () => {
                         onOk={() => createAdmin()}
                         Disable={createAdminLoading}>
                         {createAdminLoading ? (
-                            <div>Yuklanmoqda</div>
+                            <div className='w-full h-full'>Yuklanmoqda...</div>
                         ) : (
-                            <form onSubmit={createAdmin}>
-                                <label
-                                    htmlFor='admin-name'
-                                    className='text-base'>
-                                    Admin nomi:{" "}
-                                </label>
-                                <input
-                                    type='text'
-                                    id='admin-name'
-                                    className='border rounded-lg px-1 py-2 outline-none focus:border-blue-400 duration-150'
-                                    required
-                                    minLength={3}
-                                    maxLength={15}
-                                />
+                            <form
+                                onSubmit={createAdmin}
+                                className='flex gap-10 px-2 w-full'>
+                                <div className='flex flex-col w-full'>
+                                    <div className='flex flex-col gap-1'>
+                                        <label
+                                            htmlFor='admin-name'
+                                            className='text-base'>
+                                            {t("modal_admin_name")}:
+                                        </label>
+                                        <input
+                                            type='text'
+                                            id='admin-name'
+                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                            minLength={3}
+                                            maxLength={15}
+                                            value={adminName}
+                                            onChange={(e) =>
+                                                setAdminName(e.target.value)
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div className='flex flex-col gap-1'>
+                                        <label
+                                            htmlFor='admin-username'
+                                            className='text-base'>
+                                            {t("modal_admin_username")}:
+                                        </label>
+                                        <input
+                                            type='text'
+                                            id='admin-username'
+                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                            minLength={3}
+                                            maxLength={15}
+                                            value={adminUsername}
+                                            onChange={(e) =>
+                                                setAdminUsername(e.target.value)
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div className='flex flex-col gap-1'>
+                                        <label
+                                            htmlFor='admin-password'
+                                            className='text-base'>
+                                            Admin password:{" "}
+                                        </label>
+                                        <input
+                                            type='password'
+                                            id='admin-password'
+                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                            minLength={3}
+                                            maxLength={15}
+                                            value={adminPassword}
+                                            onChange={(e) =>
+                                                setAdminPassword(e.target.value)
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div className='flex flex-col gap-1'>
+                                        <label
+                                            htmlFor='admin-phone'
+                                            className='text-base'>
+                                            Admin telefon raqam:{" "}
+                                        </label>
+                                        <input
+                                            type='number'
+                                            id='admin-phone'
+                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                            max={9}
+                                            maxLength={9}
+                                            value={adminPhone}
+                                            onChange={(e) =>
+                                                setAdminPhone(e.target.value)
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div className='flex flex-col gap-1'>
+                                        <label
+                                            htmlFor='admin-role'
+                                            className='text-base'>
+                                            Admin role:
+                                        </label>
+                                        <select
+                                            multiple={false}
+                                            value={adminRole}
+                                            onChange={(e) =>
+                                                setAdminRole(e.target.value)
+                                            }
+                                            id='admin-role'
+                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                            required>
+                                            <option disabled>
+                                                Role tanlang...
+                                            </option>
+                                            <option value='ADMIN'>Admin</option>
+                                            <option value='SUPERADMIN'>
+                                                Super-admin
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div className='flex flex-col w-full gap-1'>
+                                    <span>Rasm tanlang:</span>
+                                    <input
+                                        className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                        type='file'
+                                        accept='image/*'
+                                        id='admin-image'
+                                        required
+                                        minLength={3}
+                                        maxLength={15}
+                                        onChange={(e) =>
+                                            setAdminImage(e.target.files[0])
+                                        }
+                                    />
+                                    {/* <FileUpload /> */}
+                                </div>
                             </form>
                         )}
                     </Modal>
-                    <div className=''>
+                    <div>
                         {admins.length == 0 ||
                         admins == null ||
                         admins == undefined ? (

@@ -70,15 +70,22 @@ function Table({ data }) {
                         <tr
                             key={item.id}
                             className='hover:bg-gray-100 dark:hover:bg-[#222] transition-colors'>
-                            {/* <td className='px-6 py-4 whitespace-nowrap'>
-                                <img
-                                    src={item.imageUrl}
-                                    alt={item.name}
-                                    className='h-10 w-10 rounded-full object-cover'
-                                />
-                            </td> */}
-                            <td></td>
                             <td className='px-6 py-4 whitespace-nowrap'>
+                                <img
+                                    src={
+                                        item.image === null
+                                            ? "https://alyeowbccvspelnnwqhy.supabase.co/storage/v1/object/public/images//defaultImage.png"
+                                            : item.image
+                                    }
+                                    alt={item.name}
+                                    className={`h-[50px] rounded-full object-cover ${
+                                        item?.image !== null
+                                            ? ""
+                                            : "border p-[3px]"
+                                    }`}
+                                />
+                            </td>
+                            <td>
                                 <div className='text-sm font-medium text-gray-900 dark:text-gray-100'>
                                     {item.name}
                                 </div>
@@ -98,19 +105,21 @@ function Table({ data }) {
                                     {item.phone}
                                 </span>
                             </td>
-                            <td className='px-6 py-4 space-x-2 flex items-center justify-center'>
-                                <button
-                                    onClick={() => handleEdit(item.id)}
-                                    className='px-[10px] py-[5px] text-white bg-blue-600/80 hover:bg-blue-600 rounded-lg transition'>
-                                    <UserRoundPen size={22} />
-                                </button>
-                                <button
-                                    onClick={() =>
-                                        console.log("Delete", item.id)
-                                    }
-                                    className='px-[10px] py-[5px] text-white bg-red-600/80 hover:bg-red-600 rounded-lg transition'>
-                                    <UserRoundMinus size={22} />
-                                </button>
+                            <td className='px-6 py-4'>
+                                <div className='flex items-center justify-around'>
+                                    <button
+                                        onClick={() => handleEdit(item.id)}
+                                        className='px-[10px] py-[5px] text-white bg-blue-600/80 hover:bg-blue-600 rounded-lg transition'>
+                                        <UserRoundPen size={22} />
+                                    </button>
+                                    <button
+                                        onClick={() =>
+                                            console.log("Delete", item.id)
+                                        }
+                                        className='px-[10px] py-[5px] text-white bg-red-600/80 hover:bg-red-600 rounded-lg transition'>
+                                        <UserRoundMinus size={22} />
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     ))}

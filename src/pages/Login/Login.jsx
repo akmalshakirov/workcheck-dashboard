@@ -92,6 +92,7 @@ const Login = () => {
                             minLength={3}
                             maxLength={15}
                             disabled={loading}
+                            autoFocus
                         />
                     </div>
                     <div className='relative'>

@@ -160,7 +160,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     <input
                         type='text'
                         className='px-2 py-1 border border-gray-700 rounded-lg outline-none focus:bg-gray-800/10 transition-colors placeholder-black/30 dark:placeholder-white/30 dark:focus:bg-gray-600/40'
-                        placeholder={t("search")}
+                        placeholder={`${t("search")}...`}
                         name='search'
                         id='search'
                     />

@@ -19,8 +19,8 @@ const DashboardHome = React.lazy(() =>
 );
 const Login = React.lazy(() => import("./pages/Login/Login"));
 
-// export const baseURL = "http://localhost:7000";
-export const baseURL = "https://workcheck.onrender.com";
+export const baseURL = "http://localhost:7000";
+// export const baseURL = "https://workcheck.onrender.com";
 
 const App = () => {
     const token = localStorage.getItem("token");
@@ -37,7 +37,7 @@ const App = () => {
         <Suspense fallback={<Preloader />}>
             <ToastContainer
                 position='top-right'
-                autoClose={10000}
+                autoClose={5000}
                 limit={3}
                 closeOnClick={false}
                 rtl={false}

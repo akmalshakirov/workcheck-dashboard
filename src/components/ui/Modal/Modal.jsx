@@ -5,7 +5,7 @@ import styles from "./Modal.module.css";
 const Modal = ({ visible, title, onCancel, onOk, children, Disable }) => {
     const { t } = useTranslation();
     return (
-        <AnimatePresence mode='popLayout'>
+        <AnimatePresence mode='wait'>
             {visible && (
                 <motion.div
                     className={styles.overlay}
@@ -13,20 +13,20 @@ const Modal = ({ visible, title, onCancel, onOk, children, Disable }) => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{
-                        duration: 0.2,
+                        duration: 0.3,
                     }}>
                     <motion.div
-                        className={`${styles.modal} bg-white dark:bg-[rgba(0,0,0,0.9)] dark:text-white text-black`}
-                        initial={{ scale: 0.5, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        exit={{ scale: 0.5, opacity: 0 }}
+                        className={`${styles.modal} bg-[#FFFCFB99] dark:bg-[rgba(15,15,15,0.9)] dark:text-white text-black`}
+                        initial={{ y: -100, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        exit={{ y: 100, opacity: 0 }}
                         transition={{
                             type: "spring",
-                            stiffness: 300,
-                            damping: 25,
+                            damping: 30,
+                            stiffness: 200,
                         }}>
                         <div
-                            className={`${styles.header} border-b border-b-[#eee] dark:border-b-[#b8b8b8] text-lg`}>
+                            className={`${styles.header} border-b border-b-gray-600/30 text-lg dark:border-b-[#777]`}>
                             <h1>{title}</h1>
                         </div>
                         <div className={styles.body}>{children}</div>

@@ -13,5 +13,7 @@
     "search": "Поиск",
     "open_sidebar": "Открыть меню",
     "close_sidebar": "Закрыть меню",
-    "no_admins_error": "Админы не найдены или еще не добавлены"
+    "no_admins_error": "Админы не найдены или еще не добавлены",
+    "modal_admin_name": "Имя админ",
+    "modal_admin_username": "Имя пользователя админ"
 }

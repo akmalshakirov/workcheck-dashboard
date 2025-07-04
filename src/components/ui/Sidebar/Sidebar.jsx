@@ -21,7 +21,7 @@ export const Sidebar = ({ children, collapsed }) => {
                     className={`h-full flex flex-col bg-white dark:bg-[#111] dark:text-white rounded-lg shadow-sm duration-200`}>
                     <Link
                         to={"/"}
-                        className='p-4 pb-2 flex justify-center items-center overflow-hidden relative'>
+                        className='p-4 pb-2 flex justify-center items-center overflow-hidden relative border-b border-b-gray-500/40'>
                         <span className={`text-2xl font-bold mx-auto`}>
                             {collapsed ? "WorkCheck" : "W"}
                         </span>

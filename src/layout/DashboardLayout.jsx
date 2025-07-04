@@ -35,7 +35,7 @@ const DashboardLayout = () => {
     }, []);
 
     return (
-        <div className='flex bg-[#5f73e2] dark:bg-black transition-colors duration-300'>
+        <div className='flex bg-[#5f73e2] dark:bg-[#202020] transition-colors duration-300'>
             <Sidebar collapsed={collapsed} setCollapsed={setCollapsed}>
                 <SidebarItem
                     icon={<LayoutDashboard size={22} />}
