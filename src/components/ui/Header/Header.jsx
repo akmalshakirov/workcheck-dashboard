@@ -17,7 +17,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import DropdowIcon from "../Icons/Dropdown";
 import styles from "./Header.module.css";
-import { motion } from "framer-motion";
 
 function useClickOutside(ref, handler) {
     useEffect(() => {
@@ -31,12 +30,12 @@ function useClickOutside(ref, handler) {
     }, [ref, handler]);
 }
 
-export const Header = ({ collapsed, setCollapsed }) => {
+export const Header = ({ collapsed, setCollapsed, message }) => {
     const [langOpen, setLangOpen] = useState(false);
     const [langClosing, setLangClosing] = useState(false);
     const [selectedLang, setSelectedLang] = useState({
         code: "uz",
-        label: "UZ",
+        label: "Uz",
     });
     const { i18n } = useTranslation();
     const changeLanguage = (lng) => {
@@ -112,9 +111,9 @@ export const Header = ({ collapsed, setCollapsed }) => {
     };
 
     const languages = [
-        { code: "en", label: "EN" },
-        { code: "uz", label: "UZ" },
-        { code: "ru", label: "RU" },
+        { code: "en", label: "En" },
+        { code: "uz", label: "Uz" },
+        { code: "ru", label: "Ru" },
     ];
     const notifications = [
         { id: 1, text: "Sizga yangi xabar keldi" },
@@ -149,7 +148,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     onClick={() => {
                         setCollapsed(!collapsed);
                     }}
-                    className='p-1 hover:bg-gray-700/30 border border-gray-700 rounded-lg duration-200'
+                    className='p-1 hover:bg-gray-700/30 border border-gray-700 rounded-lg duration-200 active:scale-[0.95]'
                     title={!collapsed ? t("open_sidebar") : t("close_sidebar")}
                     aria-label={
                         !collapsed ? t("open_sidebar") : t("close_sidebar")
@@ -170,15 +169,18 @@ export const Header = ({ collapsed, setCollapsed }) => {
             <div className='flex items-center gap-2.5'>
                 <div
                     ref={langRef}
-                    className={`${styles.item} dark:text-white p-1 border dark:border-white/40 border-black/30 rounded-lg`}
+                    className={`${styles.item} dark:text-white border dark:border-white/40 border-black/30 rounded-lg`}
                     onClick={() =>
                         toggleDropdown(langOpen, setLangOpen, setLangClosing)
                     }>
-                    <div className='flex items-center justify-center pl-2 py-1'>
+                    <div className='flex items-center justify-center pl-2 py-2 px-1 duration-200 active:scale-[0.95] will-change-transform'>
                         <Globe className='mr-1' size={22} />
-                        {selectedLang.code}
-                        <span>
-                            <DropdowIcon className='dark:fill-white' />
+                        {selectedLang.label}
+                        <span
+                            className={`dark:fill-white duration-200 ml-1 ${
+                                langOpen ? "rotate-180" : ""
+                            }`}>
+                            <DropdowIcon />
                         </span>
                     </div>
                     {(langOpen || langClosing) && (
@@ -201,7 +203,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                                         changeLanguage(lang.code);
                                     }}
                                     className='dark:hover:bg-white/20 px-6! rounded-lg hover:bg-black/10'>
-                                    {lang.code}
+                                    {lang.label}
                                 </li>
                             ))}
                         </ul>
@@ -212,8 +214,14 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     onClick={toggleFullscreen}
                     aria-label='Toggle Fullscreen'
                     title='Toggle Fullscreen'
-                    className='p-2.5 border border-black/30 dark:border-white/40 rounded-lg'>
-                    {isFull ? <Minimize2 size={20} /> : <Maximize size={20} />}
+                    className='border border-black/30 dark:border-white/40 rounded-lg'>
+                    <span className='p-2.5 duration-200 active:scale-[0.85] will-change-transform block'>
+                        {isFull ? (
+                            <Minimize2 size={20} />
+                        ) : (
+                            <Maximize size={20} />
+                        )}
+                    </span>
                 </button>
 
                 <div
@@ -222,11 +230,22 @@ export const Header = ({ collapsed, setCollapsed }) => {
                     onClick={() =>
                         toggleDropdown(notifOpen, setNotifOpen, setNotifClosing)
                     }>
-                    <div className='flex items-center justify-center p-1 pl-2 py-2 border dark:border-white/40 border-black/30 rounded-lg'>
-                        <Bell size={22} className='mr-1' /> (
-                        {notifications.length})
-                        <span>
-                            <DropdowIcon className='dark:fill-white' />
+                    <div className='border dark:border-white/40 border-black/30 rounded-lg'>
+                        <span className='flex items-center justify-center duration-200 active:scale-[0.95] will-change-transform p-1 pl-2 py-2'>
+                            <span className='relative'>
+                                <Bell size={22} className='mr-1' />
+                                <span className='absolute -top-1.5 -right-[3px] bg-red-500 text-white rounded-full'>
+                                    <span className='block text-[12px] px-[5.5px] animate-ping'>
+                                        {notifications.length}
+                                    </span>
+                                </span>
+                            </span>
+                            <span
+                                className={`dark:fill-white duration-200 ml-1 ${
+                                    notifOpen ? "rotate-180" : ""
+                                }`}>
+                                <DropdowIcon />
+                            </span>
                         </span>
                     </div>
                     {(notifOpen || notifClosing) && (
@@ -249,7 +268,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
 
                 <label
                     htmlFor='switch'
-                    className='border cursor-pointer dark:border-white/40 border-black/30 p-1 py-2 rounded-lg dark:bg-red'>
+                    className='border cursor-pointer dark:border-white/40 border-black/30 p-1 py-2 rounded-lg'>
                     <div className={styles.switch}>
                         <input
                             id='switch'
@@ -279,11 +298,16 @@ export const Header = ({ collapsed, setCollapsed }) => {
                             setProfileClosing
                         )
                     }>
-                    <div className='flex items-center justify-center p-1 border dark:border-white/40 border-black/30 rounded-lg pl-2.5 py-2'>
-                        <User />
-                        <span>
-                            <DropdowIcon className='dark:fill-white' />
-                        </span>
+                    <div className='border dark:border-white/40 border-black/30 rounded-lg '>
+                        <div className='flex items-center justify-center p-1 pl-2.5 py-2 duration-200 active:scale-[0.95] will-change-transform'>
+                            <User />
+                            <span
+                                className={`dark:fill-white duration-200 ml-1 ${
+                                    profileOpen ? "rotate-180" : ""
+                                }`}>
+                                <DropdowIcon />
+                            </span>
+                        </div>
                     </div>
                     {(profileOpen || profileClosing) && (
                         <ul

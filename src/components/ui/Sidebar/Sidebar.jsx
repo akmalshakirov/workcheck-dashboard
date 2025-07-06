@@ -16,12 +16,14 @@ export const Sidebar = ({ children, collapsed }) => {
                 stiffness: 400,
                 damping: 30,
             }}>
-            <aside className='p-2.5 h-screen sticky top-0 z-1 duration-200'>
+            <aside
+                className='p-2.5 h-screen sticky top-0 z-1 duration-200'
+                aria-atomic='false'>
                 <nav
                     className={`h-full flex flex-col bg-white dark:bg-[#111] dark:text-white rounded-lg shadow-sm duration-200`}>
                     <Link
                         to={"/"}
-                        className='p-4 pb-2 flex justify-center items-center overflow-hidden relative border-b border-b-gray-500/40'>
+                        className='p-4 pb-2 flex justify-center items-center overflow-hidden relative border-b border-b-gray-500/40 mb-2'>
                         <span className={`text-2xl font-bold mx-auto`}>
                             {collapsed ? "WorkCheck" : "W"}
                         </span>

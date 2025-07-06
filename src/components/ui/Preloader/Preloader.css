@@ -4,12 +4,12 @@
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100vw;
-    height: 101vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: 1s linear;
+    transition: 0.3s linear;
     z-index: 777;
 }
 

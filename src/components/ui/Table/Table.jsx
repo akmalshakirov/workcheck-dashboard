@@ -72,6 +72,9 @@ function Table({ data }) {
                             className='hover:bg-gray-100 dark:hover:bg-[#222] transition-colors'>
                             <td className='px-6 py-4 whitespace-nowrap'>
                                 <img
+                                    draggable={false}
+                                    fetchPriority='auto'
+                                    loading='lazy'
                                     src={
                                         item.image === null
                                             ? "https://alyeowbccvspelnnwqhy.supabase.co/storage/v1/object/public/images//defaultImage.png"

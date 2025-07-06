@@ -16,7 +16,7 @@ const Modal = ({ visible, title, onCancel, onOk, children, Disable }) => {
                         duration: 0.3,
                     }}>
                     <motion.div
-                        className={`${styles.modal} bg-[#FFFCFB99] dark:bg-[rgba(15,15,15,0.9)] dark:text-white text-black`}
+                        className={`${styles.modal} bg-[rgba(255,255,255,0.89)] dark:bg-[rgba(15,15,15,0.95)] dark:text-white text-black`}
                         initial={{ y: -100, opacity: 0 }}
                         animate={{ y: 0, opacity: 1 }}
                         exit={{ y: 100, opacity: 0 }}
@@ -32,7 +32,7 @@ const Modal = ({ visible, title, onCancel, onOk, children, Disable }) => {
                         <div className={styles.body}>{children}</div>
                         <div className={styles.footer}>
                             <button
-                                className={`${styles.cancelBtn} bg-red-600/80 hover:bg-red-600 duration-150 text-white`}
+                                className={`${styles.cancelBtn} bg-red-600/80 hover:bg-red-600 duration-150 text-white active:scale-[0.95] will-change-transform`}
                                 onClick={onCancel}>
                                 {t("cancel")}
                             </button>
@@ -40,7 +40,9 @@ const Modal = ({ visible, title, onCancel, onOk, children, Disable }) => {
                                 className={`${
                                     styles.okBtn
                                 } bg-[#126ac9] duration-150 hover:bg-[#007bff] ${
-                                    Disable ? "opacity-30" : ""
+                                    Disable
+                                        ? "opacity-30 cursor-not-allowed!"
+                                        : "pointer-events-auto active:scale-[0.95] will-change-transform"
                                 }`}
                                 onClick={onOk}
                                 type='submit'
