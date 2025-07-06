@@ -235,7 +235,11 @@ export const Header = ({ collapsed, setCollapsed, message }) => {
                             <span className='relative'>
                                 <Bell size={22} className='mr-1' />
                                 <span className='absolute -top-1.5 -right-[3px] bg-red-500 text-white rounded-full'>
-                                    <span className='block text-[12px] px-[5.5px] animate-ping'>
+                                    <span
+                                        className='block text-[12px] px-[5.5px] animate-pulse'
+                                        style={{
+                                            animationDuration: "1s",
+                                        }}>
                                         {notifications.length}
                                     </span>
                                 </span>
