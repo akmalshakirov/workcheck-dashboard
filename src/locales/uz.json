@@ -15,5 +15,6 @@
     "close_sidebar": "Menyuni yopish",
     "no_admins_error": "Adminlar topilmadi yoki hali qo'shilmagan",
     "modal_admin_name": "Admin nomi",
-    "modal_admin_username": "Admin username"
+    "modal_admin_username": "Admin username",
+    "footer_creator": "Sayt yaratuvchisi"
 }

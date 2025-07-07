@@ -24,7 +24,6 @@ const Login = () => {
         formData.append("password", password);
 
         try {
-            console.log(formData);
             const response = await axios.post(`${baseURL}/login`, formData, {
                 withCredentials: true,
                 headers: {

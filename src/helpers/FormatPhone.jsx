@@ -59,7 +59,7 @@ const PhoneInput = ({
                 onChange={handleChange}
                 className='w-full border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600 mb-2'
                 required={required}
-                placeholder='+998-(xx)-xxx-xx-xx'
+                placeholder={placeholder ? placeholder : "+998-(xx)-xxx-xx-xx"}
                 autoComplete='tel'
             />
         </div>

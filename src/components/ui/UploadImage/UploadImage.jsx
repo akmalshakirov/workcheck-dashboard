@@ -1,9 +1,9 @@
-import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { CloudUpload } from "lucide-react";
+import React, { useRef, useState } from "react";
 
 /**@param {{onFileBinary?: (binary: ArrayBuffer, fileName: string) => void}} props*/
-export default function FileUpload({ onFileBinary }) {
+export default function UploadImage({ onFileBinary }) {
     const [file, setFile] = useState(null);
     const [preview, setPreview] = useState(null);
     const [dragActive, setDragActive] = useState(false);
@@ -12,7 +12,6 @@ export default function FileUpload({ onFileBinary }) {
     const processFile = (selected) => {
         setFile(selected);
         setPreview(URL.createObjectURL(selected));
-        // Faylni binary (ArrayBuffer) ko'rinishida o'qish
         const reader = new FileReader();
         reader.onload = () => {
             const arrayBuffer = reader.result;
@@ -54,30 +53,25 @@ export default function FileUpload({ onFileBinary }) {
     };
 
     return (
-        <div className='flex flex-col items-center justify-center p-6'>
+        <div className='flex flex-col items-center justify-center'>
             <motion.div
-                initial={{ scale: 1 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className={`w-full max-w-md p-6 border-2 border-dashed rounded-xl transition-colors
-          ${
-              dragActive
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-gray-300 bg-white"
-          }`}
                 onDragEnter={handleDrag}
                 onDragOver={handleDrag}
                 onDragLeave={handleDrag}
-                onDrop={handleDrop}>
-                <div
-                    className='flex flex-col items-center justify-center cursor-pointer'
-                    onClick={openFileDialog}>
+                onDrop={handleDrop}
+                initial={{ scale: 1 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={openFileDialog}
+                className={`w-full max-w-md border-2 border-dashed rounded-xl transition-colors ${
+                    dragActive
+                        ? "border-blue-500 bg-blue-50"
+                        : "border-gray-300 bg-white dark:bg-black/20"
+                }`}>
+                <div className='flex flex-col p-6 items-center justify-center cursor-pointer'>
                     <CloudUpload className='w-12 h-12 text-gray-400 mb-3' />
-                    <p className='text-gray-600'>
-                        Drag & drop faylni shu yerga
-                    </p>
-                    <p className='text-blue-500 underline mt-2'>
-                        yoki faylni tanlash uchun bosing
+                    <p className='text-gray-600 dark:text-gray-300'>
+                        Rasmni tanlash uchun bosing
                     </p>
                     <input
                         type='file'
@@ -85,6 +79,7 @@ export default function FileUpload({ onFileBinary }) {
                         className='hidden'
                         ref={inputRef}
                         onChange={handleFileChange}
+                        name='adminImage'
                     />
                 </div>
             </motion.div>
