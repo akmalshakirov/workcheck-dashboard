@@ -15,6 +15,11 @@
     border-radius: 8px;
     list-style: none;
     margin: 0;
+    padding: 0;
+}
+
+.dropdown ul {
+    padding: 0 3px 3px 3px;
 }
 
 .dropdownEnter {

@@ -8,7 +8,6 @@ import {
     Minimize2,
     Moon,
     Sun,
-    User,
     UserPen,
     X,
 } from "lucide-react";
@@ -30,7 +29,7 @@ function useClickOutside(ref, handler) {
     }, [ref, handler]);
 }
 
-export const Header = ({ collapsed, setCollapsed, message }) => {
+export const Header = ({ collapsed, setCollapsed, admin }) => {
     const [langOpen, setLangOpen] = useState(false);
     const [langClosing, setLangClosing] = useState(false);
     const [selectedLang, setSelectedLang] = useState({
@@ -304,7 +303,15 @@ export const Header = ({ collapsed, setCollapsed, message }) => {
                     }>
                     <div className='border dark:border-white/40 border-black/30 rounded-lg '>
                         <div className='flex items-center justify-center p-1 pl-2.5 py-2 duration-200 active:scale-[0.95] will-change-transform'>
-                            <User />
+                            <img
+                                src={
+                                    admin?.image
+                                        ? admin?.image
+                                        : "https://alyeowbccvspelnnwqhy.supabase.co/storage/v1/object/public/images//defaultImage.png"
+                                }
+                                alt='Admin-image'
+                                className='size-6 object-cover rounded-full'
+                            />
                             <span
                                 className={`dark:fill-white duration-200 ml-1 ${
                                     profileOpen ? "rotate-180" : ""
@@ -314,25 +321,55 @@ export const Header = ({ collapsed, setCollapsed, message }) => {
                         </div>
                     </div>
                     {(profileOpen || profileClosing) && (
-                        <ul
+                        <div
                             className={`${styles.dropdown} ${
                                 profileClosing
                                     ? styles.dropdownExit
                                     : styles.dropdownEnter
-                            } bg-white/70 backdrop-blur-xs whitespace-nowrap dark:bg-black/70 dark:text-white p-1`}>
-                            {profileActions.map((a) => (
-                                <li
-                                    key={a.id}
-                                    onClick={a.onClick}
-                                    className='flex items-center gap-2 dark:hover:bg-white/20 rounded-lg hover:bg-black/10'>
-                                    {a.icon}
-                                    {a.label}
-                                </li>
-                            ))}
-                        </ul>
+                            } bg-white whitespace-nowrap dark:bg-[#222] dark:text-white p-1`}>
+                            <div
+                                className='border-b border-b-gray-600/80 mb-1 p-2 flex gap-2.5 cursor-default'
+                                onClick={(e) => e.stopPropagation()}>
+                                {admin ? (
+                                    <>
+                                        <img
+                                            src={
+                                                admin?.image
+                                                    ? admin?.image
+                                                    : "https://alyeowbccvspelnnwqhy.supabase.co/storage/v1/object/public/images//defaultImage.png"
+                                            }
+                                            alt='Admin image'
+                                            className='size-10 mt-1 object-contain'
+                                        />
+                                        <div>
+                                            <p className='uppercase whitespace-break-spaces ml-1 break-all line-clamp-1'>
+                                                {admin?.name}
+                                            </p>
+                                            <p className='px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-200 text-green-800 dark:text-green-900'>
+                                                {admin?.role}
+                                            </p>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <p className='whitespace-break-spaces text-center'>
+                                        {t("preloader")}
+                                    </p>
+                                )}
+                            </div>
+                            <ul>
+                                {profileActions.map((a) => (
+                                    <li
+                                        key={a.id}
+                                        onClick={a.onClick}
+                                        className='flex items-center gap-2 dark:hover:bg-white/20 rounded-lg hover:bg-black/10'>
+                                        {a.icon}
+                                        {a.label}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     )}
                 </div>
-                {/* right side closed */}
             </div>
         </div>
     );

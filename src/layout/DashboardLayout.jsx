@@ -1,7 +1,9 @@
+import axios from "axios";
 import { LayoutDashboard, ShieldUser, UserCog, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate } from "react-router-dom";
+import { baseURL } from "../App";
 import Footer from "../components/ui/Footer/Footer";
 import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
@@ -10,6 +12,8 @@ const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(
         localStorage.getItem("sidebar") == "true"
     );
+    const [admin, setAdmin] = useState(null);
+    const token = localStorage.getItem("token");
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,20 +22,21 @@ const DashboardLayout = () => {
 
     const { t } = useTranslation();
 
+    const getProfile = async () => {
+        try {
+            const response = await axios.get(`${baseURL}/profile`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (response.status === 200) setAdmin(response.data.admin);
+        } catch (error) {
+            if (error.response.status === 401) {
+                navigate("/login", { replace: true });
+            }
+        }
+    };
+
     useEffect(() => {
-        const token = localStorage.getItem("token");
-        // const getProfile = async () => {
-        //     try {
-        //         await axios.get(`${baseURL}/profile`, {
-        //             headers: { Authorization: `Bearer ${token}` },
-        //         });
-        //     } catch (error) {
-        //         if (error.response.status === 401) {
-        //             navigate("/login", { replace: true });
-        //         }
-        //     }
-        // };
-        // getProfile();
+        getProfile();
     }, []);
 
     return (
@@ -59,7 +64,11 @@ const DashboardLayout = () => {
                 />
             </Sidebar>
             <div className='flex-1 p-2.5 pl-1'>
-                <Header collapsed={collapsed} setCollapsed={setCollapsed} />
+                <Header
+                    collapsed={collapsed}
+                    setCollapsed={setCollapsed}
+                    admin={admin}
+                />
                 <main className='p-5 bg-white rounded-lg mt-3 dark:bg-[#111] dark:text-white text-black duration-200'>
                     <Outlet />
                 </main>
