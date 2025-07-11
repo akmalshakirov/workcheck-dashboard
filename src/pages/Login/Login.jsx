@@ -50,7 +50,7 @@ const Login = () => {
     }, []);
 
     return (
-        <div className='flex items-center justify-center min-h-screen bg-[#5f73e2] max-md:px-5 max-sm:px-2'>
+        <div className='flex items-center justify-center min-h-screen bg-[#5f73e2] max-md:px-5 max-sm:px-5'>
             <div className='w-full max-w-md bg-white rounded-lg shadow-lg p-6'>
                 <h1 className='text-2xl max-sm:text-md font-bold text-center text-gray-800 mb-3'>
                     Tizimga kirish

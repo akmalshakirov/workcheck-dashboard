@@ -1,3 +1,4 @@
+import { AnimatePresence, motion } from "framer-motion";
 import {
     Bell,
     Globe,
@@ -53,6 +54,10 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
     const profileRef = useRef();
     const navigate = useNavigate();
     const { t } = useTranslation();
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [mobileLangOpen, setMobileLangOpen] = useState(false);
+    const [mobileNotifOpen, setMobileNotifOpen] = useState(false);
+    const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
 
     const closeDropdown = (open, setOpen, setClosing) => {
         if (open) {
@@ -142,19 +147,27 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
 
     return (
         <div className='p-2.5 flex-1 flex items-center justify-between max-h-max bg-white rounded-lg !w-full dark:bg-[#111] dark:text-white sticky top-2.5 z-[1] shadow-sm'>
-            <div className='flex gap-2.5'>
+            <div className='flex gap-2.5 items-center'>
+                {/* Burger button for mobile */}
+                <button
+                    className='md:hidden p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none'
+                    onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                    aria-label='Open menu'>
+                    <Menu size={24} />
+                </button>
+                {/* Sidebar toggle (desktop only) */}
                 <button
                     onClick={() => {
                         setCollapsed(!collapsed);
                     }}
-                    className='p-1 hover:bg-gray-700/30 border border-gray-700 rounded-lg duration-200 active:scale-[0.95]'
+                    className='p-1 hover:bg-gray-700/30 border border-gray-700 rounded-lg duration-200 active:scale-[0.95] hidden md:inline-flex'
                     title={!collapsed ? t("open_sidebar") : t("close_sidebar")}
                     aria-label={
                         !collapsed ? t("open_sidebar") : t("close_sidebar")
                     }>
                     {collapsed ? <Menu size={22} /> : <X size={22} />}
                 </button>
-                <div>
+                <div className='hidden md:block'>
                     <input
                         type='text'
                         className='px-2 py-1 border border-gray-700 rounded-lg outline-none focus:bg-gray-800/10 transition-colors placeholder-black/30 dark:placeholder-white/30 dark:focus:bg-gray-600/40'
@@ -164,8 +177,8 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                     />
                 </div>
             </div>
-            {/* right side */}
-            <div className='flex items-center gap-2.5'>
+            {/* right side nav (desktop) */}
+            <div className='hidden md:flex items-center gap-2.5'>
                 <div
                     ref={langRef}
                     className={`${styles.item} dark:text-white border dark:border-white/40 border-black/30 rounded-lg`}
@@ -371,6 +384,200 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                     )}
                 </div>
             </div>
+            {/* Mobile menu overlay */}
+            <AnimatePresence>
+                {mobileMenuOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{
+                            type: "spring",
+                            stiffness: 300,
+                            damping: 30,
+                        }}
+                        className='fixed inset-0 z-50 bg-black/40 flex md:hidden'
+                        onClick={() => setMobileMenuOpen(false)}>
+                        <motion.div
+                            initial={{ x: -100, opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ x: -100, opacity: 0 }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 300,
+                                damping: 30,
+                            }}
+                            className='bg-white dark:bg-[#111] p-4 flex flex-col gap-4 w-3/4 max-w-xs h-full shadow-lg'
+                            onClick={(e) => e.stopPropagation()}>
+                            <div className='flex justify-between items-center mb-4'>
+                                <span className='font-bold text-lg'>
+                                    {t("menu")}
+                                </span>
+                                <button
+                                    onClick={() => setMobileMenuOpen(false)}
+                                    aria-label='Close menu'>
+                                    <X size={28} />
+                                </button>
+                            </div>
+
+                            <div>
+                                <button
+                                    className='flex items-center w-full py-2 px-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700'
+                                    onClick={() =>
+                                        setMobileLangOpen((v) => !v)
+                                    }>
+                                    <Globe className='mr-2' size={22} />
+                                    {selectedLang.label}
+                                    <span
+                                        className={`ml-auto transition-transform ${
+                                            mobileLangOpen ? "rotate-180" : ""
+                                        }`}>
+                                        <DropdowIcon />
+                                    </span>
+                                </button>
+                                <AnimatePresence>
+                                    {mobileLangOpen && (
+                                        <motion.ul
+                                            initial={{ height: 0, opacity: 0 }}
+                                            animate={{
+                                                height: "auto",
+                                                opacity: 1,
+                                            }}
+                                            exit={{ height: 0, opacity: 0 }}
+                                            className='overflow-hidden bg-white dark:bg-black/70 rounded shadow mt-1'>
+                                            {languages.map((lang) => (
+                                                <li
+                                                    key={lang.code}
+                                                    onClick={() => {
+                                                        setSelectedLang(lang);
+                                                        setMobileLangOpen(
+                                                            false
+                                                        );
+                                                        changeLanguage(
+                                                            lang.code
+                                                        );
+                                                    }}
+                                                    className='cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded px-4 py-2'>
+                                                    {lang.label}
+                                                </li>
+                                            ))}
+                                        </motion.ul>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+
+                            <button
+                                onClick={toggleFullscreen}
+                                aria-label='Toggle Fullscreen'
+                                title='Toggle Fullscreen'
+                                className='flex items-center gap-2 py-2 px-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 border border-black/30 dark:border-white/40'>
+                                {isFull ? (
+                                    <Minimize2 size={20} />
+                                ) : (
+                                    <Maximize size={20} />
+                                )}
+                                <span>
+                                    {isFull ? t("minimize") : t("fullscreen")}
+                                </span>
+                            </button>
+
+                            <div>
+                                <button
+                                    className='flex items-center w-full py-2 px-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700'
+                                    onClick={() =>
+                                        setMobileNotifOpen((v) => !v)
+                                    }>
+                                    <Bell className='mr-2' size={22} />
+                                    <span>{t("notifications")}</span>
+                                    <span className='ml-auto bg-red-500 text-white rounded-full px-2 text-xs'>
+                                        {notifications.length}
+                                    </span>
+                                    <span
+                                        className={`ml-2 transition-transform ${
+                                            mobileNotifOpen ? "rotate-180" : ""
+                                        }`}>
+                                        <DropdowIcon />
+                                    </span>
+                                </button>
+                                <AnimatePresence>
+                                    {mobileNotifOpen && (
+                                        <motion.ul
+                                            initial={{ height: 0, opacity: 0 }}
+                                            animate={{
+                                                height: "auto",
+                                                opacity: 1,
+                                            }}
+                                            exit={{ height: 0, opacity: 0 }}
+                                            className='overflow-hidden bg-white dark:bg-black/70 rounded shadow mt-1'>
+                                            {notifications.map((notif) => (
+                                                <li
+                                                    key={notif.id}
+                                                    className='px-4 py-2 border-b last:border-b-0 border-gray-200 dark:border-gray-700'>
+                                                    {notif.text}
+                                                </li>
+                                            ))}
+                                        </motion.ul>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+
+                            <div>
+                                <button
+                                    className='flex items-center w-full py-2 px-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700'
+                                    onClick={() =>
+                                        setMobileProfileOpen((v) => !v)
+                                    }>
+                                    <UserPen className='mr-2' size={22} />
+                                    <span>{admin?.name || t("profile")}</span>
+                                    <span
+                                        className={`ml-auto transition-transform ${
+                                            mobileProfileOpen
+                                                ? "rotate-180"
+                                                : ""
+                                        }`}>
+                                        <DropdowIcon />
+                                    </span>
+                                </button>
+                                <AnimatePresence>
+                                    {mobileProfileOpen && (
+                                        <motion.ul
+                                            initial={{ height: 0, opacity: 0 }}
+                                            animate={{
+                                                height: "auto",
+                                                opacity: 1,
+                                            }}
+                                            exit={{ height: 0, opacity: 0 }}
+                                            className='overflow-hidden bg-white dark:bg-black/70 rounded shadow mt-1'>
+                                            {profileActions.map((action) => (
+                                                <li
+                                                    key={action.id}
+                                                    className='flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 rounded'
+                                                    onClick={action.onClick}>
+                                                    {action.icon}
+                                                    <span>{action.label}</span>
+                                                </li>
+                                            ))}
+                                        </motion.ul>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+
+                            <button
+                                onClick={() => setIsDark((v) => !v)}
+                                className='flex items-center gap-2 py-2 px-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700 border border-black/30 dark:border-white/40'>
+                                {isDark ? (
+                                    <Moon size={20} />
+                                ) : (
+                                    <Sun size={20} />
+                                )}
+                                <span>
+                                    {isDark ? t("dark_mode") : t("light_mode")}
+                                </span>
+                            </button>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 };

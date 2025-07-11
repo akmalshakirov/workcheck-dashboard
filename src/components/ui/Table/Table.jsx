@@ -1,52 +1,31 @@
 import { UserRoundMinus, UserRoundPen } from "lucide-react";
-import React, { useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
 
-function Table({ data, deleteOnClick, editOnClick }) {
-    const token = localStorage.getItem("token");
-    const [admin, setAdmin] = useState([]);
-    const [editLoading, setEditLoading] = useState(false);
+function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
     const { t } = useTranslation();
-    const [id, setId] = useState(null);
-    const [adminName, setAdminName] = useState("");
-    const [adminUsername, setAdminUsername] = useState("");
-    const [adminPassword, setAdminPassword] = useState("");
-    const [adminPhone, setAdminPhone] = useState("");
-    const [adminRole, setAdminRole] = useState("ADMIN");
-    const [adminImage, setAdminImage] = useState(null);
-    const [showPassword, setShowPassword] = useState(false);
 
     return (
         <div className='overflow-x-auto bg-white dark:bg-[#222] rounded-lg shadow'>
             <table className='min-w-full divide-y divide-gray-200 dark:bg-black'>
                 <thead className='bg-gray-50 dark:bg-[#222]'>
                     <tr>
-                        <th
-                            scope='col'
-                            className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
+                        <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
                             Rasm
                         </th>
-                        <th
-                            scope='col'
-                            className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
+                        <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
                             Ism
                         </th>
-                        <th
-                            scope='col'
-                            className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
+                        <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
                             Username
                         </th>
-                        <th
-                            scope='col'
-                            className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
+                        <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
                             Role
                         </th>
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
                             Telefon raqam
                         </th>
-                        <th
-                            scope='col'
-                            className='px-6 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
+                        <th className='px-6 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
                             Amallar
                         </th>
                     </tr>

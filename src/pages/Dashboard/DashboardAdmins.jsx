@@ -9,8 +9,9 @@ import { baseURL } from "../../App";
 import Modal from "../../components/ui/Modal/Modal";
 import Preloader from "../../components/ui/Preloader/Preloader";
 import Table from "../../components/ui/Table/Table";
-import UploadImage from "../../components/ui/UploadImage/UploadImage";
+import { UploadImage } from "../../components/ui/UploadImage/UploadImage";
 import PhoneInput from "../../helpers/FormatPhone";
+import { motion } from "framer-motion";
 
 const MySwal = withReactContent(Swal);
 
@@ -18,22 +19,31 @@ const DashboardAdmins = () => {
     const token = localStorage.getItem("token");
     const [admins, setAdmins] = useState([]);
     const [preloader, setPreloader] = useState(false);
-    const [addAdminModal, setAddAdminModal] = useState(false);
+    const [createAdminModal, setCreateAdminModal] = useState(false);
     const [createAdminLoading, setCreateAdminLoading] = useState(false);
+    const [fileList, setFileList] = useState([]);
+    const [adminData, setAdminData] = useState({
+        name: "",
+        username: "",
+        password: "",
+        phone: "",
+        role: "ADMIN",
+        image: [null],
+    });
+    const [imageData, setImageData] = useState(null);
+    const [id, setId] = useState(null);
+    const [admin, setAdmin] = useState(null);
+    const [showPassword, setShowPassword] = useState(false);
+    const { t } = useTranslation();
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [getAdminLoading, setGetAdminLoading] = useState(true);
+    const [editLoading, setEditLoading] = useState(false);
     const [adminName, setAdminName] = useState("");
     const [adminUsername, setAdminUsername] = useState("");
     const [adminPassword, setAdminPassword] = useState("");
     const [adminPhone, setAdminPhone] = useState("");
     const [adminRole, setAdminRole] = useState("ADMIN");
-    const [imageData, setImageData] = useState({
-        binary: null,
-        fileName: "",
-        preview: null,
-    });
-    const [showPassword, setShowPassword] = useState(false);
-    const { t } = useTranslation();
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [getAdminLoading, setGetAdminLoading] = useState(true);
+    const [editImageData, setEditImageData] = useState(null);
 
     const getAdmins = async () => {
         setPreloader(true);
@@ -43,66 +53,33 @@ const DashboardAdmins = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-
             setAdmins(response?.data?.admins);
         } catch (error) {
-            if (error.code === "ERR_NETWORK") {
-                toast.info("Internet aloqasi yo'q");
-            } else if (error?.response?.status === 401) {
-                const refreshResponse = await axios.post(
-                    `${baseURL}/refresh`,
-                    {},
-                    {
-                        withCredentials: true,
-                    }
-                );
-
-                if (refreshResponse.status === 200) {
-                    localStorage.setItem("token", refreshResponse.data.token);
-                    const token = localStorage.getItem("token");
-                    const response = await axios.get(`${baseURL}/admins`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
-
-                    if (response.status === 200) {
-                        setAdmins(response?.data?.admins);
-                    }
-                }
-            }
+            console.log(error);
         } finally {
             setPreloader(false);
         }
     };
 
-    const getFileType = (fileName) => {
-        const extension = fileName.split(".").pop().toLowerCase();
-        const mimeTypes = {
-            jpg: "image/jpg",
-            jpeg: "image/jpeg",
-            png: "image/png",
-            webp: "image/webp",
-            svg: "image/svg",
-        };
-        return mimeTypes[extension] || "image/jpeg";
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setAdminData((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handlePhoneChange = (value) => {
+        setAdminData((prev) => ({ ...prev, phone: value }));
     };
 
     const createAdmin = async (e) => {
         e.preventDefault();
         setCreateAdminLoading(true);
-
-        const imageFile = new File([imageData.binary], imageData.fileName, {
-            type: getFileType(imageData.fileName),
-        });
-
         const formData = new FormData();
-        formData.append("name", adminName);
-        formData.append("username", adminUsername);
-        formData.append("password", adminPassword);
-        formData.append("image", imageFile);
-        formData.append("phone", adminPhone);
-        formData.append("role", adminRole);
+        formData.append("name", adminData.name);
+        formData.append("username", adminData.username);
+        formData.append("password", adminData.password);
+        formData.append("phone", adminData.phone);
+        formData.append("role", adminData.role);
+        formData.append("image", fileList[0]);
 
         try {
             const response = await axios.post(
@@ -115,34 +92,28 @@ const DashboardAdmins = () => {
                     },
                 }
             );
-            if (response.status === 201) {
+            getAdmins();
+            setAdminData({
+                name: "",
+                username: "",
+                password: "",
+                phone: "",
+                role: "ADMIN",
+            });
+            setFileList(null);
+            if (preloader == false) {
                 Swal.fire({
                     title: response.data.message,
                     icon: "success",
                     confirmButtonText: "Ok",
                 });
-                setAddAdminModal(false);
-                getAdmins();
-                setAdminUsername("");
-                setAdminName("");
-                setAdminPassword("");
-                setAdminPhone("");
-                setAdminRole("ADMIN");
             }
         } catch (error) {
-            toast.error(error.response.data.error);
+            toast.error(error?.response?.data?.error || "Xatolik yuz berdi");
         } finally {
             setCreateAdminLoading(false);
+            setCreateAdminModal(false);
         }
-    };
-
-    const handleImageSelect = (binary, fileName) => {
-        setImageData({
-            binary,
-            fileName,
-            preview: URL.createObjectURL(new Blob([binary])),
-        });
-        console.log("Rasm tanlandi:", fileName);
     };
 
     useEffect(() => {
@@ -160,8 +131,13 @@ const DashboardAdmins = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            toast.success(response.data.message);
             setAdmin(response.data.admin);
+            setAdminName(response.data.admin.name || "");
+            setAdminUsername(response.data.admin.username || "");
+            setAdminPassword("");
+            setAdminPhone(response.data.admin.phone || "");
+            setAdminRole(response.data.admin.role || "ADMIN");
+            setEditImageData(null);
         } catch (error) {
             console.log(error);
         } finally {
@@ -169,18 +145,23 @@ const DashboardAdmins = () => {
         }
     };
 
-    const handleEdit = async (id) => {
+    const handleEdit = async (e) => {
+        e.preventDefault();
         setEditLoading(true);
         try {
             const formData = new FormData();
-            formData.append("name", adminName ? adminName : admin.name);
-            formData.append(
-                "username",
-                adminUsername ? adminUsername : admin.username
-            );
-            formData.append("role", adminRole ? adminRole : admin.role);
-            formData.append("phone", adminPhone ? adminPhone : admin.phone);
-            console.log(formData);
+            formData.append("name", adminName);
+            formData.append("username", adminUsername);
+            formData.append("role", adminRole);
+            formData.append("phone", adminPhone);
+            if (adminPassword) formData.append("password", adminPassword);
+            if (editImageData) {
+                formData.append(
+                    "image",
+                    new Blob([editImageData.binary]),
+                    editImageData.fileName
+                );
+            }
             const response = await axios.put(
                 `${baseURL}/admin/${id}/update`,
                 formData,
@@ -191,11 +172,14 @@ const DashboardAdmins = () => {
                     },
                 }
             );
-
-            if (response.status === 200) toast.success(response.data.message);
+            if (response.status === 200) {
+                toast.success(response.data.message);
+                setIsEditModalOpen(false);
+                getAdmins();
+            }
         } catch (error) {
             Swal.fire({
-                text: error?.response?.data?.error,
+                text: error?.response?.data?.error || "Xatolik yuz berdi",
                 icon: "error",
                 timerProgressBar: true,
                 timer: 10000,
@@ -218,7 +202,6 @@ const DashboardAdmins = () => {
             animation: true,
             theme: localStorage.getItem("isDark") == true,
         });
-
         if (result.isConfirmed) {
             try {
                 const response = await axios.delete(
@@ -230,20 +213,14 @@ const DashboardAdmins = () => {
                         },
                     }
                 );
-
-                if (response.status === 200) {
-                    MySwal.fire(
-                        `${response.data.message}`,
-                        `${response.data.message}`,
-                        "success"
-                    );
-                }
-            } catch (error) {
                 MySwal.fire(
-                    "Error!",
-                    "There was a problem deleting your item.",
-                    "error"
+                    `${response.data.message}`,
+                    `${response.data.message}`,
+                    "success"
                 );
+                getAdmins();
+            } catch (error) {
+                MySwal.fire(error.response.data.error, "error");
             }
         }
     };
@@ -258,18 +235,30 @@ const DashboardAdmins = () => {
                             {t("sidebar_admins")}
                         </h1>
                         <button
-                            className='border rounded-lg border-gray-500/70 p-1 px-2 bg-blue-800 text-white active:scale-[0.95] duration-150 will-change-transform'
-                            onClick={() => setAddAdminModal(true)}>
+                            className='border rounded-lg border-gray-500/70 p-1 px-2 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] duration-150 will-change-transform'
+                            onClick={() => setCreateAdminModal(true)}>
                             {t("add_admin")}
                         </button>
                     </div>
 
+                    <div>
+                        {!admins || admins.length === 0 ? (
+                            <h1>{t("no_admins_error")}</h1>
+                        ) : (
+                            <Table
+                                data={admins}
+                                deleteOnClick={handleDelete}
+                                editOnClick={handleGetAdminById}
+                            />
+                        )}
+                    </div>
+
                     {/* Create admin modal */}
-                    <Modal visible={addAdminModal} title={t("add_admin")}>
+                    <Modal visible={createAdminModal} title={t("add_admin")}>
                         <form onSubmit={createAdmin}>
                             <div>
                                 <div className='flex gap-10'>
-                                    <div className='max-w-1/2 w-full'>
+                                    <div className='w-1/2'>
                                         <div className='flex flex-col gap-1'>
                                             <label
                                                 htmlFor='admin-name'
@@ -279,15 +268,15 @@ const DashboardAdmins = () => {
                                             <input
                                                 type='text'
                                                 id='admin-name'
+                                                name='name'
                                                 className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
                                                 minLength={3}
                                                 maxLength={15}
-                                                value={adminName}
-                                                onChange={(e) =>
-                                                    setAdminName(e.target.value)
-                                                }
+                                                value={adminData.name}
+                                                onChange={handleChange}
                                                 required
                                                 placeholder='adminbek'
+                                                autoComplete='name'
                                             />
                                         </div>
                                         <div className='flex flex-col gap-1'>
@@ -299,17 +288,15 @@ const DashboardAdmins = () => {
                                             <input
                                                 type='text'
                                                 id='admin-username'
+                                                name='username'
                                                 className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
                                                 minLength={3}
                                                 maxLength={15}
-                                                value={adminUsername}
-                                                onChange={(e) =>
-                                                    setAdminUsername(
-                                                        e.target.value
-                                                    )
-                                                }
+                                                value={adminData.username}
+                                                onChange={handleChange}
                                                 required
                                                 placeholder='admin'
+                                                autoComplete='username'
                                             />
                                         </div>
                                         <div className='flex flex-col gap-1 relative'>
@@ -325,17 +312,15 @@ const DashboardAdmins = () => {
                                                         : "password"
                                                 }
                                                 id='admin-password'
+                                                name='password'
                                                 className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
                                                 minLength={3}
                                                 maxLength={15}
-                                                value={adminPassword}
-                                                onChange={(e) =>
-                                                    setAdminPassword(
-                                                        e.target.value
-                                                    )
-                                                }
+                                                value={adminData.password}
+                                                onChange={handleChange}
                                                 required
                                                 placeholder='12345678'
+                                                autoComplete='new-password'
                                             />
                                             <button
                                                 name='Show password button'
@@ -359,33 +344,12 @@ const DashboardAdmins = () => {
                                         </div>
                                         <div className='flex flex-col gap-1'>
                                             <PhoneInput
-                                                value={adminPhone}
-                                                onChange={(e) =>
-                                                    setAdminPhone(e)
-                                                }
+                                                value={adminData.phone}
+                                                onChange={handlePhoneChange}
                                                 label='Admin telefon raqam:'
-                                                name='Admin telefon raqam'
+                                                name='phone'
                                                 required
                                             />
-                                            {/* <label
-                                                htmlFor='admin-phone'
-                                                className='text-base'>
-                                                Admin telefon raqam:{" "}
-                                            </label>
-                                            <input
-                                                type='number'
-                                                id='admin-phone'
-                                                className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                                max={9}
-                                                maxLength={9}
-                                                value={adminPhone}
-                                                onChange={(e) =>
-                                                    setAdminPhone(
-                                                        e.target.value
-                                                    )
-                                                }
-                                                required
-                                            /> */}
                                         </div>
                                         <div className='flex flex-col gap-1'>
                                             <label
@@ -395,13 +359,10 @@ const DashboardAdmins = () => {
                                             </label>
                                             <select
                                                 multiple={false}
-                                                value={adminRole}
-                                                onChange={(e) => {
-                                                    setAdminRole(
-                                                        e.target.value
-                                                    );
-                                                }}
+                                                value={adminData.role}
+                                                onChange={handleChange}
                                                 id='admin-role'
+                                                name='role'
                                                 className='border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600 dark:bg-[#0f0f0f]'
                                                 required>
                                                 <option disabled>
@@ -417,34 +378,45 @@ const DashboardAdmins = () => {
                                         </div>
                                     </div>
                                     <div className='flex flex-col w-1/2 gap-1'>
-                                        <span>Rasm tanlang:</span>
-                                        {/* <input
-                                        className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                        type='file'
-                                        accept='image/*'
-                                        id='admin-image'
-                                        required
-                                        minLength={3}
-                                        maxLength={15}
-                                        onChange={(e) =>
-                                            setAdminImage(e.target.files[0])
-                                        }
-                                        /> */}
+                                        <label
+                                            htmlFor='image'
+                                            className='cursor-pointer flex flex-col'>
+                                            Rasm tanlang:{" "}
+                                            <input
+                                                hidden
+                                                id='image'
+                                                type='file'
+                                                name='image'
+                                                onChange={(e) =>
+                                                    setFileList(e.target.files)
+                                                }
+                                                autoComplete='off'
+                                            />
+                                        </label>
+                                        {fileList[0] && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: -50 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -50 }}
+                                                className='max-h-2/5 max-w-2/5'>
+                                                <img
+                                                    src={URL.createObjectURL(
+                                                        fileList[0]
+                                                    )}
+                                                    alt='Image'
+                                                    className='object-contain rounded-lg'
+                                                />
+                                                <span className='text-green-600'>
+                                                    {fileList[0]?.name}
+                                                </span>
+                                            </motion.div>
+                                        )}
                                         {/* <UploadImage
-                                            onFileBinary={
-                                                (e) => setAdminImage(e)
-                                            }
+                                            fileList={fileList}
+                                            label='Rasm tanlang:'
+                                            name='image'
+                                            className='border divide-neutral-800'
                                         /> */}
-                                        <UploadImage
-                                            onFileBinary={handleImageSelect}
-                                            maxFileSize={5 * 1024 * 1024}
-                                            acceptedTypes={[
-                                                "image/jpeg",
-                                                "image/png",
-                                                "image/webp",
-                                            ]}
-                                            className='w-full'
-                                        />
                                     </div>
                                 </div>
                             </div>
@@ -455,7 +427,8 @@ const DashboardAdmins = () => {
                                             ? "opacity-30 pointer-events-none"
                                             : ""
                                     }`}
-                                    onClick={() => setAddAdminModal(false)}
+                                    onClick={() => setCreateAdminModal(false)}
+                                    type='button'
                                     disabled={createAdminLoading}>
                                     {t("cancel")}
                                 </button>
@@ -473,64 +446,66 @@ const DashboardAdmins = () => {
                         </form>
                     </Modal>
 
-                    {/* Update modal */}
+                    {/* Update admin modal */}
                     <Modal title='Adminni tahrirlash' visible={isEditModalOpen}>
                         {getAdminLoading ? (
                             <div className='w-[900px] h-[400px]'>
-                                <h1 className='text-2xl'>
-                                    {t("preloader")}...{" "}
-                                </h1>
+                                <h1 className='text-2xl'>{t("preloader")}</h1>
                             </div>
                         ) : (
                             <>
                                 <form onSubmit={handleEdit}>
                                     <div className='flex gap-10'>
-                                        <div className='max-w-1/2 w-full'>
+                                        <div className='w-1/2'>
                                             <div className='flex flex-col gap-1'>
                                                 <label
-                                                    htmlFor='admin-name'
+                                                    htmlFor='edit-admin-name'
                                                     className='text-base'>
                                                     {t("modal_admin_name")}:
                                                 </label>
                                                 <input
                                                     type='text'
-                                                    id='admin-name'
-                                                    className='border rounded-lg border-gray-500/70 px-3 py-2 text-`[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                                    id='edit-admin-name'
+                                                    className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
                                                     minLength={3}
                                                     maxLength={15}
-                                                    defaultValue={admin.name}
+                                                    name='name'
+                                                    value={adminName}
                                                     onChange={(e) =>
                                                         setAdminName(
                                                             e.target.value
                                                         )
                                                     }
+                                                    required
+                                                    autoComplete='name'
                                                 />
                                             </div>
                                             <div className='flex flex-col gap-1'>
                                                 <label
-                                                    htmlFor='admin-username'
+                                                    htmlFor='edit-admin-username'
                                                     className='text-base'>
                                                     {t("modal_admin_username")}:
                                                 </label>
                                                 <input
                                                     type='text'
-                                                    id='admin-username'
+                                                    id='edit-admin-username'
                                                     className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
                                                     minLength={3}
                                                     maxLength={15}
-                                                    defaultValue={
-                                                        admin.username
-                                                    }
+                                                    value={adminUsername}
                                                     onChange={(e) =>
                                                         setAdminUsername(
                                                             e.target.value
                                                         )
                                                     }
+                                                    required
+                                                    autoComplete='username'
+                                                    name='username'
                                                 />
                                             </div>
                                             <div className='flex flex-col gap-1 relative'>
                                                 <label
-                                                    htmlFor='admin-password'
+                                                    htmlFor='edit-admin-password'
                                                     className='text-base'>
                                                     Admin password:{" "}
                                                 </label>
@@ -540,16 +515,19 @@ const DashboardAdmins = () => {
                                                             ? "text"
                                                             : "password"
                                                     }
-                                                    id='admin-password'
+                                                    id='edit-admin-password'
                                                     className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
                                                     minLength={3}
                                                     maxLength={15}
-                                                    defaultValue={""}
+                                                    value={adminPassword}
                                                     onChange={(e) =>
                                                         setAdminPassword(
                                                             e.target.value
                                                         )
                                                     }
+                                                    placeholder='Yangi parol (ixtiyoriy)'
+                                                    name='password'
+                                                    autoComplete='current-password'
                                                 />
                                                 <button
                                                     name='Show password button'
@@ -573,30 +551,28 @@ const DashboardAdmins = () => {
                                             </div>
                                             <div className='flex flex-col gap-1'>
                                                 <PhoneInput
-                                                    value={admin.phone}
-                                                    onChange={(e) =>
-                                                        setAdminPhone(e)
-                                                    }
+                                                    value={adminPhone}
+                                                    onChange={setAdminPhone}
                                                     label='Admin telefon raqam:'
-                                                    name='Admin telefon raqam'
-                                                    placeholder={admin?.phone}
+                                                    name='phone'
+                                                    required
                                                 />
                                             </div>
                                             <div className='flex flex-col gap-1'>
                                                 <label
-                                                    htmlFor='admin-role'
+                                                    htmlFor='edit-admin-role'
                                                     className='text-base'>
                                                     Admin role:
                                                 </label>
                                                 <select
                                                     multiple={false}
-                                                    defaultValue={admin.role}
-                                                    onChange={(e) => {
+                                                    value={adminRole}
+                                                    onChange={(e) =>
                                                         setAdminRole(
                                                             e.target.value
-                                                        );
-                                                    }}
-                                                    id='admin-role'
+                                                        )
+                                                    }
+                                                    id='edit-admin-role'
                                                     className='border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600'>
                                                     <option disabled>
                                                         Role tanlang...
@@ -612,10 +588,21 @@ const DashboardAdmins = () => {
                                         </div>
                                         <div className='flex flex-col w-1/2 gap-1'>
                                             <span>Rasm tanlang:</span>
-                                            <UploadImage
-                                                onFileBinary={(e) =>
-                                                    console.log(e)
+                                            {/* <UploadImage
+                                                onFileBinary={
+                                                    handleEditImageSelect
                                                 }
+                                                maxFileSize={5 * 1024 * 1024}
+                                                acceptedTypes={[
+                                                    "image/jpeg",
+                                                    "image/png",
+                                                    "image/webp",
+                                                ]}
+                                                className='w-full'
+                                            /> */}
+                                            <UploadImage
+                                                fileList={fileList}
+                                                className='max-h-2/5 max-w-2/5'
                                             />
                                         </div>
                                     </div>
@@ -648,21 +635,6 @@ const DashboardAdmins = () => {
                             </>
                         )}
                     </Modal>
-                    <div>
-                        {admins.length == 0 ||
-                        admins == null ||
-                        admins == undefined ? (
-                            <>
-                                <h1>{t("no_admins_error")}</h1>
-                            </>
-                        ) : (
-                            <Table
-                                data={admins}
-                                deleteOnClick={handleDelete}
-                                editOnClick={handleEdit}
-                            />
-                        )}
-                    </div>
                 </div>
             )}
         </>

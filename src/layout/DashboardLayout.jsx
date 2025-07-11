@@ -3,6 +3,7 @@ import { LayoutDashboard, ShieldUser, UserCog, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import { baseURL } from "../App";
 import Footer from "../components/ui/Footer/Footer";
 import { Header } from "../components/ui/Header/Header";
@@ -29,8 +30,30 @@ const DashboardLayout = () => {
             });
             if (response.status === 200) setAdmin(response.data.admin);
         } catch (error) {
-            if (error.response.status === 401) {
-                navigate("/login", { replace: true });
+            if (error.code === "ERR_NETWORK") {
+                toast.info("Internet aloqasi yo'q");
+            } else if (error?.response?.status === 401) {
+                const refreshResponse = await axios.post(
+                    `${baseURL}/refresh`,
+                    {},
+                    {
+                        withCredentials: true,
+                    }
+                );
+
+                if (refreshResponse.status === 200) {
+                    localStorage.setItem("token", refreshResponse.data.token);
+                    const token = localStorage.getItem("token");
+                    const response = await axios.get(`${baseURL}/profile`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+
+                    if (response.status === 200) {
+                        setAdmin(response?.data?.admin);
+                    }
+                }
             }
         }
     };
