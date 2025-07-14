@@ -1,6 +1,4 @@
-import axios from "axios";
-import { createContext, useEffect, useState } from "react";
-import { baseURL } from "../App";
+import { createContext, useState } from "react";
 
 export const AdminContext = createContext();
 

@@ -1,13 +1,14 @@
 import axios from "axios";
 import { LayoutDashboard, ShieldUser, UserCog, Users } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { toast } from "react-toastify";
 import { baseURL } from "../App";
 import Footer from "../components/ui/Footer/Footer";
 import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
+import { AdminContext } from "../context/AdminContext";
 
 const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(
@@ -15,7 +16,8 @@ const DashboardLayout = () => {
     );
     const [admin, setAdmin] = useState(null);
     const token = localStorage.getItem("token");
-    const navigate = useNavigate();
+    const { loading } = useContext(AdminContext);
+    console.log(loading);
 
     useEffect(() => {
         localStorage.setItem("sidebar", collapsed);

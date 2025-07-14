@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function DropdowIcon({ ...props }) {
+export default function DropdownIcon({ ...props }) {
     return (
         <svg
             className={`w-5 h-5 text-gray-800 dark:text-white ${props}`}

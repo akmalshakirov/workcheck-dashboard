@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, Loader2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -28,11 +28,9 @@ const DashboardAdmins = () => {
         password: "",
         phone: "",
         role: "ADMIN",
-        image: [null],
+        image: null,
     });
-    const [imageData, setImageData] = useState(null);
     const [id, setId] = useState(null);
-    const [admin, setAdmin] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
     const { t } = useTranslation();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -131,7 +129,6 @@ const DashboardAdmins = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            setAdmin(response.data.admin);
             setAdminName(response.data.admin.name || "");
             setAdminUsername(response.data.admin.username || "");
             setAdminPassword("");
@@ -226,10 +223,24 @@ const DashboardAdmins = () => {
     };
 
     return (
-        <>
-            {preloader && <Preloader />}
-            {!preloader && (
-                <div>
+        <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}>
+            {preloader ? (
+                <>
+                    <div className='flex justify-center items-center'>
+                        <h1 className='text-2xl'>{t("preloader")}...</h1>
+                        <span>
+                            <Loader2Icon className='animate-spin' />
+                        </span>
+                    </div>
+                </>
+            ) : (
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}>
                     <div className='flex items-center justify-between mb-5'>
                         <h1 className='text-2xl font-bold'>
                             {t("sidebar_admins")}
@@ -635,9 +646,9 @@ const DashboardAdmins = () => {
                             </>
                         )}
                     </Modal>
-                </div>
+                </motion.div>
             )}
-        </>
+        </motion.div>
     );
 };
 

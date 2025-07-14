@@ -15,7 +15,7 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import DropdowIcon from "../Icons/Dropdown";
+import DropdownIcon from "../Icons/Dropdown";
 import styles from "./Header.module.css";
 
 function useClickOutside(ref, handler) {
@@ -192,7 +192,7 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                             className={`dark:fill-white duration-200 ml-1 ${
                                 langOpen ? "rotate-180" : ""
                             }`}>
-                            <DropdowIcon />
+                            <DropdownIcon />
                         </span>
                     </div>
                     {(langOpen || langClosing) && (
@@ -260,7 +260,7 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                                 className={`dark:fill-white duration-200 ml-1 ${
                                     notifOpen ? "rotate-180" : ""
                                 }`}>
-                                <DropdowIcon />
+                                <DropdownIcon />
                             </span>
                         </span>
                     </div>
@@ -329,7 +329,7 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                                 className={`dark:fill-white duration-200 ml-1 ${
                                     profileOpen ? "rotate-180" : ""
                                 }`}>
-                                <DropdowIcon />
+                                <DropdownIcon />
                             </span>
                         </div>
                     </div>
@@ -384,7 +384,7 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                     )}
                 </div>
             </div>
-            {/* Mobile menu overlay */}
+
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <motion.div
@@ -411,7 +411,7 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                             onClick={(e) => e.stopPropagation()}>
                             <div className='flex justify-between items-center mb-4'>
                                 <span className='font-bold text-lg'>
-                                    {t("menu")}
+                                    <kbd>off</kbd>
                                 </span>
                                 <button
                                     onClick={() => setMobileMenuOpen(false)}
@@ -432,7 +432,7 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                                         className={`ml-auto transition-transform ${
                                             mobileLangOpen ? "rotate-180" : ""
                                         }`}>
-                                        <DropdowIcon />
+                                        <DropdownIcon />
                                     </span>
                                 </button>
                                 <AnimatePresence>
@@ -496,7 +496,7 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                                         className={`ml-2 transition-transform ${
                                             mobileNotifOpen ? "rotate-180" : ""
                                         }`}>
-                                        <DropdowIcon />
+                                        <DropdownIcon />
                                     </span>
                                 </button>
                                 <AnimatePresence>
@@ -535,7 +535,7 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                                                 ? "rotate-180"
                                                 : ""
                                         }`}>
-                                        <DropdowIcon />
+                                        <DropdownIcon />
                                     </span>
                                 </button>
                                 <AnimatePresence>
