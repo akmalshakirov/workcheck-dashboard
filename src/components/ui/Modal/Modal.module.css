@@ -4,13 +4,12 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(30, 30, 30, 0.2);
+    background: rgba(70, 70, 70, 0.4);
     backdrop-filter: blur(5px);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
-    overflow-y: auto;
 }
 
 .modal {
@@ -18,9 +17,9 @@
     width: 100%;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-    overflow: hidden;
     display: flex;
     flex-direction: column;
+    max-height: calc(77% + 5vh);
 }
 
 .header {

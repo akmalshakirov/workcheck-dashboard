@@ -1,12 +1,24 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 
-/**@param {{ fileList: () => void, className?: string | undefined, label: string, name: string }} */
+/**@param {{ fileList: Array, className?: string | undefined, label?: string, name: string, onChange: function }} */
 
-export const UploadImage = ({ fileList, className, label, name }) => {
-    const [image, setImage] = useState([]);
+export const UploadImage = ({
+    fileList = [],
+    className,
+    label,
+    name = "image",
+    onChange,
+}) => {
+    const [image, setImage] = useState(null);
 
-    console.log(image);
+    const handleChange = (e) => {
+        const file = e.target.files && e.target.files[0];
+        setImage(file);
+        if (onChange) onChange(file);
+    };
+
+    const displayImage = fileList && fileList.length > 0 ? fileList[0] : image;
 
     return (
         <motion.div
@@ -14,28 +26,30 @@ export const UploadImage = ({ fileList, className, label, name }) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 50 }}
             className={className}>
-            <label htmlFor='image' className='cursor-pointer'>
+            <label htmlFor={name} className='cursor-pointer'>
                 {label ? label : "Rasm tanlang:"}
                 <input
                     type='file'
                     hidden
-                    id='image'
+                    id={name}
                     autoComplete='off'
-                    name={name ? name : "image"}
-                    onChange={(e) => setImage(e.target.files)}
+                    name={name}
+                    onChange={handleChange}
                 />
             </label>
-            <img
-                src={
-                    fileList.length && URL?.createObjectURL(fileList[0])
-                        ? fileList
-                        : image
-                        ? image
-                        : image
-                }
-                alt='Image'
-                className='object-contain rounded-lg'
-            />
+            {displayImage && (
+                <img
+                    src={
+                        typeof displayImage === "string"
+                            ? displayImage
+                            : URL.createObjectURL(displayImage)
+                    }
+                    alt='Image'
+                    className='object-contain rounded-lg'
+                />
+            )}
         </motion.div>
     );
 };
+
+export default UploadImage;

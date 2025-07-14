@@ -6,8 +6,8 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
     const { t } = useTranslation();
 
     return (
-        <div className='overflow-x-auto bg-white dark:bg-[#222] rounded-lg shadow'>
-            <table className='min-w-full divide-y divide-gray-200 dark:bg-black'>
+        <div>
+            <table className='w-full'>
                 <thead className='bg-gray-50 dark:bg-[#222]'>
                     <tr>
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>

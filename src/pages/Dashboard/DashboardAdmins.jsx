@@ -1,17 +1,16 @@
 import axios from "axios";
+import { AnimatePresence, motion } from "framer-motion";
 import { Eye, EyeOff, Loader2Icon } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { baseURL } from "../../App";
 import Modal from "../../components/ui/Modal/Modal";
-import Preloader from "../../components/ui/Preloader/Preloader";
 import Table from "../../components/ui/Table/Table";
 import { UploadImage } from "../../components/ui/UploadImage/UploadImage";
 import PhoneInput from "../../helpers/FormatPhone";
-import { motion } from "framer-motion";
 
 const MySwal = withReactContent(Swal);
 
@@ -42,6 +41,7 @@ const DashboardAdmins = () => {
     const [adminPhone, setAdminPhone] = useState("");
     const [adminRole, setAdminRole] = useState("ADMIN");
     const [editImageData, setEditImageData] = useState(null);
+    const lang = localStorage.getItem("lang");
 
     const getAdmins = async () => {
         setPreloader(true);
@@ -49,11 +49,12 @@ const DashboardAdmins = () => {
             const response = await axios.get(`${baseURL}/admins`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
+                    Accept: lang,
                 },
             });
             setAdmins(response?.data?.admins);
         } catch (error) {
-            console.log(error);
+            toast.info(error.response.data.error);
         } finally {
             setPreloader(false);
         }
@@ -87,6 +88,7 @@ const DashboardAdmins = () => {
                     headers: {
                         Authorization: `Bearer ${token}`,
                         "Content-Type": "multipart/form-data",
+                        Accept: lang,
                     },
                 }
             );
@@ -107,7 +109,11 @@ const DashboardAdmins = () => {
                 });
             }
         } catch (error) {
-            toast.error(error?.response?.data?.error || "Xatolik yuz berdi");
+            Swal.fire({
+                title: error.response.data.error,
+                text: error.response.data.error,
+                icon: "error",
+            });
         } finally {
             setCreateAdminLoading(false);
             setCreateAdminModal(false);
@@ -116,8 +122,13 @@ const DashboardAdmins = () => {
 
     useEffect(() => {
         getAdmins();
-        document.title = "WorkCheck - Dashboard | Adminlar";
     }, []);
+
+    useEffect(() => {
+        document.title = `WorkCheck - Dashboard | ${
+            t("sidebar_admins") || "Adminlar"
+        }`;
+    }, [t]);
 
     const handleGetAdminById = async (id) => {
         setIsEditModalOpen(true);
@@ -151,7 +162,6 @@ const DashboardAdmins = () => {
             formData.append("username", adminUsername);
             formData.append("role", adminRole);
             formData.append("phone", adminPhone);
-            if (adminPassword) formData.append("password", adminPassword);
             if (editImageData) {
                 formData.append(
                     "image",
@@ -165,7 +175,7 @@ const DashboardAdmins = () => {
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        "Content-Type": "multipart/form-data",
+                        // "Content-Type": "multipart/form-data",
                     },
                 }
             );
@@ -210,17 +220,59 @@ const DashboardAdmins = () => {
                         },
                     }
                 );
-                MySwal.fire(
-                    `${response.data.message}`,
-                    `${response.data.message}`,
-                    "success"
-                );
+                MySwal.fire({
+                    title: `${response.data.message}`,
+                    text: `${response.data.message}`,
+                    icon: "success",
+                });
                 getAdmins();
             } catch (error) {
                 MySwal.fire(error.response.data.error, "error");
             }
         }
     };
+
+    const renderInput = useCallback(
+        ({
+            id,
+            name,
+            label,
+            type = "text",
+            value,
+            onChange,
+            minLength = 3,
+            maxLength = 15,
+            required = true,
+            placeholder = "",
+            autoComplete = "off",
+            ...rest
+        }) => (
+            <div className='flex flex-col gap-1'>
+                <label htmlFor={id} className='text-base'>
+                    {label}
+                </label>
+                <input
+                    type={type}
+                    id={id}
+                    name={name}
+                    className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                    minLength={minLength}
+                    maxLength={maxLength}
+                    value={value}
+                    onChange={onChange}
+                    required={required}
+                    placeholder={placeholder}
+                    autoComplete={autoComplete}
+                    {...rest}
+                />
+            </div>
+        ),
+        []
+    );
+
+    const handleFileChange = useCallback((e) => {
+        setFileList(e?.target?.files ? Array.from(e.target.files) : []);
+    }, []);
 
     return (
         <motion.div
@@ -270,51 +322,30 @@ const DashboardAdmins = () => {
                             <div>
                                 <div className='flex gap-10'>
                                     <div className='w-1/2'>
-                                        <div className='flex flex-col gap-1'>
-                                            <label
-                                                htmlFor='admin-name'
-                                                className='text-base'>
-                                                {t("modal_admin_name")}:
-                                            </label>
-                                            <input
-                                                type='text'
-                                                id='admin-name'
-                                                name='name'
-                                                className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                                minLength={3}
-                                                maxLength={15}
-                                                value={adminData.name}
-                                                onChange={handleChange}
-                                                required
-                                                placeholder='adminbek'
-                                                autoComplete='name'
-                                            />
-                                        </div>
-                                        <div className='flex flex-col gap-1'>
-                                            <label
-                                                htmlFor='admin-username'
-                                                className='text-base'>
-                                                {t("modal_admin_username")}:
-                                            </label>
-                                            <input
-                                                type='text'
-                                                id='admin-username'
-                                                name='username'
-                                                className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                                minLength={3}
-                                                maxLength={15}
-                                                value={adminData.username}
-                                                onChange={handleChange}
-                                                required
-                                                placeholder='admin'
-                                                autoComplete='username'
-                                            />
-                                        </div>
+                                        {renderInput({
+                                            id: "admin-name",
+                                            name: "name",
+                                            label: t("modal_admin_name") + ":",
+                                            value: adminData.name,
+                                            onChange: handleChange,
+                                            placeholder: "adminbek",
+                                            autoComplete: "name",
+                                        })}
+                                        {renderInput({
+                                            id: "admin-username",
+                                            name: "username",
+                                            label:
+                                                t("modal_admin_username") + ":",
+                                            value: adminData.username,
+                                            onChange: handleChange,
+                                            placeholder: "admin",
+                                            autoComplete: "username",
+                                        })}
                                         <div className='flex flex-col gap-1 relative'>
                                             <label
                                                 htmlFor='admin-password'
                                                 className='text-base'>
-                                                Admin password:{" "}
+                                                Admin password:
                                             </label>
                                             <input
                                                 type={
@@ -392,42 +423,45 @@ const DashboardAdmins = () => {
                                         <label
                                             htmlFor='image'
                                             className='cursor-pointer flex flex-col'>
-                                            Rasm tanlang:{" "}
+                                            Rasm tanlang:
                                             <input
                                                 hidden
                                                 id='image'
                                                 type='file'
                                                 name='image'
-                                                onChange={(e) =>
-                                                    setFileList(e.target.files)
-                                                }
+                                                onChange={handleFileChange}
                                                 autoComplete='off'
+                                                multiple={false}
                                             />
                                         </label>
-                                        {fileList[0] && (
-                                            <motion.div
-                                                initial={{ opacity: 0, y: -50 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0, y: -50 }}
-                                                className='max-h-2/5 max-w-2/5'>
-                                                <img
-                                                    src={URL.createObjectURL(
-                                                        fileList[0]
-                                                    )}
-                                                    alt='Image'
-                                                    className='object-contain rounded-lg'
-                                                />
-                                                <span className='text-green-600'>
-                                                    {fileList[0]?.name}
-                                                </span>
-                                            </motion.div>
-                                        )}
-                                        {/* <UploadImage
-                                            fileList={fileList}
-                                            label='Rasm tanlang:'
-                                            name='image'
-                                            className='border divide-neutral-800'
-                                        /> */}
+                                        {fileList?.length > 0 &&
+                                            fileList[0] && (
+                                                <motion.div
+                                                    initial={{
+                                                        opacity: 0,
+                                                        y: -50,
+                                                    }}
+                                                    animate={{
+                                                        opacity: 1,
+                                                        y: 0,
+                                                    }}
+                                                    exit={{
+                                                        opacity: 0,
+                                                        y: -50,
+                                                    }}
+                                                    className='max-h-2/5 max-w-2/5'>
+                                                    <img
+                                                        src={URL.createObjectURL(
+                                                            fileList[0]
+                                                        )}
+                                                        alt='Image'
+                                                        className='object-contain rounded-lg'
+                                                    />
+                                                    <span className='text-green-600'>
+                                                        {fileList[0]?.name}
+                                                    </span>
+                                                </motion.div>
+                                            )}
                                     </div>
                                 </div>
                             </div>
@@ -459,192 +493,159 @@ const DashboardAdmins = () => {
 
                     {/* Update admin modal */}
                     <Modal title='Adminni tahrirlash' visible={isEditModalOpen}>
-                        {getAdminLoading ? (
-                            <div className='w-[900px] h-[400px]'>
-                                <h1 className='text-2xl'>{t("preloader")}</h1>
-                            </div>
-                        ) : (
-                            <>
-                                <form onSubmit={handleEdit}>
-                                    <div className='flex gap-10'>
-                                        <div className='w-1/2'>
-                                            <div className='flex flex-col gap-1'>
-                                                <label
-                                                    htmlFor='edit-admin-name'
-                                                    className='text-base'>
-                                                    {t("modal_admin_name")}:
-                                                </label>
-                                                <input
-                                                    type='text'
-                                                    id='edit-admin-name'
-                                                    className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                                    minLength={3}
-                                                    maxLength={15}
-                                                    name='name'
-                                                    value={adminName}
-                                                    onChange={(e) =>
-                                                        setAdminName(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    required
-                                                    autoComplete='name'
-                                                />
+                        <AnimatePresence>
+                            <motion.div
+                                layout
+                                transition={{ duration: 0.4, type: "spring" }}>
+                                {getAdminLoading ? (
+                                    <div className='flex items-center justify-center'>
+                                        <h1 className='text-2xl flex items-center'>
+                                            {t("preloader")}...{" "}
+                                            <span>
+                                                <Loader2Icon className='animate-spin' />
+                                            </span>
+                                        </h1>
+                                    </div>
+                                ) : (
+                                    <>
+                                        <form onSubmit={handleEdit}>
+                                            <div className='flex gap-10'>
+                                                <div className='w-1/2'>
+                                                    <div className='flex flex-col gap-1'>
+                                                        <label
+                                                            htmlFor='edit-admin-name'
+                                                            className='text-base'>
+                                                            {t(
+                                                                "modal_admin_name"
+                                                            )}
+                                                            :
+                                                        </label>
+                                                        <input
+                                                            type='text'
+                                                            id='edit-admin-name'
+                                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                                            minLength={3}
+                                                            maxLength={15}
+                                                            name='name'
+                                                            value={adminName}
+                                                            onChange={(e) =>
+                                                                setAdminName(
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                            required
+                                                            autoComplete='name'
+                                                        />
+                                                    </div>
+                                                    <div className='flex flex-col gap-1'>
+                                                        <label
+                                                            htmlFor='edit-admin-username'
+                                                            className='text-base'>
+                                                            {t(
+                                                                "modal_admin_username"
+                                                            )}
+                                                            :
+                                                        </label>
+                                                        <input
+                                                            type='text'
+                                                            id='edit-admin-username'
+                                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                                            minLength={3}
+                                                            maxLength={15}
+                                                            value={
+                                                                adminUsername
+                                                            }
+                                                            onChange={(e) =>
+                                                                setAdminUsername(
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                            required
+                                                            autoComplete='username'
+                                                            name='username'
+                                                        />
+                                                    </div>
+                                                    <div className='flex flex-col gap-1'>
+                                                        <PhoneInput
+                                                            value={adminPhone}
+                                                            onChange={
+                                                                setAdminPhone
+                                                            }
+                                                            label='Admin telefon raqam:'
+                                                            name='phone'
+                                                            required
+                                                        />
+                                                    </div>
+                                                    <div className='flex flex-col gap-1'>
+                                                        <label
+                                                            htmlFor='edit-admin-role'
+                                                            className='text-base'>
+                                                            Admin role:
+                                                        </label>
+                                                        <select
+                                                            multiple={false}
+                                                            value={adminRole}
+                                                            onChange={(e) =>
+                                                                setAdminRole(
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                            id='edit-admin-role'
+                                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600'>
+                                                            <option disabled>
+                                                                Role tanlang...
+                                                            </option>
+                                                            <option value='ADMIN'>
+                                                                Admin
+                                                            </option>
+                                                            <option value='SUPERADMIN'>
+                                                                Super-admin
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div className='flex flex-col w-1/2 gap-1'>
+                                                    <UploadImage
+                                                        fileList={fileList}
+                                                        className='max-h-2/5 max-w-2/5'
+                                                    />
+                                                </div>
                                             </div>
-                                            <div className='flex flex-col gap-1'>
-                                                <label
-                                                    htmlFor='edit-admin-username'
-                                                    className='text-base'>
-                                                    {t("modal_admin_username")}:
-                                                </label>
-                                                <input
-                                                    type='text'
-                                                    id='edit-admin-username'
-                                                    className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                                    minLength={3}
-                                                    maxLength={15}
-                                                    value={adminUsername}
-                                                    onChange={(e) =>
-                                                        setAdminUsername(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    required
-                                                    autoComplete='username'
-                                                    name='username'
-                                                />
-                                            </div>
-                                            <div className='flex flex-col gap-1 relative'>
-                                                <label
-                                                    htmlFor='edit-admin-password'
-                                                    className='text-base'>
-                                                    Admin password:{" "}
-                                                </label>
-                                                <input
-                                                    type={
-                                                        showPassword
-                                                            ? "text"
-                                                            : "password"
-                                                    }
-                                                    id='edit-admin-password'
-                                                    className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                                    minLength={3}
-                                                    maxLength={15}
-                                                    value={adminPassword}
-                                                    onChange={(e) =>
-                                                        setAdminPassword(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    placeholder='Yangi parol (ixtiyoriy)'
-                                                    name='password'
-                                                    autoComplete='current-password'
-                                                />
+                                            <div className='flex justify-end gap-3 mt-4'>
                                                 <button
-                                                    name='Show password button'
-                                                    aria-label='Show password button'
-                                                    title='Show password'
                                                     type='button'
+                                                    className={`py-2 px-2.5 rounded-lg border-none cursor-pointer bg-red-600/80 hover:bg-red-600 duration-150 text-white w-max active:scale-[0.95] will-change-transform ${
+                                                        editLoading
+                                                            ? "opacity-30 pointer-events-none"
+                                                            : ""
+                                                    }`}
                                                     onClick={() =>
-                                                        setShowPassword(
-                                                            (curr) => !curr
+                                                        setIsEditModalOpen(
+                                                            false
                                                         )
                                                     }
-                                                    className='absolute top-9.5 ml-2 right-3 text-gray-500 hover:text-gray-700'
-                                                    tabIndex={-1}
                                                     disabled={editLoading}>
-                                                    {showPassword ? (
-                                                        <EyeOff size={20} />
-                                                    ) : (
-                                                        <Eye size={20} />
-                                                    )}
+                                                    {t("cancel")}
+                                                </button>
+                                                <button
+                                                    className={`py-2 px-2.5 rounded-lg text-white border-none cursor-pointer bg-[#126ac9] duration-150 hover:bg-[#007bff] w-max active:scale-[0.95] will-change-transform ${
+                                                        editLoading
+                                                            ? "opacity-30 pointer-events-none"
+                                                            : ""
+                                                    }`}
+                                                    type='submit'
+                                                    disabled={editLoading}>
+                                                    {t("ok")}
                                                 </button>
                                             </div>
-                                            <div className='flex flex-col gap-1'>
-                                                <PhoneInput
-                                                    value={adminPhone}
-                                                    onChange={setAdminPhone}
-                                                    label='Admin telefon raqam:'
-                                                    name='phone'
-                                                    required
-                                                />
-                                            </div>
-                                            <div className='flex flex-col gap-1'>
-                                                <label
-                                                    htmlFor='edit-admin-role'
-                                                    className='text-base'>
-                                                    Admin role:
-                                                </label>
-                                                <select
-                                                    multiple={false}
-                                                    value={adminRole}
-                                                    onChange={(e) =>
-                                                        setAdminRole(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    id='edit-admin-role'
-                                                    className='border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600'>
-                                                    <option disabled>
-                                                        Role tanlang...
-                                                    </option>
-                                                    <option value='ADMIN'>
-                                                        Admin
-                                                    </option>
-                                                    <option value='SUPERADMIN'>
-                                                        Super-admin
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div className='flex flex-col w-1/2 gap-1'>
-                                            <span>Rasm tanlang:</span>
-                                            {/* <UploadImage
-                                                onFileBinary={
-                                                    handleEditImageSelect
-                                                }
-                                                maxFileSize={5 * 1024 * 1024}
-                                                acceptedTypes={[
-                                                    "image/jpeg",
-                                                    "image/png",
-                                                    "image/webp",
-                                                ]}
-                                                className='w-full'
-                                            /> */}
-                                            <UploadImage
-                                                fileList={fileList}
-                                                className='max-h-2/5 max-w-2/5'
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className='flex justify-end gap-3 mt-4'>
-                                        <button
-                                            type='button'
-                                            className={`py-2 px-2.5 rounded-lg border-none cursor-pointer bg-red-600/80 hover:bg-red-600 duration-150 text-white w-max active:scale-[0.95] will-change-transform ${
-                                                editLoading
-                                                    ? "opacity-30 pointer-events-none"
-                                                    : ""
-                                            }`}
-                                            onClick={() =>
-                                                setIsEditModalOpen(false)
-                                            }
-                                            disabled={editLoading}>
-                                            {t("cancel")}
-                                        </button>
-                                        <button
-                                            className={`py-2 px-2.5 rounded-lg text-white border-none cursor-pointer bg-[#126ac9] duration-150 hover:bg-[#007bff] w-max active:scale-[0.95] will-change-transform ${
-                                                editLoading
-                                                    ? "opacity-30 pointer-events-none"
-                                                    : ""
-                                            }`}
-                                            type='submit'
-                                            disabled={editLoading}>
-                                            {t("ok")}
-                                        </button>
-                                    </div>
-                                </form>
-                            </>
-                        )}
+                                        </form>
+                                    </>
+                                )}
+                            </motion.div>
+                        </AnimatePresence>
                     </Modal>
                 </motion.div>
             )}

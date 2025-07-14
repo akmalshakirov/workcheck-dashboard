@@ -5,6 +5,7 @@ import en from "./locales/en.json";
 import ru from "./locales/ru.json";
 import uz from "./locales/uz.json";
 
+const savedLang = localStorage.getItem("lang");
 const resources = {
     uz: { translation: uz },
     ru: { translation: ru },
@@ -13,8 +14,8 @@ const resources = {
 
 i18n.use(initReactI18next).init({
     resources,
-    lng: "uz",
-    fallbackLng: "en",
+    lng: savedLang ? savedLang : "uz",
+    fallbackLng: "uz",
     interpolation: {
         escapeValue: false,
     },

@@ -1,7 +1,13 @@
 import { AnimatePresence, motion } from "framer-motion";
 import styles from "./Modal.module.css";
+import { useEffect } from "react";
 
 const Modal = ({ visible, title = "", children }) => {
+    useEffect(() => {
+        if (visible) document.documentElement.classList.add("overflow-hidden");
+        else document.documentElement.classList.remove("overflow-hidden");
+    }, [visible]);
+
     return (
         <AnimatePresence mode='wait'>
             {visible && (
@@ -28,26 +34,6 @@ const Modal = ({ visible, title = "", children }) => {
                             <h1>{title}</h1>
                         </div>
                         <div className={styles.body}>{children}</div>
-                        {/* <div className={styles.footer}>
-                            <button
-                                className={`${styles.cancelBtn} bg-red-600/80 hover:bg-red-600 duration-150 text-white active:scale-[0.95] will-change-transform`}
-                                onClick={onCancel}>
-                                {t("cancel")}
-                            </button>
-                            <button
-                                className={`${
-                                    styles.okBtn
-                                } bg-[#126ac9] duration-150 hover:bg-[#007bff] ${
-                                    Disable
-                                        ? "opacity-30 cursor-not-allowed!"
-                                        : "pointer-events-auto active:scale-[0.95] will-change-transform"
-                                }`}
-                                onClick={onOk}
-                                type='submit'
-                                disabled={Disable}>
-                                {t("ok")}
-                            </button>
-                        </div> */}
                     </motion.div>
                 </motion.div>
             )}

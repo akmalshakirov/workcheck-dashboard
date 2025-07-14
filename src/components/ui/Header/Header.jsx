@@ -34,12 +34,13 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
     const [langOpen, setLangOpen] = useState(false);
     const [langClosing, setLangClosing] = useState(false);
     const [selectedLang, setSelectedLang] = useState({
-        code: "uz",
-        label: "Uz",
+        code: localStorage.getItem("lang"),
+        label: localStorage.getItem("lang"),
     });
     const { i18n } = useTranslation();
     const changeLanguage = (lng) => {
         i18n.changeLanguage(lng);
+        localStorage.setItem("lang", lng);
     };
     const [notifOpen, setNotifOpen] = useState(false);
     const [notifClosing, setNotifClosing] = useState(false);
@@ -58,6 +59,11 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
     const [mobileLangOpen, setMobileLangOpen] = useState(false);
     const [mobileNotifOpen, setMobileNotifOpen] = useState(false);
     const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
+    const lang = localStorage.getItem("lang");
+
+    useEffect(() => {
+        localStorage.setItem("lang", selectedLang.code);
+    }, [langRef, selectedLang, lang]);
 
     const closeDropdown = (open, setOpen, setClosing) => {
         if (open) {
@@ -410,9 +416,7 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                             className='bg-white dark:bg-[#111] p-4 flex flex-col gap-4 w-3/4 max-w-xs h-full shadow-lg'
                             onClick={(e) => e.stopPropagation()}>
                             <div className='flex justify-between items-center mb-4'>
-                                <span className='font-bold text-lg'>
-                                    <kbd>off</kbd>
-                                </span>
+                                <span className='font-bold text-lg'>Menu</span>
                                 <button
                                     onClick={() => setMobileMenuOpen(false)}
                                     aria-label='Close menu'>
