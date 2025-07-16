@@ -351,15 +351,17 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                                 onClick={(e) => e.stopPropagation()}>
                                 {admin ? (
                                     <>
-                                        <img
+                                        <>
+                                            <img
                                             src={
                                                 admin?.image
                                                     ? admin?.image
                                                     : "https://alyeowbccvspelnnwqhy.supabase.co/storage/v1/object/public/images//defaultImage.png"
                                             }
                                             alt='Admin image'
-                                            className='size-10 mt-1 object-contain'
+                                            className='size-10 mt-1 object-cover rounded-full'
                                         />
+                                        </>
                                         <div>
                                             <p className='uppercase whitespace-break-spaces ml-1 break-all line-clamp-1'>
                                                 {admin?.name}

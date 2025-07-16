@@ -27,7 +27,6 @@ const DashboardAdmins = () => {
         password: "",
         phone: "",
         role: "ADMIN",
-        image: null,
     });
     const [id, setId] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
@@ -87,7 +86,7 @@ const DashboardAdmins = () => {
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        "Content-Type": "multipart/form-data",
+                        // "Content-Type": "multipart/form-data",
                         Accept: lang,
                     },
                 }
@@ -117,6 +116,13 @@ const DashboardAdmins = () => {
         } finally {
             setCreateAdminLoading(false);
             setCreateAdminModal(false);
+            setAdminData({
+                name: "",
+                username: "",
+                password: "",
+                phone: "",
+                role: "ADMIN",
+            });
         }
     };
 
@@ -158,17 +164,19 @@ const DashboardAdmins = () => {
         setEditLoading(true);
         try {
             const formData = new FormData();
-            formData.append("name", adminName);
-            formData.append("username", adminUsername);
-            formData.append("role", adminRole);
-            formData.append("phone", adminPhone);
-            if (editImageData) {
-                formData.append(
-                    "image",
-                    new Blob([editImageData.binary]),
-                    editImageData.fileName
-                );
-            }
+            formData.append("name", adminName || "");
+            formData.append("username", adminUsername || "");
+            formData.append("role", adminRole || "");
+            formData.append("phone", adminPhone || "");
+            fileList && formData.append("image", fileList);
+            formData.append("password", adminPassword || "");
+            // if (editImageData) {
+            //     formData.append(
+            //         "image",
+            //         new Blob([editImageData.binary]),
+            //         editImageData.fileName
+            //     );
+            // }
             const response = await axios.put(
                 `${baseURL}/admin/${id}/update`,
                 formData,
@@ -179,11 +187,16 @@ const DashboardAdmins = () => {
                     },
                 }
             );
-            if (response.status === 200) {
-                toast.success(response.data.message);
-                setIsEditModalOpen(false);
-                getAdmins();
-            }
+            // if (response.status == 200) {
+            Swal.fire({
+                title: response.data.message,
+                icon: "success",
+                timer: 10000,
+                timerProgressBar,
+            });
+            setIsEditModalOpen(false);
+            getAdmins();
+            // }
         } catch (error) {
             Swal.fire({
                 text: error?.response?.data?.error || "Xatolik yuz berdi",
@@ -209,6 +222,13 @@ const DashboardAdmins = () => {
             animation: true,
             theme: localStorage.getItem("isDark") == true,
         });
+
+        result.dismiss({
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+
         if (result.isConfirmed) {
             try {
                 const response = await axios.delete(
@@ -457,9 +477,6 @@ const DashboardAdmins = () => {
                                                         alt='Image'
                                                         className='object-contain rounded-lg'
                                                     />
-                                                    <span className='text-green-600'>
-                                                        {fileList[0]?.name}
-                                                    </span>
                                                 </motion.div>
                                             )}
                                     </div>
@@ -606,11 +623,43 @@ const DashboardAdmins = () => {
                                                             </option>
                                                         </select>
                                                     </div>
+                                                    <div className='flex flex-col gap-1'>
+                                                        <label
+                                                            htmlFor='edit-admin-password'
+                                                            className='text-base'>
+                                                            {t(
+                                                                "modal_admin_password"
+                                                            )}
+                                                            :
+                                                        </label>
+                                                        <input
+                                                            type='password'
+                                                            id='edit-admin-password'
+                                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                                            minLength={3}
+                                                            maxLength={15}
+                                                            name='password'
+                                                            value={
+                                                                adminPassword
+                                                            }
+                                                            onChange={(e) =>
+                                                                setAdminPassword(
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                            autoComplete='current-password'
+                                                        />
+                                                    </div>
                                                 </div>
                                                 <div className='flex flex-col w-1/2 gap-1'>
                                                     <UploadImage
                                                         fileList={fileList}
                                                         className='max-h-2/5 max-w-2/5'
+                                                        onChange={(e) => {
+                                                            setFileList(e),
+                                                                console.log(e);
+                                                        }}
                                                     />
                                                 </div>
                                             </div>
