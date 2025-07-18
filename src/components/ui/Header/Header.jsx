@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import {
     Bell,
+    BellRing,
     Globe,
     LockKeyhole,
     LogOut,
@@ -251,7 +252,11 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                     <div className='border dark:border-white/40 border-black/30 rounded-lg'>
                         <span className='flex items-center justify-center duration-200 active:scale-[0.95] will-change-transform p-1 pl-2 py-2'>
                             <span className='relative'>
-                                <Bell size={22} className='mr-1' />
+                                {notifications.length > 0 ? (
+                                    <BellRing size={22} className='mr-1' />
+                                ) : (
+                                    <Bell size={22} className='mr-1' />
+                                )}
                                 <span className='absolute -top-1.5 -right-[3px] bg-red-500 text-white rounded-full'>
                                     <span
                                         className='block text-[12px] px-[5.5px] animate-pulse'
@@ -353,14 +358,14 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                                     <>
                                         <>
                                             <img
-                                            src={
-                                                admin?.image
-                                                    ? admin?.image
-                                                    : "https://alyeowbccvspelnnwqhy.supabase.co/storage/v1/object/public/images//defaultImage.png"
-                                            }
-                                            alt='Admin image'
-                                            className='size-10 mt-1 object-cover rounded-full'
-                                        />
+                                                src={
+                                                    admin?.image
+                                                        ? admin?.image
+                                                        : "https://alyeowbccvspelnnwqhy.supabase.co/storage/v1/object/public/images//defaultImage.png"
+                                                }
+                                                alt='Admin image'
+                                                className='size-10 mt-1 object-cover rounded-full'
+                                            />
                                         </>
                                         <div>
                                             <p className='uppercase whitespace-break-spaces ml-1 break-all line-clamp-1'>

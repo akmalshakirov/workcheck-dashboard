@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./Dropdown.module.css";
 
-const Dropdown = ({ options, placeholder = "Tanlang..." }) => {
+const Dropdown = ({ options, placeholder = "Tanlang...", className }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedOption, setSelectedOption] = useState(null);
     const dropdownRef = useRef(null);
@@ -47,7 +47,9 @@ const Dropdown = ({ options, placeholder = "Tanlang..." }) => {
     };
 
     return (
-        <div className={styles.dropdownContainer} ref={dropdownRef}>
+        <div
+            className={`${styles.dropdownContainer} ${className}`}
+            ref={dropdownRef}>
             <button onClick={handleToggle} className={styles.dropdownButton}>
                 <span>
                     {selectedOption ? selectedOption.label : placeholder}
@@ -80,9 +82,9 @@ const Dropdown = ({ options, placeholder = "Tanlang..." }) => {
                     }`}
                     onAnimationEnd={handleAnimationEnd}>
                     <ul className={styles.dropdownList}>
-                        {options.map((option) => (
+                        {options.map((option, index) => (
                             <li
-                                key={option.value}
+                                key={index}
                                 onClick={() => handleOptionClick(option)}
                                 className={styles.dropdownItem}>
                                 {option.label}

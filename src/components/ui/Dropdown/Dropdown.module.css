@@ -1,6 +1,3 @@
-/* CustomDropdown.module.css */
-
-/* Keyframe animatsiyalar */
 @keyframes slide-fade-in-dropdown {
     0% {
         transform: translateY(-10px) scale(0.95);
@@ -45,10 +42,8 @@
     }
 }
 
-/* Mavjud stillar... */
 .dropdownContainer {
     position: relative;
-    width: 256px;
 }
 
 .dropdownButton {
@@ -64,7 +59,7 @@
     cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Elementlarni ikki tomonga ajratish */
+    justify-content: space-between;
 }
 
 .dropdownButton:focus {

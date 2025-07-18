@@ -8,6 +8,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { baseURL } from "../../App";
 import Modal from "../../components/ui/Modal/Modal";
+import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import Table from "../../components/ui/Table/Table";
 import { UploadImage } from "../../components/ui/UploadImage/UploadImage";
 import PhoneInput from "../../helpers/FormatPhone";
@@ -39,7 +40,6 @@ const DashboardAdmins = () => {
     const [adminPassword, setAdminPassword] = useState("");
     const [adminPhone, setAdminPhone] = useState("");
     const [adminRole, setAdminRole] = useState("ADMIN");
-    const [editImageData, setEditImageData] = useState(null);
     const lang = localStorage.getItem("lang");
 
     const getAdmins = async () => {
@@ -151,7 +151,6 @@ const DashboardAdmins = () => {
             setAdminPassword("");
             setAdminPhone(response.data.admin.phone || "");
             setAdminRole(response.data.admin.role || "ADMIN");
-            setEditImageData(null);
         } catch (error) {
             console.log(error);
         } finally {
@@ -300,20 +299,21 @@ const DashboardAdmins = () => {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}>
             {preloader ? (
-                <>
-                    <div className='flex justify-center items-center'>
-                        <h1 className='text-2xl'>{t("preloader")}...</h1>
-                        <span>
-                            <Loader2Icon className='animate-spin' />
-                        </span>
-                    </div>
-                </>
+                <div className='flex flex-col gap-3'>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                        <div
+                            key={(_, index)}
+                            className='p-2 flex gap-2 items-center'>
+                            <Skeleton className='w-full h-10' />
+                        </div>
+                    ))}
+                </div>
             ) : (
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}>
-                    <div className='flex items-center justify-between mb-5'>
+                    <div className='flex items-center justify-between mb-5 '>
                         <h1 className='text-2xl font-bold'>
                             {t("sidebar_admins")}
                         </h1>

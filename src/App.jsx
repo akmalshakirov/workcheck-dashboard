@@ -3,6 +3,7 @@ import { Route, Routes, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Loader from "./components/ui/Loader/Loader";
 import Preloader from "./components/ui/Preloader/Preloader";
+import DashboardBranch from "./pages/Dashboard/DashboardBranch";
 
 const DashboardLayout = React.lazy(() => import("./layout/DashboardLayout"));
 const DashboardAdmins = React.lazy(() =>
@@ -57,6 +58,7 @@ const App = () => {
                     <Route path='admins' element={<DashboardAdmins />} />
                     <Route path='workers' element={<DashboardWorkers />} />
                     <Route path='profile' element={<DashboardProfile />} />
+                    <Route path='branch' element={<DashboardBranch />} />
                 </Route>
                 <Route path='*' element={<h1>Page Not Found</h1>} />
             </Routes>
