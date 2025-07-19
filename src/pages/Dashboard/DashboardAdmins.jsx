@@ -41,6 +41,7 @@ const DashboardAdmins = () => {
     const [adminPhone, setAdminPhone] = useState("");
     const [adminRole, setAdminRole] = useState("ADMIN");
     const lang = localStorage.getItem("lang");
+    const [editingFileList, setEditingFileList] = useState([]);
 
     const getAdmins = async () => {
         setPreloader(true);
@@ -86,7 +87,6 @@ const DashboardAdmins = () => {
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        // "Content-Type": "multipart/form-data",
                         Accept: lang,
                     },
                 }
@@ -151,8 +151,16 @@ const DashboardAdmins = () => {
             setAdminPassword("");
             setAdminPhone(response.data.admin.phone || "");
             setAdminRole(response.data.admin.role || "ADMIN");
+            setEditingFileList(response.data.admin.image);
         } catch (error) {
-            console.log(error);
+            setGetAdminLoading(false);
+            setIsEditModalOpen(false);
+            Swal.fire({
+                title: error.response.data.error,
+                icon: "error",
+                timer: 10000,
+                timerProgressBar: true,
+            });
         } finally {
             setGetAdminLoading(false);
         }
@@ -167,26 +175,18 @@ const DashboardAdmins = () => {
             formData.append("username", adminUsername || "");
             formData.append("role", adminRole || "");
             formData.append("phone", adminPhone || "");
-            fileList && formData.append("image", fileList);
+            editingFileList && formData.append("image", editingFileList);
             formData.append("password", adminPassword || "");
-            // if (editImageData) {
-            //     formData.append(
-            //         "image",
-            //         new Blob([editImageData.binary]),
-            //         editImageData.fileName
-            //     );
-            // }
             const response = await axios.put(
                 `${baseURL}/admin/${id}/update`,
                 formData,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        // "Content-Type": "multipart/form-data",
                     },
                 }
             );
-            // if (response.status == 200) {
+            // if (response.status === 200) {
             Swal.fire({
                 title: response.data.message,
                 icon: "success",
@@ -222,12 +222,6 @@ const DashboardAdmins = () => {
             theme: localStorage.getItem("isDark") == true,
         });
 
-        result.dismiss({
-            didOpen: () => {
-                Swal.showLoading();
-            },
-        });
-
         if (result.isConfirmed) {
             try {
                 const response = await axios.delete(
@@ -239,6 +233,7 @@ const DashboardAdmins = () => {
                         },
                     }
                 );
+
                 MySwal.fire({
                     title: `${response.data.message}`,
                     text: `${response.data.message}`,
@@ -515,13 +510,29 @@ const DashboardAdmins = () => {
                                 layout
                                 transition={{ duration: 0.4, type: "spring" }}>
                                 {getAdminLoading ? (
-                                    <div className='flex items-center justify-center'>
-                                        <h1 className='text-2xl flex items-center'>
-                                            {t("preloader")}...{" "}
-                                            <span>
-                                                <Loader2Icon className='animate-spin' />
-                                            </span>
-                                        </h1>
+                                    // <div className='flex items-center justify-center'>
+                                    //     <h1 className='text-2xl flex items-center'>
+                                    //         {t("preloader")}...{" "}
+                                    //         <span>
+                                    //             <Loader2Icon className='animate-spin' />
+                                    //         </span>
+                                    //     </h1>
+                                    // </div>
+                                    <div className='flex gap-2.5'>
+                                        <div className='w-1/2'>
+                                            {Array.from({ length: 5 }).map(
+                                                (_, i) => (
+                                                    <div
+                                                        key={i}
+                                                        className='p-2 flex gap-2 items-center'>
+                                                        <Skeleton className='w-full h-14' />
+                                                    </div>
+                                                )
+                                            )}
+                                        </div>
+                                        <div className='w-1/2 p-4'>
+                                            <Skeleton className='w-40 h-40' />
+                                        </div>
                                     </div>
                                 ) : (
                                     <>
@@ -590,7 +601,9 @@ const DashboardAdmins = () => {
                                                             onChange={
                                                                 setAdminPhone
                                                             }
-                                                            label='Admin telefon raqam:'
+                                                            label={`${t(
+                                                                "modal_admin_phone"
+                                                            )}:`}
                                                             name='phone'
                                                             required
                                                         />
@@ -652,13 +665,17 @@ const DashboardAdmins = () => {
                                                         />
                                                     </div>
                                                 </div>
-                                                <div className='flex flex-col w-1/2 gap-1'>
+                                                <div className='max-w-1/3'>
                                                     <UploadImage
-                                                        fileList={fileList}
-                                                        className='max-h-2/5 max-w-2/5'
+                                                        label='Adminni rasmi:'
+                                                        fileList={
+                                                            editingFileList
+                                                        }
+                                                        className=''
                                                         onChange={(e) => {
-                                                            setFileList(e),
-                                                                console.log(e);
+                                                            setEditingFileList(
+                                                                e
+                                                            );
                                                         }}
                                                     />
                                                 </div>

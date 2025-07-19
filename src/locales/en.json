@@ -17,5 +17,6 @@
     "no_admins_error": "Admins not found or not added yet",
     "modal_admin_name": "Admin name",
     "modal_admin_username": "Admin username",
+    "modal_admin_phone": "Admin phone number",
     "footer_creator": "Site creator"
 }

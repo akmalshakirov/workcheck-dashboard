@@ -18,7 +18,8 @@ export const UploadImage = ({
         if (onChange) onChange(file);
     };
 
-    const displayImage = fileList && fileList.length > 0 ? fileList[0] : image;
+    const displayImage =
+        image?.length > 0 ? URL?.createObjectURL(image) : fileList;
 
     return (
         <motion.div
@@ -37,7 +38,18 @@ export const UploadImage = ({
                     onChange={handleChange}
                 />
             </label>
-            {displayImage && (
+            <img
+                src={
+                    image
+                        ? URL.createObjectURL(image)
+                        : image
+                        ? displayImage
+                        : fileList
+                }
+                alt={`Image is uploading... ${fileList}`}
+                className='object-contain rounded-lg'
+            />
+            {/* {displayImage && (
                 <img
                     src={
                         typeof displayImage === "string"
@@ -45,9 +57,9 @@ export const UploadImage = ({
                             : URL.createObjectURL(displayImage)
                     }
                     alt='Image'
-                    className='object-contain rounded-lg'
+                    className=''
                 />
-            )}
+            )} */}
         </motion.div>
     );
 };

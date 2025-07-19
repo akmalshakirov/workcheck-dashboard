@@ -1,13 +1,12 @@
 import { UserRoundMinus, UserRoundPen } from "lucide-react";
-import React from "react";
 import { useTranslation } from "react-i18next";
 
 function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
     const { t } = useTranslation();
 
     return (
-        <div>
-            <table className='w-full'>
+        <div className='w-full overflow-x-auto'>
+            <table className='min-w-full table-auto'>
                 <thead className='bg-gray-50 dark:bg-[#222]'>
                     <tr>
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
@@ -35,7 +34,7 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                         <tr
                             key={item?.id}
                             className='hover:bg-gray-100 dark:hover:bg-[#222] transition-colors'>
-                            <td className='px-6 py-4 whitespace-nowrap pr-10'>
+                            <td className='px-6 py-4 whitespace-nowrap'>
                                 <img
                                     draggable={false}
                                     fetchPriority='auto'
@@ -46,7 +45,7 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                                             : item?.image
                                     }
                                     alt={item?.name}
-                                    className={`w-10 h-10 object-cover rounded-full ${
+                                    className={`w-10 h-10 object-cover object-top rounded-full ${
                                         item?.image !== null
                                             ? ""
                                             : "border p-[3px]"
@@ -76,7 +75,7 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                                 </span>
                             </td>
                             <td className='px-6 py-4'>
-                                <div className='flex items-center justify-around'>
+                                <div className='flex gap-2.5 items-center justify-around'>
                                     <button
                                         disabled={editLoading[item.id]}
                                         aria-label={

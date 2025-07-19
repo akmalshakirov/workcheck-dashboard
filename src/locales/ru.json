@@ -17,5 +17,6 @@
     "no_admins_error": "Админы не найдены или еще не добавлены",
     "modal_admin_name": "Имя админ",
     "modal_admin_username": "Имя пользователя админ",
+    "modal_admin_phone": "Номер телефон админ",
     "footer_creator": "Создатель сайта"
 }
