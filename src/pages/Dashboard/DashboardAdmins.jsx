@@ -186,16 +186,14 @@ const DashboardAdmins = () => {
                     },
                 }
             );
-            // if (response.status === 200) {
             Swal.fire({
                 title: response.data.message,
                 icon: "success",
                 timer: 10000,
-                timerProgressBar,
+                timerProgressBar: true,
             });
             setIsEditModalOpen(false);
             getAdmins();
-            // }
         } catch (error) {
             Swal.fire({
                 text: error?.response?.data?.error || "Xatolik yuz berdi",
@@ -298,8 +296,8 @@ const DashboardAdmins = () => {
                     {Array.from({ length: 5 }).map((_, index) => (
                         <div
                             key={(_, index)}
-                            className='p-2 flex gap-2 items-center'>
-                            <Skeleton className='w-full h-10' />
+                            className='flex h-[10vh] gap-1 items-center'>
+                            <Skeleton className='w-full h-full' />
                         </div>
                     ))}
                 </div>
