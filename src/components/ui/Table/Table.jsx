@@ -45,7 +45,7 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                                             : item?.image
                                     }
                                     alt={item?.name}
-                                    className={`w-10 h-10 object-cover object-top rounded-full ${
+                                    className={`w-10 h-10 object-cover rounded-full ${
                                         item?.image !== null
                                             ? ""
                                             : "border p-[3px]"

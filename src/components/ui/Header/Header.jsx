@@ -16,27 +16,17 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { useClickOutside } from "../../../hooks/useClickOutside";
 import DropdownIcon from "../Icons/Dropdown";
 import styles from "./Header.module.css";
+import { Skeleton } from "../Skeleton/Skeleton";
 
-function useClickOutside(ref, handler) {
-    useEffect(() => {
-        function handleClick(event) {
-            if (ref.current && !ref.current.contains(event.target)) {
-                handler();
-            }
-        }
-        document.addEventListener("mousedown", handleClick);
-        return () => document.removeEventListener("mousedown", handleClick);
-    }, [ref, handler]);
-}
-
-export const Header = ({ collapsed, setCollapsed, admin }) => {
+export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
     const [langOpen, setLangOpen] = useState(false);
     const [langClosing, setLangClosing] = useState(false);
     const [selectedLang, setSelectedLang] = useState({
-        code: localStorage.getItem("lang"),
-        label: localStorage.getItem("lang"),
+        code: localStorage.getItem("lang") || "uz",
+        label: localStorage.getItem("lang") || "Uz",
     });
     const { i18n } = useTranslation();
     const changeLanguage = (lng) => {
@@ -327,15 +317,19 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                     }>
                     <div className='border dark:border-white/40 border-black/30 rounded-lg '>
                         <div className='flex items-center justify-center p-1 pl-2.5 py-2 duration-200 active:scale-[0.95] will-change-transform'>
-                            <img
-                                src={
-                                    admin?.image
-                                        ? admin?.image
-                                        : "https://alyeowbccvspelnnwqhy.supabase.co/storage/v1/object/public/images//defaultImage.png"
-                                }
-                                alt='Admin-image'
-                                className='size-6 object-cover rounded-full'
-                            />
+                            {!admin ? (
+                                <Skeleton className='size-6 rounded-full' />
+                            ) : (
+                                <img
+                                    src={
+                                        admin?.image
+                                            ? admin?.image
+                                            : "https://alyeowbccvspelnnwqhy.supabase.co/storage/v1/object/public/images//defaultImage.png"
+                                    }
+                                    alt='Admin-image'
+                                    className='size-6 object-cover rounded-full'
+                                />
+                            )}
                             <span
                                 className={`dark:fill-white duration-200 ml-1 ${
                                     profileOpen ? "rotate-180" : ""
@@ -354,9 +348,9 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                             <div
                                 className='border-b border-b-gray-600/80 mb-1 p-2 flex gap-2.5 cursor-default'
                                 onClick={(e) => e.stopPropagation()}>
-                                {admin ? (
+                                <div className='flex items-center gap-3'>
                                     <>
-                                        <>
+                                        {admin?.image ? (
                                             <img
                                                 src={
                                                     admin?.image
@@ -366,21 +360,27 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                                                 alt='Admin image'
                                                 className='size-10 mt-1 object-cover rounded-full'
                                             />
-                                        </>
-                                        <div>
-                                            <p className='uppercase whitespace-break-spaces ml-1 break-all line-clamp-1'>
-                                                {admin?.name}
-                                            </p>
-                                            <p className='px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-200 text-green-800 dark:text-green-900'>
-                                                {admin?.role}
-                                            </p>
-                                        </div>
+                                        ) : (
+                                            <Skeleton className='w-10 h-10 rounded-full' />
+                                        )}
                                     </>
-                                ) : (
-                                    <p className='whitespace-break-spaces text-center'>
-                                        {t("preloader")}
-                                    </p>
-                                )}
+                                    <div className='flex flex-col max-w-max'>
+                                        {admin?.name ? (
+                                            <p className='uppercase whitespace-break-spaces ml-1 break-all line-clamp-1'>
+                                                {admin.name}
+                                            </p>
+                                        ) : (
+                                            <Skeleton className='w-[120px] h-[20px]' />
+                                        )}
+                                        {admin?.role ? (
+                                            <p className='px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-200 text-green-800 dark:text-green-900'>
+                                                {admin.role}
+                                            </p>
+                                        ) : (
+                                            <Skeleton className='w-[120px] h-[20px] mt-2' />
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                             <ul>
                                 {profileActions.map((a) => (
@@ -398,6 +398,7 @@ export const Header = ({ collapsed, setCollapsed, admin }) => {
                 </div>
             </div>
 
+            {/* it's mobile version of navbar */}
             <AnimatePresence>
                 {mobileMenuOpen && (
                     <motion.div

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
-import { Eye, EyeOff, Loader2Icon } from "lucide-react";
+import { Eye, EyeOff, UploadIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
@@ -104,13 +104,12 @@ const DashboardAdmins = () => {
                 Swal.fire({
                     title: response.data.message,
                     icon: "success",
-                    confirmButtonText: "Ok",
+                    confirmButtonText: t("ok2"),
                 });
             }
         } catch (error) {
             Swal.fire({
                 title: error.response.data.error,
-                text: error.response.data.error,
                 icon: "error",
             });
         } finally {
@@ -192,6 +191,14 @@ const DashboardAdmins = () => {
                 timer: 10000,
                 timerProgressBar: true,
             });
+            setEditingFileList(null);
+            setAdminData({
+                name: "",
+                username: "",
+                password: "",
+                phone: "",
+                role: "ADMIN",
+            });
             setIsEditModalOpen(false);
             getAdmins();
         } catch (error) {
@@ -208,16 +215,16 @@ const DashboardAdmins = () => {
 
     const handleDelete = async (id) => {
         const result = await MySwal.fire({
-            title: "Bu adminni o'chirmoqchimisiz?",
-            text: "Bu amalni ortga qaytarib bo'lmaydi!",
+            title: t("modal_admin_delete_title"),
+            text: t("modal_admin_delete_desc"),
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#d33",
             cancelButtonColor: "#3085d6",
-            confirmButtonText: "Ha!",
+            confirmButtonText: t("ok2"),
             cancelButtonText: t("cancel"),
             animation: true,
-            theme: localStorage.getItem("isDark") == true,
+            theme: localStorage.getItem("isDark") == "true" ? "dark" : "light",
         });
 
         if (result.isConfirmed) {
@@ -236,10 +243,21 @@ const DashboardAdmins = () => {
                     title: `${response.data.message}`,
                     text: `${response.data.message}`,
                     icon: "success",
+                    theme:
+                        localStorage.getItem("isDark") == "true"
+                            ? "dark"
+                            : "light",
                 });
                 getAdmins();
             } catch (error) {
-                MySwal.fire(error.response.data.error, "error");
+                MySwal.fire({
+                    title: error.response.data.error,
+                    icon: "error",
+                    theme:
+                        localStorage.getItem("isDark") == "true"
+                            ? "dark"
+                            : "light",
+                });
             }
         }
     };
@@ -295,7 +313,7 @@ const DashboardAdmins = () => {
                 <div className='flex flex-col gap-3'>
                     {Array.from({ length: 5 }).map((_, index) => (
                         <div
-                            key={(_, index)}
+                            key={index}
                             className='flex h-[10vh] gap-1 items-center'>
                             <Skeleton className='w-full h-full' />
                         </div>
@@ -432,11 +450,19 @@ const DashboardAdmins = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <div className='flex flex-col w-1/2 gap-1'>
+                                    <div className='flex flex-col w-1/2 gap-1 '>
                                         <label
                                             htmlFor='image'
                                             className='cursor-pointer flex flex-col'>
-                                            Rasm tanlang:
+                                            {fileList.length === 0
+                                                ? "Rasm tanlang:"
+                                                : "Tanlangan rasm:"}
+                                            {fileList.length === 0 && (
+                                                <div className='flex gap-2 px-2 py-5 border border-blue-500 bg-blue-400/20 rounded'>
+                                                    Rasm tanlash uchun joy
+                                                    <UploadIcon />
+                                                </div>
+                                            )}
                                             <input
                                                 hidden
                                                 id='image'
@@ -462,7 +488,7 @@ const DashboardAdmins = () => {
                                                         opacity: 0,
                                                         y: -50,
                                                     }}
-                                                    className='max-h-2/5 max-w-2/5'>
+                                                    className='max-h-2/5 max-w-2/5 border border-blue-500 bg-blue-300/10 p-4 rounded'>
                                                     <img
                                                         src={URL.createObjectURL(
                                                             fileList[0]
@@ -502,20 +528,14 @@ const DashboardAdmins = () => {
                     </Modal>
 
                     {/* Update admin modal */}
-                    <Modal title='Adminni tahrirlash' visible={isEditModalOpen}>
+                    <Modal
+                        title={t("modal_admin_update")}
+                        visible={isEditModalOpen}>
                         <AnimatePresence>
                             <motion.div
                                 layout
                                 transition={{ duration: 0.4, type: "spring" }}>
                                 {getAdminLoading ? (
-                                    // <div className='flex items-center justify-center'>
-                                    //     <h1 className='text-2xl flex items-center'>
-                                    //         {t("preloader")}...{" "}
-                                    //         <span>
-                                    //             <Loader2Icon className='animate-spin' />
-                                    //         </span>
-                                    //     </h1>
-                                    // </div>
                                     <div className='flex gap-2.5'>
                                         <div className='w-1/2'>
                                             {Array.from({ length: 5 }).map(
@@ -537,7 +557,7 @@ const DashboardAdmins = () => {
                                         <form onSubmit={handleEdit}>
                                             <div className='flex gap-10'>
                                                 <div className='w-1/2'>
-                                                    <div className='flex flex-col gap-1'>
+                                                    <div className='flex flex-col gap-1 mt-1'>
                                                         <label
                                                             htmlFor='edit-admin-name'
                                                             className='text-base'>
@@ -564,7 +584,7 @@ const DashboardAdmins = () => {
                                                             autoComplete='name'
                                                         />
                                                     </div>
-                                                    <div className='flex flex-col gap-1'>
+                                                    <div className='flex flex-col gap-1 mt-1'>
                                                         <label
                                                             htmlFor='edit-admin-username'
                                                             className='text-base'>
@@ -593,7 +613,7 @@ const DashboardAdmins = () => {
                                                             name='username'
                                                         />
                                                     </div>
-                                                    <div className='flex flex-col gap-1'>
+                                                    <div className='flex flex-col gap-1 mt-1'>
                                                         <PhoneInput
                                                             value={adminPhone}
                                                             onChange={
@@ -606,7 +626,7 @@ const DashboardAdmins = () => {
                                                             required
                                                         />
                                                     </div>
-                                                    <div className='flex flex-col gap-1'>
+                                                    <div className='flex flex-col gap-1 mt-1'>
                                                         <label
                                                             htmlFor='edit-admin-role'
                                                             className='text-base'>
@@ -634,7 +654,7 @@ const DashboardAdmins = () => {
                                                             </option>
                                                         </select>
                                                     </div>
-                                                    <div className='flex flex-col gap-1'>
+                                                    <div className='flex flex-col gap-1 mt-1'>
                                                         <label
                                                             htmlFor='edit-admin-password'
                                                             className='text-base'>

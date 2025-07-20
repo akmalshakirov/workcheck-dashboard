@@ -9,7 +9,6 @@ import { Footer } from "../components/ui/Footer/Footer";
 import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
 import { AdminContext } from "../context/AdminContext";
-import Dropdown from "../components/ui/Dropdown/Dropdown";
 
 const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(
@@ -102,7 +101,7 @@ const DashboardLayout = () => {
                     admin={admin}
                 />
                 <main className='p-5 bg-white rounded-lg mt-3 dark:bg-[#111] dark:text-white text-black duration-200'>
-                    <Outlet />
+                    <Outlet context={admin} />
                 </main>
                 <Footer />
             </div>

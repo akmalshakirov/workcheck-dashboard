@@ -3,7 +3,6 @@ import { createContext, useState } from "react";
 export const AdminContext = createContext();
 
 export const AdminProvider = ({ children }) => {
-    const token = localStorage.getItem("token");
     const [admin, setAdmin] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);

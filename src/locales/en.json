@@ -11,6 +11,7 @@
     "add_admin": "Add admin",
     "cancel": "Cancel",
     "ok": "Ok",
+    "ok2": "Yes",
     "search": "Search",
     "open_sidebar": "Open sidebar",
     "close_sidebar": "Close sidebar",
@@ -18,5 +19,10 @@
     "modal_admin_name": "Admin name",
     "modal_admin_username": "Admin username",
     "modal_admin_phone": "Admin phone number",
+    "modal_admin_password": "Admin password",
+    "moda_admin_update_image": "Admin image",
+    "modal_admin_update": "Update admin",
+    "modal_admin_delete_title": "Do you want to delete this admin?",
+    "modal_admin_delete_desc": "This action cannot be undone!",
     "footer_creator": "Site creator"
 }
