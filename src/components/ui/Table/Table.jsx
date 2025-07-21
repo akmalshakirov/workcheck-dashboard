@@ -1,8 +1,10 @@
 import { UserRoundMinus, UserRoundPen } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useAdmin } from "../../../hooks/useAdmin";
 
 function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
     const { t } = useTranslation();
+    const { isSuperAdmin } = useAdmin();
 
     return (
         <div className='w-full overflow-x-auto'>
@@ -24,9 +26,11 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
                             Telefon raqam
                         </th>
-                        <th className='px-6 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            Amallar
-                        </th>
+                        {isSuperAdmin ? (
+                            <th className='px-6 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
+                                Amallar
+                            </th>
+                        ) : null}
                     </tr>
                 </thead>
                 <tbody className='bg-white dark:bg-[#111010] divide-y divide-gray-200 dark:divide-gray-700'>
@@ -82,6 +86,7 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                                             item?.id + `it's a edit button`
                                         }
                                         onClick={() => editOnClick(item.id)}
+                                        title='Click to edit'
                                         className='px-[10px] py-[5px] text-white bg-blue-600/80 hover:bg-blue-600 rounded-lg transition'>
                                         <UserRoundPen size={22} />
                                     </button>
@@ -90,6 +95,7 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                                             item?.id + `it's a delete button`
                                         }
                                         onClick={() => deleteOnClick(item.id)}
+                                        title='Click to delete'
                                         className='px-[10px] py-[5px] text-white bg-red-600/80 hover:bg-red-600 rounded-lg transition'>
                                         <UserRoundMinus size={22} />
                                     </button>

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { LayoutDashboard, MapPin, ShieldUser, Users } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -8,59 +8,28 @@ import { baseURL } from "../App";
 import { Footer } from "../components/ui/Footer/Footer";
 import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
-import { AdminContext } from "../context/AdminContext";
+import { useAdmin } from "../hooks/useAdmin";
+import { getProfile } from "../service/api/api";
 
 const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(
         localStorage.getItem("sidebar") == "true"
     );
-    const [admin, setAdmin] = useState(null);
+    const [adminContent, setAdminContent] = useState(null);
     const token = localStorage.getItem("token");
-    const { loading } = useContext(AdminContext);
-
     useEffect(() => {
         localStorage.setItem("sidebar", collapsed);
     }, [collapsed]);
-
     const { t } = useTranslation();
-
-    const getProfile = async () => {
-        try {
-            const response = await axios.get(`${baseURL}/profile`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            if (response.status === 200) setAdmin(response.data.admin);
-        } catch (error) {
-            if (error.code === "ERR_NETWORK") {
-                toast.info("Internet aloqasi yo'q");
-            } else if (error?.response?.status === 401) {
-                const refreshResponse = await axios.post(
-                    `${baseURL}/refresh`,
-                    {},
-                    {
-                        withCredentials: true,
-                    }
-                );
-
-                if (refreshResponse.status === 200) {
-                    localStorage.setItem("token", refreshResponse.data.token);
-                    const token = localStorage.getItem("token");
-                    const response = await axios.get(`${baseURL}/profile`, {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                        },
-                    });
-
-                    if (response.status === 200) {
-                        setAdmin(response?.data?.admin);
-                    }
-                }
-            }
-        }
-    };
+    const { setAdmin, setIsLoading } = useAdmin();
 
     useEffect(() => {
-        getProfile();
+        getProfile({
+            setAdmin,
+            setAdminContent,
+            setIsLoading,
+            token,
+        });
     }, []);
 
     return (
@@ -98,10 +67,10 @@ const DashboardLayout = () => {
                 <Header
                     collapsed={collapsed}
                     setCollapsed={setCollapsed}
-                    admin={admin}
+                    admin={adminContent}
                 />
                 <main className='p-5 bg-white rounded-lg mt-3 dark:bg-[#111] dark:text-white text-black duration-200'>
-                    <Outlet context={admin} />
+                    <Outlet />
                 </main>
                 <Footer />
             </div>

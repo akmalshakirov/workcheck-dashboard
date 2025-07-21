@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Eye, EyeOff, UploadIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { baseURL } from "../../App";
@@ -12,6 +11,7 @@ import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import Table from "../../components/ui/Table/Table";
 import { UploadImage } from "../../components/ui/UploadImage/UploadImage";
 import PhoneInput from "../../helpers/FormatPhone";
+import { getAdmins } from "../../service/api/api";
 
 const MySwal = withReactContent(Swal);
 
@@ -43,23 +43,6 @@ const DashboardAdmins = () => {
     const lang = localStorage.getItem("lang");
     const [editingFileList, setEditingFileList] = useState([]);
 
-    const getAdmins = async () => {
-        setPreloader(true);
-        try {
-            const response = await axios.get(`${baseURL}/admins`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                    Accept: lang,
-                },
-            });
-            setAdmins(response?.data?.admins);
-        } catch (error) {
-            toast.info(error.response.data.error);
-        } finally {
-            setPreloader(false);
-        }
-    };
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setAdminData((prev) => ({ ...prev, [name]: value }));
@@ -72,13 +55,13 @@ const DashboardAdmins = () => {
     const createAdmin = async (e) => {
         e.preventDefault();
         setCreateAdminLoading(true);
-        const formData = new FormData();
-        formData.append("name", adminData.name);
-        formData.append("username", adminData.username);
-        formData.append("password", adminData.password);
-        formData.append("phone", adminData.phone);
-        formData.append("role", adminData.role);
-        formData.append("image", fileList[0]);
+        const formData = new FormData(e.target);
+        // formData.append("name", adminData.name);
+        // formData.append("username", adminData.username);
+        // formData.append("password", adminData.password);
+        // formData.append("phone", adminData.phone);
+        // formData.append("role", adminData.role);
+        // formData.append("image", fileList[0]);
 
         try {
             const response = await axios.post(
@@ -126,7 +109,12 @@ const DashboardAdmins = () => {
     };
 
     useEffect(() => {
-        getAdmins();
+        getAdmins({
+            setPreloader,
+            setAdmins,
+            token,
+            lang,
+        });
     }, []);
 
     useEffect(() => {
@@ -314,7 +302,7 @@ const DashboardAdmins = () => {
                     {Array.from({ length: 5 }).map((_, index) => (
                         <div
                             key={index}
-                            className='flex h-[10vh] gap-1 items-center'>
+                            className='flex h-[6vh] gap-1 items-center'>
                             <Skeleton className='w-full h-full' />
                         </div>
                     ))}
@@ -454,14 +442,16 @@ const DashboardAdmins = () => {
                                         <label
                                             htmlFor='image'
                                             className='cursor-pointer flex flex-col'>
-                                            {fileList.length === 0
+                                            {fileList?.length === 0
                                                 ? "Rasm tanlang:"
                                                 : "Tanlangan rasm:"}
-                                            {fileList.length === 0 && (
-                                                <div className='flex gap-2 px-2 py-5 border border-blue-500 bg-blue-400/20 rounded'>
+                                            {fileList?.length === 0 && (
+                                                <motion.div
+                                                    whileTap={{ scale: 0.98 }}
+                                                    className='flex gap-2 px-2 py-5 border border-blue-500 bg-blue-400/20 rounded'>
                                                     Rasm tanlash uchun joy
                                                     <UploadIcon />
-                                                </div>
+                                                </motion.div>
                                             )}
                                             <input
                                                 hidden
@@ -475,7 +465,8 @@ const DashboardAdmins = () => {
                                         </label>
                                         {fileList?.length > 0 &&
                                             fileList[0] && (
-                                                <motion.div
+                                                <motion.label
+                                                    htmlFor='image'
                                                     initial={{
                                                         opacity: 0,
                                                         y: -50,
@@ -488,15 +479,32 @@ const DashboardAdmins = () => {
                                                         opacity: 0,
                                                         y: -50,
                                                     }}
-                                                    className='max-h-2/5 max-w-2/5 border border-blue-500 bg-blue-300/10 p-4 rounded'>
-                                                    <img
-                                                        src={URL.createObjectURL(
-                                                            fileList[0]
-                                                        )}
-                                                        alt='Image'
-                                                        className='object-contain rounded-lg'
-                                                    />
-                                                </motion.div>
+                                                    className='border border-blue-500 bg-blue-300/10 p-2 rounded cursor-pointer'>
+                                                    <div className='flex gap-3'>
+                                                        <img
+                                                            src={URL.createObjectURL(
+                                                                fileList[0]
+                                                            )}
+                                                            alt='Admin Image'
+                                                            className='object-cover rounded-lg max-w-[50%] max-h-[50%]'
+                                                        />
+                                                        <div>
+                                                            <p>
+                                                                Tanlagan
+                                                                rasmingiz
+                                                                shunaqa
+                                                                ko'rinadi:
+                                                            </p>
+                                                            <img
+                                                                src={URL.createObjectURL(
+                                                                    fileList[0]
+                                                                )}
+                                                                alt='Admin Image'
+                                                                className='object-cover w-30 h-30 rounded-full p-2'
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                </motion.label>
                                             )}
                                     </div>
                                 </div>

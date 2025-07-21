@@ -1,13 +1,16 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AdminContext } from "../context/AdminContext";
 
 export const useAdmin = () => {
-    const context = useContext(AdminContext);
-    if (!context) {
-        throw new Error(
-            "useAdmin hook AdminProvider ichida ishlatilishi kerak!"
-        );
-    }
+    const { admin, setAdmin } = useContext(AdminContext);
+    const [isLoading, setIsLoading] = useState(true);
 
-    return context;
+    return {
+        admin,
+        setAdmin,
+        isAdmin: admin?.role === "ADMIN" || admin?.role === "SUPERADMIN",
+        isSuperAdmin: admin?.role === "SUPERADMIN",
+        isLoading,
+        setIsLoading,
+    };
 };
