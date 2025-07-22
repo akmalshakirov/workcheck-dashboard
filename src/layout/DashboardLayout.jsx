@@ -12,8 +12,6 @@ const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(
         localStorage.getItem("sidebar") == "true"
     );
-    console.log(collapsed);
-
     const [adminContent, setAdminContent] = useState(null);
     const token = localStorage.getItem("token");
     useEffect(() => {
