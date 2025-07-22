@@ -8,8 +8,8 @@ const SidearContext = createContext();
 export const Sidebar = ({ children, collapsed }) => {
     return (
         <motion.div
-            initial={!collapsed ? { width: "5.8rem" } : { width: "14.3rem" }}
-            animate={!collapsed ? { width: "5.8rem" } : { width: "14.3rem" }}
+            initial={collapsed ? { width: "5.8rem" } : { width: "14.3rem" }}
+            animate={collapsed ? { width: "5.8rem" } : { width: "14.3rem" }}
             transition={{
                 duration: 0.4,
                 type: "spring",
@@ -25,7 +25,7 @@ export const Sidebar = ({ children, collapsed }) => {
                         to={"/"}
                         className='p-4 pb-2 flex justify-center items-center overflow-hidden relative border-b border-b-gray-500/40 mb-2'>
                         <span className={`text-2xl font-bold mx-auto`}>
-                            {collapsed ? "WorkCheck" : "W"}
+                            {!collapsed ? "WorkCheck" : "W"}
                         </span>
                     </Link>
 
@@ -56,20 +56,20 @@ export const SidebarItem = ({ icon, text, link }) => {
                         <>
                             <span
                                 className={`${isActive ? "scale-120" : ""} ${
-                                    collapsed ? "mr-2" : "mr-0"
+                                    !collapsed ? "mr-2" : "mr-0"
                                 }`}>
                                 {icon}
                             </span>
                             <span
                                 className={`overflow-hidden transition-all ${
-                                    collapsed ? "" : "w-0"
+                                    !collapsed ? "" : "w-0"
                                 }`}>
                                 {text}
                             </span>
                         </>
                     </Ripple>
                     <span className='relative w-auto'>
-                        {!collapsed && (
+                        {collapsed && (
                             <div
                                 className={`whitespace-nowrap absolute z-[999]! -top-3 left-full opacity-20 -translate-x-3 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-hover:translate-x-0 invisible`}>
                                 <span className='ml-2 p-2 bg-gradient-to-tl from-blue-400 to-indigo-600 text-white text-sm rounded-lg dark:to-black/80 dark:from-black/80'>
