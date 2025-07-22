@@ -35,6 +35,7 @@ const Login = () => {
                 localStorage.setItem("token", response.data.token);
                 toast.success(response.data.message);
                 navigate("/");
+                console.log(response.data);
             }
         } catch (error) {
             if (error.code === "ERR_NETWORK") {
