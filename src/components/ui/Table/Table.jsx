@@ -5,7 +5,7 @@ import { useAdmin } from "../../../hooks/useAdmin";
 
 function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
     const { t } = useTranslation();
-    const { isSuperAdmin } = useAdmin();
+    const { isSuperAdmin, branch } = useAdmin();
 
     return (
         <div className='w-full overflow-x-auto'>
@@ -26,6 +26,9 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                         </th>
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
                             Telefon raqam
+                        </th>
+                        <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
+                            Filial
                         </th>
                         {isSuperAdmin && (
                             <motion.th
@@ -79,6 +82,11 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                             <td className='px-6 py-4 whitespace-nowrap'>
                                 <span className='px-2 inline-flex text-sm leading-5 font-semibold rounded-full'>
                                     +998{item?.phone}
+                                </span>
+                            </td>
+                            <td className='px-6 py-4 whitespace-nowrap'>
+                                <span className='px-2 inline-flex text-sm leading-5 font-semibold rounded-full'>
+                                    {item?.branch?.name}
                                 </span>
                             </td>
                             {isSuperAdmin && (

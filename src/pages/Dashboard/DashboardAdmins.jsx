@@ -11,8 +11,8 @@ import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import Table from "../../components/ui/Table/Table";
 import { UploadImage } from "../../components/ui/UploadImage/UploadImage";
 import PhoneInput from "../../helpers/FormatPhone";
-import { getAdmins } from "../../service/api/api";
 import { useAdmin } from "../../hooks/useAdmin";
+import { getAdmins } from "../../service/api/api";
 
 const MySwal = withReactContent(Swal);
 
@@ -445,21 +445,27 @@ const DashboardAdmins = () => {
                                             </select>
                                         </div>
                                     </div>
-                                    <div className='flex flex-col w-1/2 gap-1 '>
-                                        <div>
-                                            <label
-                                                htmlFor='branch'
-                                                className='mr-2'>
+                                    <div className='flex-1'>
+                                        <div className='flex flex-col gap-1'>
+                                            <p className='mr-2'>
                                                 Filialni tanlang:
-                                            </label>
-                                            <select
-                                                name='branchId'
-                                                id='branch'
-                                                className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'>
-                                                <option value='1'>
-                                                    Birinchi filial
-                                                </option>
-                                            </select>
+                                            </p>
+                                            {branch === null ? (
+                                                <Skeleton className='w-full h-10 rounded-lg' />
+                                            ) : (
+                                                <select
+                                                    name='branchId'
+                                                    className='border w-full rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'>
+                                                    {branch?.length > 0 &&
+                                                        branch.map((b) => (
+                                                            <option
+                                                                value={b.id}
+                                                                key={b.id}>
+                                                                {b.name}
+                                                            </option>
+                                                        ))}
+                                                </select>
+                                            )}
                                         </div>
                                         <label
                                             htmlFor='image'
@@ -501,15 +507,17 @@ const DashboardAdmins = () => {
                                                         opacity: 0,
                                                         y: -50,
                                                     }}
-                                                    className='border border-blue-500 bg-blue-300/10 p-2 rounded cursor-pointer'>
-                                                    <div className='flex gap-3'>
-                                                        <img
-                                                            src={URL.createObjectURL(
-                                                                fileList[0]
-                                                            )}
-                                                            alt='Admin Image'
-                                                            className='object-cover rounded-lg max-w-[50%] max-h-[50%]'
-                                                        />
+                                                    className='block border border-blue-500 bg-blue-300/10 p-4 rounded cursor-pointer'>
+                                                    <div className='flex gap-4'>
+                                                        <div className='max-w-1/4'>
+                                                            <img
+                                                                src={URL.createObjectURL(
+                                                                    fileList[0]
+                                                                )}
+                                                                alt='Admin Image'
+                                                                className='object-cover rounded-lg w-full h-full'
+                                                            />
+                                                        </div>
                                                         <div>
                                                             <p>
                                                                 Tanlagan

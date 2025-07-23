@@ -7,6 +7,7 @@ import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
 import { useAdmin } from "../hooks/useAdmin";
 import { getBranches, getProfile } from "../service/api/api";
+import { Skeleton } from "../components/ui/Skeleton/Skeleton";
 
 const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(
@@ -34,12 +35,19 @@ const DashboardLayout = () => {
     return (
         <div className='flex bg-[#5f73e2] dark:bg-[#000] transition-colors duration-200'>
             <Sidebar collapsed={collapsed} setCollapsed={setCollapsed}>
-                <select
-                    name='branch'
-                    className='w-full px-2 border border-gray-400 rounded py-2 outline-none'>
-                    <option value='nothing'>Filial tanlang...</option>
-                    <option value='bir'>Birinchi filial</option>
-                </select>
+                {branch === null ? (
+                    <Skeleton className='w-full h-10' />
+                ) : (
+                    <select
+                        name='branchId'
+                        className='w-full px-2 border border-gray-400 rounded py-2 outline-none'>
+                        {branch.map((b) => (
+                            <option value={b.id} key={b.id}>
+                                {b.name}
+                            </option>
+                        ))}
+                    </select>
+                )}
 
                 <hr className='my-3 text-gray-500/50' />
 
