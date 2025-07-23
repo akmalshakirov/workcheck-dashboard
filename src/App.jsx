@@ -36,7 +36,7 @@ const App = () => {
     return (
         <Suspense fallback={<Preloader />}>
             <ToastContainer
-                position='top-right'
+                position='top-center'
                 autoClose={5000}
                 limit={3}
                 closeOnClick={false}

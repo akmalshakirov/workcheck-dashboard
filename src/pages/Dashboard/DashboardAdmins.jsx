@@ -1,6 +1,6 @@
 import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
-import { Eye, EyeOff, UploadIcon } from "lucide-react";
+import { Eye, EyeOff, UploadIcon, UserRoundPlus } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
@@ -17,6 +17,7 @@ const MySwal = withReactContent(Swal);
 
 const DashboardAdmins = () => {
     const token = localStorage.getItem("token");
+    const theme = localStorage.getItem("isDark");
     const [admins, setAdmins] = useState([]);
     const [preloader, setPreloader] = useState(false);
     const [createAdminModal, setCreateAdminModal] = useState(false);
@@ -42,6 +43,7 @@ const DashboardAdmins = () => {
     const [adminRole, setAdminRole] = useState("ADMIN");
     const lang = localStorage.getItem("lang");
     const [editingFileList, setEditingFileList] = useState([]);
+    const [branch, setBranch] = useState(null);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -56,12 +58,6 @@ const DashboardAdmins = () => {
         e.preventDefault();
         setCreateAdminLoading(true);
         const formData = new FormData(e.target);
-        // formData.append("name", adminData.name);
-        // formData.append("username", adminData.username);
-        // formData.append("password", adminData.password);
-        // formData.append("phone", adminData.phone);
-        // formData.append("role", adminData.role);
-        // formData.append("image", fileList[0]);
 
         try {
             const response = await axios.post(
@@ -74,26 +70,35 @@ const DashboardAdmins = () => {
                     },
                 }
             );
-            getAdmins();
-            setAdminData({
-                name: "",
-                username: "",
-                password: "",
-                phone: "",
-                role: "ADMIN",
-            });
-            setFileList(null);
-            if (preloader == false) {
-                Swal.fire({
-                    title: response.data.message,
-                    icon: "success",
-                    confirmButtonText: t("ok2"),
+            if (response.status === 201) {
+                getAdmins({
+                    setPreloader,
+                    setAdmins,
+                    token,
+                    lang,
                 });
+                setAdminData({
+                    name: "",
+                    username: "",
+                    password: "",
+                    phone: "",
+                    role: "ADMIN",
+                });
+                setFileList(null);
+                if (preloader == false) {
+                    Swal.fire({
+                        title: response.data.message,
+                        icon: "success",
+                        confirmButtonText: t("ok2"),
+                        theme: theme == "true" ? "dark" : "light",
+                    });
+                }
             }
         } catch (error) {
             Swal.fire({
                 title: error.response.data.error,
                 icon: "error",
+                theme: theme == "true" ? "dark" : "light",
             });
         } finally {
             setCreateAdminLoading(false);
@@ -105,6 +110,7 @@ const DashboardAdmins = () => {
                 phone: "",
                 role: "ADMIN",
             });
+            setFileList(null);
         }
     };
 
@@ -147,6 +153,7 @@ const DashboardAdmins = () => {
                 icon: "error",
                 timer: 10000,
                 timerProgressBar: true,
+                theme: theme == "true" ? "dark" : "light",
             });
         } finally {
             setGetAdminLoading(false);
@@ -173,31 +180,36 @@ const DashboardAdmins = () => {
                     },
                 }
             );
-            Swal.fire({
-                title: response.data.message,
-                icon: "success",
-                timer: 10000,
-                timerProgressBar: true,
-            });
-            setEditingFileList(null);
-            setAdminData({
-                name: "",
-                username: "",
-                password: "",
-                phone: "",
-                role: "ADMIN",
-            });
-            setIsEditModalOpen(false);
-            getAdmins();
+            if (response.status === 200) {
+                Swal.fire({
+                    title: response.data.message,
+                    icon: "success",
+                    timer: 10000,
+                    timerProgressBar: true,
+                    theme: theme == "true" ? "dark" : "light",
+                });
+                setEditingFileList(null);
+                setAdminData({
+                    name: "",
+                    username: "",
+                    password: "",
+                    phone: "",
+                    role: "ADMIN",
+                });
+                setIsEditModalOpen(false);
+                getAdmins();
+            }
         } catch (error) {
             Swal.fire({
                 text: error?.response?.data?.error || "Xatolik yuz berdi",
                 icon: "error",
                 timerProgressBar: true,
                 timer: 10000,
+                theme: theme == "true" ? "dark" : "light",
             });
         } finally {
             setEditLoading(false);
+            editingFileList([]);
         }
     };
 
@@ -211,8 +223,7 @@ const DashboardAdmins = () => {
             cancelButtonColor: "#3085d6",
             confirmButtonText: t("ok2"),
             cancelButtonText: t("cancel"),
-            animation: true,
-            theme: localStorage.getItem("isDark") == "true" ? "dark" : "light",
+            theme: theme == "true" ? "dark" : "light",
         });
 
         if (result.isConfirmed) {
@@ -231,20 +242,14 @@ const DashboardAdmins = () => {
                     title: `${response.data.message}`,
                     text: `${response.data.message}`,
                     icon: "success",
-                    theme:
-                        localStorage.getItem("isDark") == "true"
-                            ? "dark"
-                            : "light",
+                    theme: theme == "true" ? "dark" : "light",
                 });
                 getAdmins();
             } catch (error) {
-                MySwal.fire({
+                Myl({
                     title: error.response.data.error,
                     icon: "error",
-                    theme:
-                        localStorage.getItem("isDark") == "true"
-                            ? "dark"
-                            : "light",
+                    theme: theme == "true" ? "dark" : "light",
                 });
             }
         }
@@ -317,8 +322,9 @@ const DashboardAdmins = () => {
                             {t("sidebar_admins")}
                         </h1>
                         <button
-                            className='border rounded-lg border-gray-500/70 p-1 px-2 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] duration-150 will-change-transform'
+                            className='border flex items-center gap-2 rounded-lg border-gray-500/70 p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform'
                             onClick={() => setCreateAdminModal(true)}>
+                            <UserRoundPlus size={20} />
                             {t("add_admin")}
                         </button>
                     </div>
@@ -439,6 +445,16 @@ const DashboardAdmins = () => {
                                         </div>
                                     </div>
                                     <div className='flex flex-col w-1/2 gap-1 '>
+                                        <div>
+                                            <label htmlFor='branch'>
+                                                Filialni tanlang:
+                                            </label>
+                                            <select name='branchId' id='branch'>
+                                                <option value='1'>
+                                                    Birinchi filial
+                                                </option>
+                                            </select>
+                                        </div>
                                         <label
                                             htmlFor='image'
                                             className='cursor-pointer flex flex-col'>

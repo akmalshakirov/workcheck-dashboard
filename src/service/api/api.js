@@ -1,6 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import { baseURL } from "../../App";
+const theme = localStorage.getItem("isDark");
 
 export const getAdmins = async ({ setPreloader, setAdmins, token, lang }) => {
     setPreloader(true);
@@ -18,6 +19,7 @@ export const getAdmins = async ({ setPreloader, setAdmins, token, lang }) => {
             icon: "error",
             timer: 10000,
             timerProgressBar: true,
+            theme: theme == "true" ? "dark" : "light",
         });
     } finally {
         setPreloader(false);

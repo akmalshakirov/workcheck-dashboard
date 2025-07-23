@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { UserRoundMinus, UserRoundPen } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useAdmin } from "../../../hooks/useAdmin";
@@ -26,11 +27,13 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
                             Telefon raqam
                         </th>
-                        {isSuperAdmin ? (
-                            <th className='px-6 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
+                        {isSuperAdmin && (
+                            <motion.th
+                                layout
+                                className='px-6 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
                                 Amallar
-                            </th>
-                        ) : null}
+                            </motion.th>
+                        )}
                     </tr>
                 </thead>
                 <tbody className='bg-white dark:bg-[#111010] divide-y divide-gray-200 dark:divide-gray-700'>
@@ -78,29 +81,34 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                                     +998{item?.phone}
                                 </span>
                             </td>
-                            <td className='px-6 py-4'>
-                                <div className='flex gap-2.5 items-center justify-around'>
-                                    <button
-                                        disabled={editLoading[item.id]}
-                                        aria-label={
-                                            item?.id + `it's a edit button`
-                                        }
-                                        onClick={() => editOnClick(item.id)}
-                                        title='Click to edit'
-                                        className='px-[10px] py-[5px] text-white bg-blue-600/80 hover:bg-blue-600 rounded-lg transition'>
-                                        <UserRoundPen size={22} />
-                                    </button>
-                                    <button
-                                        aria-label={
-                                            item?.id + `it's a delete button`
-                                        }
-                                        onClick={() => deleteOnClick(item.id)}
-                                        title='Click to delete'
-                                        className='px-[10px] py-[5px] text-white bg-red-600/80 hover:bg-red-600 rounded-lg transition'>
-                                        <UserRoundMinus size={22} />
-                                    </button>
-                                </div>
-                            </td>
+                            {isSuperAdmin && (
+                                <motion.td layout className='px-6 py-4'>
+                                    <div className='flex gap-2.5 items-center justify-around'>
+                                        <button
+                                            disabled={editLoading[item.id]}
+                                            aria-label={
+                                                item?.id + `it's a edit button`
+                                            }
+                                            onClick={() => editOnClick(item.id)}
+                                            title='Click to edit'
+                                            className='px-[10px] py-[5px] text-white bg-blue-600/80 hover:bg-blue-600 rounded-lg transition'>
+                                            <UserRoundPen size={22} />
+                                        </button>
+                                        <button
+                                            aria-label={
+                                                item?.id +
+                                                `it's a delete button`
+                                            }
+                                            onClick={() =>
+                                                deleteOnClick(item.id)
+                                            }
+                                            title='Click to delete'
+                                            className='px-[10px] py-[5px] text-white bg-red-600/80 hover:bg-red-600 rounded-lg transition'>
+                                            <UserRoundMinus size={22} />
+                                        </button>
+                                    </div>
+                                </motion.td>
+                            )}
                         </tr>
                     ))}
                 </tbody>

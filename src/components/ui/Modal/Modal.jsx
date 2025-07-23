@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
-import styles from "./Modal.module.css";
 import { useEffect } from "react";
+import styles from "./Modal.module.css";
 
 const Modal = ({ visible, title = "", children }) => {
     useEffect(() => {

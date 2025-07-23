@@ -18,8 +18,8 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { useClickOutside } from "../../../hooks/useClickOutside";
 import DropdownIcon from "../Icons/Dropdown";
-import styles from "./Header.module.css";
 import { Skeleton } from "../Skeleton/Skeleton";
+import styles from "./Header.module.css";
 
 export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
     const [langOpen, setLangOpen] = useState(false);
@@ -373,7 +373,7 @@ export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
                                             <Skeleton className='w-[120px] h-[20px]' />
                                         )}
                                         {admin?.role ? (
-                                            <p className='px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-200 text-green-800 dark:text-green-900'>
+                                            <p className='px-2 text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-200 text-green-800 dark:text-green-900 text-center'>
                                                 {admin.role}
                                             </p>
                                         ) : (

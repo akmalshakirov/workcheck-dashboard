@@ -38,7 +38,9 @@ const DashboardLayout = () => {
                     <option value='nothing'>Filial tanlang...</option>
                     <option value='bir'>Birinchi filial</option>
                 </select>
+
                 <hr className='my-3 text-gray-500/50' />
+
                 <SidebarItem
                     icon={<LayoutDashboard size={22} />}
                     text={t("sidebar_dashboard")}
