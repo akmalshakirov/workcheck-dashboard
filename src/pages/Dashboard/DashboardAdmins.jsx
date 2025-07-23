@@ -12,6 +12,7 @@ import Table from "../../components/ui/Table/Table";
 import { UploadImage } from "../../components/ui/UploadImage/UploadImage";
 import PhoneInput from "../../helpers/FormatPhone";
 import { getAdmins } from "../../service/api/api";
+import { useAdmin } from "../../hooks/useAdmin";
 
 const MySwal = withReactContent(Swal);
 
@@ -43,7 +44,7 @@ const DashboardAdmins = () => {
     const [adminRole, setAdminRole] = useState("ADMIN");
     const lang = localStorage.getItem("lang");
     const [editingFileList, setEditingFileList] = useState([]);
-    const [branch, setBranch] = useState(null);
+    const { branch } = useAdmin();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -446,10 +447,15 @@ const DashboardAdmins = () => {
                                     </div>
                                     <div className='flex flex-col w-1/2 gap-1 '>
                                         <div>
-                                            <label htmlFor='branch'>
+                                            <label
+                                                htmlFor='branch'
+                                                className='mr-2'>
                                                 Filialni tanlang:
                                             </label>
-                                            <select name='branchId' id='branch'>
+                                            <select
+                                                name='branchId'
+                                                id='branch'
+                                                className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'>
                                                 <option value='1'>
                                                     Birinchi filial
                                                 </option>

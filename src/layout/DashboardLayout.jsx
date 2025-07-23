@@ -6,7 +6,7 @@ import { Footer } from "../components/ui/Footer/Footer";
 import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
 import { useAdmin } from "../hooks/useAdmin";
-import { getProfile } from "../service/api/api";
+import { getBranches, getProfile } from "../service/api/api";
 
 const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(
@@ -14,11 +14,12 @@ const DashboardLayout = () => {
     );
     const [adminContent, setAdminContent] = useState(null);
     const token = localStorage.getItem("token");
+    const lang = localStorage.getItem("lang");
     useEffect(() => {
         localStorage.setItem("sidebar", collapsed);
     }, [collapsed]);
     const { t } = useTranslation();
-    const { setAdmin, setIsLoading } = useAdmin();
+    const { setAdmin, setIsLoading, branch, setBranch } = useAdmin();
 
     useEffect(() => {
         getProfile({
@@ -27,6 +28,7 @@ const DashboardLayout = () => {
             setIsLoading,
             token,
         });
+        getBranches({ setBranch });
     }, []);
 
     return (

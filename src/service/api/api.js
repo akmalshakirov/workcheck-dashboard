@@ -1,7 +1,9 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import { baseURL } from "../../App";
+const token = localStorage.getItem("token");
 const theme = localStorage.getItem("isDark");
+const lang = localStorage.getItem("lang");
 
 export const getAdmins = async ({ setPreloader, setAdmins, token, lang }) => {
     setPreloader(true);
@@ -69,5 +71,20 @@ export const getProfile = async ({
                 }
             }
         }
+    }
+};
+
+export const getBranches = async ({ setBranch }) => {
+    try {
+        const response = await axios.get(`${baseURL}/branches`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: lang,
+            },
+        });
+
+        setBranch(response.data.branches);
+    } catch (error) {
+        console.log(error);
     }
 };

@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { AdminContext } from "../context/AdminContext";
 
 export const useAdmin = () => {
-    const { admin, setAdmin } = useContext(AdminContext);
+    const { admin, setAdmin, branch, setBranch } = useContext(AdminContext);
     const [isLoading, setIsLoading] = useState(true);
 
     return {
@@ -12,5 +12,7 @@ export const useAdmin = () => {
         isSuperAdmin: admin?.role === "SUPERADMIN",
         isLoading,
         setIsLoading,
+        branch,
+        setBranch,
     };
 };
