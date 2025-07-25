@@ -1,6 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import { baseURL } from "../../App";
+import { toast } from "react-toastify";
 const token = localStorage.getItem("token");
 const theme = localStorage.getItem("isDark");
 const lang = localStorage.getItem("lang");
@@ -16,13 +17,17 @@ export const getAdmins = async ({ setPreloader, setAdmins, token, lang }) => {
         });
         setAdmins(response?.data?.admins);
     } catch (error) {
-        Swal.fire({
-            title: error?.response?.data?.error || error,
-            icon: "error",
-            timer: 10000,
-            timerProgressBar: true,
-            theme: theme == "true" ? "dark" : "light",
-        });
+        if (error.code === "ERR_NETWORK") {
+            Swal.fire("Internet aloqasi yo'q", "", "error");
+        } else {
+            Swal.fire({
+                title: error?.response?.data?.error || error,
+                icon: "error",
+                timer: 10000,
+                timerProgressBar: true,
+                theme: theme == "true" ? "dark" : "light",
+            });
+        }
     } finally {
         setPreloader(false);
     }
@@ -45,7 +50,7 @@ export const getProfile = async ({
         }
     } catch (error) {
         if (error.code === "ERR_NETWORK") {
-            toast.info("Internet aloqasi yo'q");
+            Swal.fire("Internet aloqasi yo'q", "", "error");
         } else if (error?.response?.status === 401) {
             const refreshResponse = await axios.post(
                 `${baseURL}/refresh`,
@@ -84,7 +89,5 @@ export const getBranches = async ({ setBranch }) => {
         });
 
         setBranch(response.data.branches);
-    } catch (error) {
-        console.log(error);
-    }
+    } catch (error) {}
 };

@@ -1,11 +1,10 @@
 import axios from "axios";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, LoaderCircle } from "lucide-react";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { baseURL } from "../../App";
-import { AdminContext } from "../../context/AdminContext";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -35,7 +34,6 @@ const Login = () => {
                 localStorage.setItem("token", response.data.token);
                 toast.success(response.data.message);
                 navigate("/");
-                console.log(response.data);
             }
         } catch (error) {
             if (error.code === "ERR_NETWORK") {

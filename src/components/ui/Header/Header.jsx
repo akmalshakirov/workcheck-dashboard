@@ -20,6 +20,7 @@ import { useClickOutside } from "../../../hooks/useClickOutside";
 import DropdownIcon from "../Icons/Dropdown";
 import { Skeleton } from "../Skeleton/Skeleton";
 import styles from "./Header.module.css";
+import { Search } from "../Search/Search";
 
 export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
     const [langOpen, setLangOpen] = useState(false);
@@ -162,9 +163,9 @@ export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
                     aria-label={
                         !collapsed ? t("open_sidebar") : t("close_sidebar")
                     }>
-                    {collapsed ? <Menu size={22} /> : <X size={22} />}
+                    {!collapsed ? <Menu size={22} /> : <X size={22} />}
                 </button>
-                <div className='hidden md:block'>
+                {/* <div className='hidden md:block'>
                     <input
                         type='text'
                         className='px-2 py-1 border border-gray-700 rounded-lg outline-none focus:bg-gray-800/10 transition-colors placeholder-black/30 dark:placeholder-white/30 dark:focus:bg-gray-600/40'
@@ -172,7 +173,8 @@ export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
                         name='search'
                         id='search'
                     />
-                </div>
+                </div> */}
+                <Search />
             </div>
             {/* right side nav (desktop) */}
             <div className='hidden md:flex items-center gap-2.5'>

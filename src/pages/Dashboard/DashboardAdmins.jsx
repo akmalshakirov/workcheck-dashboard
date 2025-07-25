@@ -9,11 +9,9 @@ import { baseURL } from "../../App";
 import Modal from "../../components/ui/Modal/Modal";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import Table from "../../components/ui/Table/Table";
-import { UploadImage } from "../../components/ui/UploadImage/UploadImage";
 import PhoneInput from "../../helpers/FormatPhone";
 import { useAdmin } from "../../hooks/useAdmin";
 import { getAdmins } from "../../service/api/api";
-
 const MySwal = withReactContent(Swal);
 
 const DashboardAdmins = () => {
@@ -44,6 +42,8 @@ const DashboardAdmins = () => {
     const [adminRole, setAdminRole] = useState("ADMIN");
     const lang = localStorage.getItem("lang");
     const [editingFileList, setEditingFileList] = useState([]);
+    const [editingFileBinary, setEditingFileBinary] = useState(null);
+    const [branchData, setBranchData] = useState(null);
     const { branch } = useAdmin();
 
     const handleChange = (e) => {
@@ -146,6 +146,7 @@ const DashboardAdmins = () => {
             setAdminPhone(response.data.admin.phone || "");
             setAdminRole(response.data.admin.role || "ADMIN");
             setEditingFileList(response.data.admin.image);
+            setBranchData(response.data.admin.branch);
         } catch (error) {
             setGetAdminLoading(false);
             setIsEditModalOpen(false);
@@ -165,13 +166,14 @@ const DashboardAdmins = () => {
         e.preventDefault();
         setEditLoading(true);
         try {
-            const formData = new FormData();
-            formData.append("name", adminName || "");
-            formData.append("username", adminUsername || "");
-            formData.append("role", adminRole || "");
-            formData.append("phone", adminPhone || "");
-            editingFileList && formData.append("image", editingFileList);
-            formData.append("password", adminPassword || "");
+            const formData = new FormData(e.target);
+            // formData.append("name", adminName || "");
+            // formData.append("username", adminUsername || "");
+            // formData.append("role", adminRole || "");
+            // formData.append("phone", adminPhone || "");
+            // formData.append("image", editingFileBinary);
+            // formData.append("password", adminPassword || "");
+            // formData.append("branchId", branchData || "");
             const response = await axios.put(
                 `${baseURL}/admin/${id}/update`,
                 formData,
@@ -189,7 +191,8 @@ const DashboardAdmins = () => {
                     timerProgressBar: true,
                     theme: theme == "true" ? "dark" : "light",
                 });
-                setEditingFileList(null);
+                // setEditingFileList(null);
+                // setEditingFileBinary(null);
                 setAdminData({
                     name: "",
                     username: "",
@@ -198,11 +201,16 @@ const DashboardAdmins = () => {
                     role: "ADMIN",
                 });
                 setIsEditModalOpen(false);
-                getAdmins();
+                getAdmins({
+                    setPreloader,
+                    setAdmins,
+                    token,
+                    lang,
+                });
             }
         } catch (error) {
             Swal.fire({
-                text: error?.response?.data?.error || "Xatolik yuz berdi",
+                text: error?.response?.data?.error,
                 icon: "error",
                 timerProgressBar: true,
                 timer: 10000,
@@ -210,7 +218,6 @@ const DashboardAdmins = () => {
             });
         } finally {
             setEditLoading(false);
-            editingFileList([]);
         }
     };
 
@@ -297,6 +304,11 @@ const DashboardAdmins = () => {
     const handleFileChange = useCallback((e) => {
         setFileList(e?.target?.files ? Array.from(e.target.files) : []);
     }, []);
+
+    const handleEditFileChage = useCallback((e) => {
+        setEditingFileList(URL.createObjectURL(e?.target?.files[0]));
+        setEditingFileBinary(e?.target?.files[0]);
+    });
 
     return (
         <motion.div
@@ -469,7 +481,7 @@ const DashboardAdmins = () => {
                                         </div>
                                         <label
                                             htmlFor='image'
-                                            className='cursor-pointer flex flex-col'>
+                                            className='cursor-pointer flex flex-col md:flex'>
                                             {fileList?.length === 0
                                                 ? "Rasm tanlang:"
                                                 : "Tanlangan rasm:"}
@@ -721,7 +733,117 @@ const DashboardAdmins = () => {
                                                         />
                                                     </div>
                                                 </div>
-                                                <div className='max-w-1/3'>
+                                                <div className='flex-1'>
+                                                    <div className='flex flex-col gap-1'>
+                                                        <p className='mr-2'>
+                                                            Filialni tanlang:
+                                                        </p>
+                                                        {branchData === null ? (
+                                                            <Skeleton className='w-full h-10 rounded-lg' />
+                                                        ) : (
+                                                            <select
+                                                                name='branchId'
+                                                                className='border w-full rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                                                value={
+                                                                    branchData.name
+                                                                }>
+                                                                {branch?.length >
+                                                                    0 &&
+                                                                    branch.map(
+                                                                        (b) => (
+                                                                            <option
+                                                                                value={
+                                                                                    b.id
+                                                                                }
+                                                                                key={
+                                                                                    b.id
+                                                                                }>
+                                                                                {
+                                                                                    b.name
+                                                                                }
+                                                                            </option>
+                                                                        )
+                                                                    )}
+                                                            </select>
+                                                        )}
+                                                    </div>
+                                                    {/* <label
+                                                        htmlFor='image'
+                                                        className='cursor-pointer flex flex-col'>
+                                                        {editingFileList?.length === 0
+                                                            ? "Rasm tanlang:"
+                                                            : "Tanlangan rasm:"}
+                                                        {editingFileList?.length ===
+                                                            0 && (
+                                                            <motion.div
+                                                                whileTap={{
+                                                                    scale: 0.98,
+                                                                }}
+                                                                className='flex gap-2 px-2 py-5 border border-blue-500 bg-blue-400/20 rounded'>
+                                                                Rasm tanlash
+                                                                uchun joy
+                                                                <UploadIcon />
+                                                            </motion.div>
+                                                        )}
+                                                    </label> */}
+                                                    <input
+                                                        hidden
+                                                        id='image'
+                                                        type='file'
+                                                        name='image'
+                                                        onChange={
+                                                            handleEditFileChage
+                                                        }
+                                                        autoComplete='off'
+                                                        multiple={false}
+                                                    />
+                                                    {editingFileList && (
+                                                        <motion.label
+                                                            htmlFor='image'
+                                                            initial={{
+                                                                opacity: 0,
+                                                                y: -50,
+                                                            }}
+                                                            animate={{
+                                                                opacity: 1,
+                                                                y: 0,
+                                                            }}
+                                                            exit={{
+                                                                opacity: 0,
+                                                                y: -50,
+                                                            }}
+                                                            className='block border border-blue-500 bg-blue-300/10 p-4 rounded cursor-pointer mt-4'>
+                                                            <div className='flex gap-4'>
+                                                                <div className='max-w-1/4'>
+                                                                    <img
+                                                                        src={
+                                                                            editingFileList
+                                                                        }
+                                                                        alt='Admin Image'
+                                                                        className='object-cover rounded-lg w-full h-full'
+                                                                    />
+                                                                </div>
+                                                                <div>
+                                                                    <p>
+                                                                        Tanlangan
+                                                                        rasm
+                                                                        shunaqa
+                                                                        ko'rinadi:
+                                                                    </p>
+                                                                    <img
+                                                                        src={
+                                                                            editingFileList
+                                                                        }
+                                                                        alt='Admin Image'
+                                                                        className='object-cover w-30 h-30 rounded-full p-2'
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </motion.label>
+                                                    )}
+                                                </div>
+
+                                                {/* <div className='max-w-1/3'>
                                                     <UploadImage
                                                         label='Adminni rasmi:'
                                                         fileList={
@@ -734,7 +856,7 @@ const DashboardAdmins = () => {
                                                             );
                                                         }}
                                                     />
-                                                </div>
+                                                </div> */}
                                             </div>
                                             <div className='flex justify-end gap-3 mt-4'>
                                                 <button
