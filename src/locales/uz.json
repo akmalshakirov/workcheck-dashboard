@@ -24,5 +24,12 @@
     "moda_admin_update_image": "Adminni rasmi",
     "modal_admin_delete_title": "Bu adminni o'chirmoqchimisiz?",
     "modal_admin_delete_desc": "Bu amalni ortga qaytarib bo'lmaydi!",
-    "footer_creator": "Sayt yaratuvchisi"
+    "footer_creator": "Sayt yaratuvchisi",
+    "admin_table_img": "Rasm",
+    "admin_table_name": "Ism",
+    "admin_table_username": "Username",
+    "admin_table_role": "Ro'l",
+    "admin_table_phone": "Telefon raqam",
+    "admin_table_branch": "Filial",
+    "admin_table_action": "Amallar"
 }

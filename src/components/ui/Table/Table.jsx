@@ -5,7 +5,7 @@ import { useAdmin } from "../../../hooks/useAdmin";
 
 function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
     const { t } = useTranslation();
-    const { isSuperAdmin, branch } = useAdmin();
+    const { isSuperAdmin } = useAdmin();
 
     return (
         <div className='w-full overflow-x-auto'>
@@ -13,28 +13,28 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                 <thead className='bg-gray-50 dark:bg-[#222]'>
                     <tr>
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            Rasm
+                            {t("admin_table_img")}
                         </th>
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            Ism
+                            {t("admin_table_name")}
                         </th>
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            Username
+                            {t("admin_table_username")}
                         </th>
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            Role
+                            {t("admin_table_role")}
                         </th>
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            Telefon raqam
+                            {t("admin_table_phone")}
                         </th>
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            Filial
+                            {t("admin_table_branch")}
                         </th>
                         {isSuperAdmin && (
                             <motion.th
                                 layout
                                 className='px-6 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                                Amallar
+                                {t("admin_table_action")}
                             </motion.th>
                         )}
                     </tr>

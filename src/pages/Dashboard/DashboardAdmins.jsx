@@ -1,17 +1,16 @@
 import axios from "axios";
-import { AnimatePresence, motion } from "framer-motion";
-import { Eye, EyeOff, UploadIcon, UserRoundPlus } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { motion } from "framer-motion";
+import { UserRoundPlus } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { baseURL } from "../../App";
-import Modal from "../../components/ui/Modal/Modal";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import Table from "../../components/ui/Table/Table";
-import PhoneInput from "../../helpers/FormatPhone";
-import { useAdmin } from "../../hooks/useAdmin";
+import { AdminCreateModal } from "../../helpers/AdminCreateModal";
 import { getAdmins } from "../../service/api/api";
+import { AdminEditModal } from "../../helpers/AdminEditModal";
 const MySwal = withReactContent(Swal);
 
 const DashboardAdmins = () => {
@@ -20,7 +19,6 @@ const DashboardAdmins = () => {
     const [admins, setAdmins] = useState([]);
     const [preloader, setPreloader] = useState(false);
     const [createAdminModal, setCreateAdminModal] = useState(false);
-    const [createAdminLoading, setCreateAdminLoading] = useState(false);
     const [fileList, setFileList] = useState([]);
     const [adminData, setAdminData] = useState({
         name: "",
@@ -29,91 +27,13 @@ const DashboardAdmins = () => {
         phone: "",
         role: "ADMIN",
     });
-    const [id, setId] = useState(null);
     const [showPassword, setShowPassword] = useState(false);
     const { t } = useTranslation();
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [getAdminLoading, setGetAdminLoading] = useState(true);
-    const [editLoading, setEditLoading] = useState(false);
-    const [adminName, setAdminName] = useState("");
-    const [adminUsername, setAdminUsername] = useState("");
-    const [adminPassword, setAdminPassword] = useState("");
-    const [adminPhone, setAdminPhone] = useState("");
-    const [adminRole, setAdminRole] = useState("ADMIN");
     const lang = localStorage.getItem("lang");
-    const [editingFileList, setEditingFileList] = useState([]);
-    const [editingFileBinary, setEditingFileBinary] = useState(null);
-    const [branchData, setBranchData] = useState(null);
-    const { branch } = useAdmin();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setAdminData((prev) => ({ ...prev, [name]: value }));
-    };
-
-    const handlePhoneChange = (value) => {
-        setAdminData((prev) => ({ ...prev, phone: value }));
-    };
-
-    const createAdmin = async (e) => {
-        e.preventDefault();
-        setCreateAdminLoading(true);
-        const formData = new FormData(e.target);
-
-        try {
-            const response = await axios.post(
-                `${baseURL}/admin/create`,
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        Accept: lang,
-                    },
-                }
-            );
-            if (response.status === 201) {
-                getAdmins({
-                    setPreloader,
-                    setAdmins,
-                    token,
-                    lang,
-                });
-                setAdminData({
-                    name: "",
-                    username: "",
-                    password: "",
-                    phone: "",
-                    role: "ADMIN",
-                });
-                setFileList(null);
-                if (preloader == false) {
-                    Swal.fire({
-                        title: response.data.message,
-                        icon: "success",
-                        confirmButtonText: t("ok2"),
-                        theme: theme == "true" ? "dark" : "light",
-                    });
-                }
-            }
-        } catch (error) {
-            Swal.fire({
-                title: error.response.data.error,
-                icon: "error",
-                theme: theme == "true" ? "dark" : "light",
-            });
-        } finally {
-            setCreateAdminLoading(false);
-            setCreateAdminModal(false);
-            setAdminData({
-                name: "",
-                username: "",
-                password: "",
-                phone: "",
-                role: "ADMIN",
-            });
-            setFileList(null);
-        }
-    };
+    // const handlePhoneChange = (value) => {
+    //     setAdminData((prev) => ({ ...prev, phone: value }));
+    // };
 
     useEffect(() => {
         getAdmins({
@@ -129,97 +49,6 @@ const DashboardAdmins = () => {
             t("sidebar_admins") || "Adminlar"
         }`;
     }, [t]);
-
-    const handleGetAdminById = async (id) => {
-        setIsEditModalOpen(true);
-        setGetAdminLoading(true);
-        setId(id);
-        try {
-            const response = await axios.get(`${baseURL}/admin/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setAdminName(response.data.admin.name || "");
-            setAdminUsername(response.data.admin.username || "");
-            setAdminPassword("");
-            setAdminPhone(response.data.admin.phone || "");
-            setAdminRole(response.data.admin.role || "ADMIN");
-            setEditingFileList(response.data.admin.image);
-            setBranchData(response.data.admin.branch);
-        } catch (error) {
-            setGetAdminLoading(false);
-            setIsEditModalOpen(false);
-            Swal.fire({
-                title: error.response.data.error,
-                icon: "error",
-                timer: 10000,
-                timerProgressBar: true,
-                theme: theme == "true" ? "dark" : "light",
-            });
-        } finally {
-            setGetAdminLoading(false);
-        }
-    };
-
-    const handleEdit = async (e) => {
-        e.preventDefault();
-        setEditLoading(true);
-        try {
-            const formData = new FormData(e.target);
-            // formData.append("name", adminName || "");
-            // formData.append("username", adminUsername || "");
-            // formData.append("role", adminRole || "");
-            // formData.append("phone", adminPhone || "");
-            // formData.append("image", editingFileBinary);
-            // formData.append("password", adminPassword || "");
-            // formData.append("branchId", branchData || "");
-            const response = await axios.put(
-                `${baseURL}/admin/${id}/update`,
-                formData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-            if (response.status === 200) {
-                Swal.fire({
-                    title: response.data.message,
-                    icon: "success",
-                    timer: 10000,
-                    timerProgressBar: true,
-                    theme: theme == "true" ? "dark" : "light",
-                });
-                // setEditingFileList(null);
-                // setEditingFileBinary(null);
-                setAdminData({
-                    name: "",
-                    username: "",
-                    password: "",
-                    phone: "",
-                    role: "ADMIN",
-                });
-                setIsEditModalOpen(false);
-                getAdmins({
-                    setPreloader,
-                    setAdmins,
-                    token,
-                    lang,
-                });
-            }
-        } catch (error) {
-            Swal.fire({
-                text: error?.response?.data?.error,
-                icon: "error",
-                timerProgressBar: true,
-                timer: 10000,
-                theme: theme == "true" ? "dark" : "light",
-            });
-        } finally {
-            setEditLoading(false);
-        }
-    };
 
     const handleDelete = async (id) => {
         const result = await MySwal.fire({
@@ -263,52 +92,51 @@ const DashboardAdmins = () => {
         }
     };
 
-    const renderInput = useCallback(
-        ({
-            id,
-            name,
-            label,
-            type = "text",
-            value,
-            onChange,
-            minLength = 3,
-            maxLength = 15,
-            required = true,
-            placeholder = "",
-            autoComplete = "off",
-            ...rest
-        }) => (
-            <div className='flex flex-col gap-1'>
-                <label htmlFor={id} className='text-base'>
-                    {label}
-                </label>
-                <input
-                    type={type}
-                    id={id}
-                    name={name}
-                    className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                    minLength={minLength}
-                    maxLength={maxLength}
-                    value={value}
-                    onChange={onChange}
-                    required={required}
-                    placeholder={placeholder}
-                    autoComplete={autoComplete}
-                    {...rest}
-                />
-            </div>
-        ),
-        []
-    );
+    // const renderInput = useCallback(
+    //     ({
+    //         id,
+    //         name,
+    //         label,
+    //         type = "text",
+    //         value,
+    //         onChange,
+    //         minLength = 3,
+    //         maxLength = 15,
+    //         required = true,
+    //         placeholder = "",
+    //         autoComplete = "off",
+    //         ...rest
+    //     }) => (
+    //         <div className='flex flex-col gap-1'>
+    //             <label htmlFor={id} className='text-base'>
+    //                 {label}
+    //             </label>
+    //             <input
+    //                 type={type}
+    //                 id={id}
+    //                 name={name}
+    //                 className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+    //                 minLength={minLength}
+    //                 maxLength={maxLength}
+    //                 value={value}
+    //                 onChange={onChange}
+    //                 required={required}
+    //                 placeholder={placeholder}
+    //                 autoComplete={autoComplete}
+    //                 {...rest}
+    //             />
+    //         </div>
+    //     ),
+    //     []
+    // );
 
-    const handleFileChange = useCallback((e) => {
-        setFileList(e?.target?.files ? Array.from(e.target.files) : []);
-    }, []);
+    // const handleFileChange = useCallback((e) => {
+    //     setFileList(e?.target?.files ? Array.from(e.target.files) : []);
+    // }, []);
 
-    const handleEditFileChage = useCallback((e) => {
-        setEditingFileList(URL.createObjectURL(e?.target?.files[0]));
-        setEditingFileBinary(e?.target?.files[0]);
-    });
+    // const handleEditFileChage = useCallback((e) => {
+    //     setEditingFileList(URL.createObjectURL(e?.target?.files[0]));
+    // });
 
     return (
         <motion.div
@@ -354,8 +182,24 @@ const DashboardAdmins = () => {
                         )}
                     </div>
 
+                    <AdminCreateModal
+                        adminData={adminData}
+                        setAdminData={setAdminData}
+                        createAdminModal={createAdminModal}
+                        fileList={fileList}
+                        setFileList={setFileList}
+                        setCreateAdminModal={setCreateAdminModal}
+                        setShowPassword={setShowPassword}
+                        showPassword={showPassword}
+                    />
+
+                    <AdminEditModal
+                        showPassword={showPassword}
+                        setShowPassword={setShowPassword}
+                    />
+
                     {/* Create admin modal */}
-                    <Modal visible={createAdminModal} title={t("add_admin")}>
+                    {/* <Modal visible={createAdminModal} title={t("add_admin")}>
                         <form onSubmit={createAdmin}>
                             <div>
                                 <div className='flex gap-10'>
@@ -480,8 +324,8 @@ const DashboardAdmins = () => {
                                             )}
                                         </div>
                                         <label
-                                            htmlFor='image'
-                                            className='cursor-pointer flex flex-col md:flex'>
+                                            // htmlFor='image'
+                                            className='cursor-pointer flex flex-col md:flex active:scale-[0.95] duration-150'>
                                             {fileList?.length === 0
                                                 ? "Rasm tanlang:"
                                                 : "Tanlangan rasm:"}
@@ -575,10 +419,10 @@ const DashboardAdmins = () => {
                                 </button>
                             </div>
                         </form>
-                    </Modal>
+                    </Modal> */}
 
                     {/* Update admin modal */}
-                    <Modal
+                    {/* <Modal
                         title={t("modal_admin_update")}
                         visible={isEditModalOpen}>
                         <AnimatePresence>
@@ -704,7 +548,7 @@ const DashboardAdmins = () => {
                                                             </option>
                                                         </select>
                                                     </div>
-                                                    <div className='flex flex-col gap-1 mt-1'>
+                                                    <div className='flex flex-col gap-1 mt-1 relative'>
                                                         <label
                                                             htmlFor='edit-admin-password'
                                                             className='text-base'>
@@ -714,7 +558,11 @@ const DashboardAdmins = () => {
                                                             :
                                                         </label>
                                                         <input
-                                                            type='password'
+                                                            type={
+                                                                showPassword
+                                                                    ? "text"
+                                                                    : "password"
+                                                            }
                                                             id='edit-admin-password'
                                                             className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
                                                             minLength={3}
@@ -731,6 +579,32 @@ const DashboardAdmins = () => {
                                                             }
                                                             autoComplete='current-password'
                                                         />
+                                                        <button
+                                                            name='Show password button'
+                                                            aria-label='Show password button'
+                                                            title='Show password'
+                                                            type='button'
+                                                            onClick={() =>
+                                                                setShowPassword(
+                                                                    (curr) =>
+                                                                        !curr
+                                                                )
+                                                            }
+                                                            className='absolute top-9.5 ml-2 right-3 text-gray-500 hover:text-gray-700'
+                                                            tabIndex={-1}
+                                                            disabled={
+                                                                createAdminLoading
+                                                            }>
+                                                            {showPassword ? (
+                                                                <EyeOff
+                                                                    size={20}
+                                                                />
+                                                            ) : (
+                                                                <Eye
+                                                                    size={20}
+                                                                />
+                                                            )}
+                                                        </button>
                                                     </div>
                                                 </div>
                                                 <div className='flex-1'>
@@ -767,25 +641,6 @@ const DashboardAdmins = () => {
                                                             </select>
                                                         )}
                                                     </div>
-                                                    {/* <label
-                                                        htmlFor='image'
-                                                        className='cursor-pointer flex flex-col'>
-                                                        {editingFileList?.length === 0
-                                                            ? "Rasm tanlang:"
-                                                            : "Tanlangan rasm:"}
-                                                        {editingFileList?.length ===
-                                                            0 && (
-                                                            <motion.div
-                                                                whileTap={{
-                                                                    scale: 0.98,
-                                                                }}
-                                                                className='flex gap-2 px-2 py-5 border border-blue-500 bg-blue-400/20 rounded'>
-                                                                Rasm tanlash
-                                                                uchun joy
-                                                                <UploadIcon />
-                                                            </motion.div>
-                                                        )}
-                                                    </label> */}
                                                     <input
                                                         hidden
                                                         id='image'
@@ -814,7 +669,7 @@ const DashboardAdmins = () => {
                                                             }}
                                                             className='block border border-blue-500 bg-blue-300/10 p-4 rounded cursor-pointer mt-4'>
                                                             <div className='flex gap-4'>
-                                                                <div className='max-w-1/4'>
+                                                                <div className='flex-1'>
                                                                     <img
                                                                         src={
                                                                             editingFileList
@@ -842,21 +697,6 @@ const DashboardAdmins = () => {
                                                         </motion.label>
                                                     )}
                                                 </div>
-
-                                                {/* <div className='max-w-1/3'>
-                                                    <UploadImage
-                                                        label='Adminni rasmi:'
-                                                        fileList={
-                                                            editingFileList
-                                                        }
-                                                        className=''
-                                                        onChange={(e) => {
-                                                            setEditingFileList(
-                                                                e
-                                                            );
-                                                        }}
-                                                    />
-                                                </div> */}
                                             </div>
                                             <div className='flex justify-end gap-3 mt-4'>
                                                 <button
@@ -890,7 +730,7 @@ const DashboardAdmins = () => {
                                 )}
                             </motion.div>
                         </AnimatePresence>
-                    </Modal>
+                    </Modal> */}
                 </motion.div>
             )}
         </motion.div>

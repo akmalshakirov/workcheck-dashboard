@@ -1,7 +1,6 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import { baseURL } from "../../App";
-import { toast } from "react-toastify";
 const token = localStorage.getItem("token");
 const theme = localStorage.getItem("isDark");
 const lang = localStorage.getItem("lang");
@@ -41,7 +40,7 @@ export const getProfile = async ({
 }) => {
     try {
         const response = await axios.get(`${baseURL}/profile`, {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { Authorization: `Bearer ${token}`, Accept: lang },
         });
         if (response.status === 200) {
             setAdminContent(response.data.admin);
@@ -49,6 +48,7 @@ export const getProfile = async ({
             setIsLoading(false);
         }
     } catch (error) {
+        Swal.fire(error.response.data.error, "", "error");
         if (error.code === "ERR_NETWORK") {
             Swal.fire("Internet aloqasi yo'q", "", "error");
         } else if (error?.response?.status === 401) {
@@ -89,5 +89,10 @@ export const getBranches = async ({ setBranch }) => {
         });
 
         setBranch(response.data.branches);
-    } catch (error) {}
+    } catch (error) {
+        if (error.code === "ERR_NETWORK") {
+            Swal.fire("Internet aloqasi yo'q", "", "error");
+        }
+        // Swal.fire(error.response.data.error, "", "error");
+    }
 };

@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
 import styles from "./Modal.module.css";
 
-const Modal = ({ visible, title = "", children }) => {
+export const Modal = ({ visible, title = "", children }) => {
     useEffect(() => {
         if (visible) document.documentElement.classList.add("overflow-hidden");
         else document.documentElement.classList.remove("overflow-hidden");
@@ -40,5 +40,3 @@ const Modal = ({ visible, title = "", children }) => {
         </AnimatePresence>
     );
 };
-
-export default Modal;

@@ -24,5 +24,12 @@
     "moda_admin_update_image": "Фото админа",
     "modal_admin_delete_title": "Вы хотите удалить этого админа?",
     "modal_admin_delete_desc": "Это действие не может быть отменено!",
-    "footer_creator": "Создатель сайта"
+    "footer_creator": "Создатель сайта",
+    "admin_table_img": "Фото",
+    "admin_table_name": "Имя",
+    "admin_table_username": "Username",
+    "admin_table_role": "Role",
+    "admin_table_phone": "Телефон",
+    "admin_table_branch": "Филиал",
+    "admin_table_action": "Действия"
 }
