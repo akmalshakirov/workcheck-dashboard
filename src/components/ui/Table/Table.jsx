@@ -99,7 +99,7 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                                             }
                                             onClick={() => editOnClick(item.id)}
                                             title='Click to edit'
-                                            className='px-[10px] py-[5px] text-white bg-blue-600/80 hover:bg-blue-600 rounded-lg transition'>
+                                            className='px-[10px] py-[5px] text-white bg-blue-600/80 hover:bg-blue-600 rounded-lg transition active:scale-[0.95]'>
                                             <UserRoundPen size={22} />
                                         </button>
                                         <button
@@ -111,7 +111,7 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                                                 deleteOnClick(item.id)
                                             }
                                             title='Click to delete'
-                                            className='px-[10px] py-[5px] text-white bg-red-600/80 hover:bg-red-600 rounded-lg transition'>
+                                            className='px-[10px] py-[5px] text-white bg-red-600/80 hover:bg-red-600 rounded-lg transition active:scale-[0.95]'>
                                             <UserRoundMinus size={22} />
                                         </button>
                                     </div>

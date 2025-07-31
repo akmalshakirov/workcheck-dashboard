@@ -1,48 +1,86 @@
 import axios from "axios";
-import { motion } from "framer-motion";
-import { UserRoundPlus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+    Eye,
+    EyeOff,
+    EyeOffIcon,
+    Loader2Icon,
+    UploadIcon,
+    UserRoundPlus,
+} from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { baseURL } from "../../App";
+import { Modal } from "../../components/ui/Modal/Modal";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import Table from "../../components/ui/Table/Table";
-import { AdminCreateModal } from "../../helpers/AdminCreateModal";
+import PhoneInput from "../../helpers/FormatPhone";
+import { useAdmin } from "../../hooks/useAdmin";
 import { getAdmins } from "../../service/api/api";
-import { AdminEditModal } from "../../helpers/AdminEditModal";
 const MySwal = withReactContent(Swal);
+
+const defaultAdminData = {
+    name: "",
+    username: "",
+    password: "",
+    phone: "",
+    role: "ADMIN",
+    branchId: "",
+    image: null,
+};
 
 const DashboardAdmins = () => {
     const token = localStorage.getItem("token");
     const theme = localStorage.getItem("isDark");
+    const lang = localStorage.getItem("lang");
+    const { t } = useTranslation();
+    const { branch } = useAdmin();
+
     const [admins, setAdmins] = useState([]);
     const [preloader, setPreloader] = useState(false);
     const [createAdminModal, setCreateAdminModal] = useState(false);
-    const [fileList, setFileList] = useState([]);
-    const [adminData, setAdminData] = useState({
-        name: "",
-        username: "",
-        password: "",
-        phone: "",
-        role: "ADMIN",
-    });
+    const [createAdminLoading, setCreateAdminLoading] = useState(false);
+    const [adminData, setAdminData] = useState(defaultAdminData);
     const [showPassword, setShowPassword] = useState(false);
-    const { t } = useTranslation();
-    const lang = localStorage.getItem("lang");
+    const [showEditPassword, setShowEditPassword] = useState(false);
 
-    // const handlePhoneChange = (value) => {
-    //     setAdminData((prev) => ({ ...prev, phone: value }));
-    // };
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [getAdminLoading, setGetAdminLoading] = useState(true);
+    const [editLoading, setEditLoading] = useState(false);
+    const [editId, setEditId] = useState(null);
+    const [editData, setEditData] = useState(defaultAdminData);
+
+    const handleInputChange = (e, isEdit = false) => {
+        const { name, value, files } = e.target;
+        if (files) {
+            (isEdit ? setEditData : setAdminData)((prev) => ({
+                ...prev,
+                image: files[0],
+            }));
+        } else {
+            (isEdit ? setEditData : setAdminData)((prev) => ({
+                ...prev,
+                [name]: value,
+            }));
+        }
+    };
+
+    const handlePhoneChange = (value, isEdit = false) => {
+        (isEdit ? setEditData : setAdminData)((prev) => ({
+            ...prev,
+            phone: value,
+        }));
+    };
+
+    const fetchAdmins = useCallback(() => {
+        getAdmins({ setPreloader, setAdmins, token, lang });
+    }, [token]);
 
     useEffect(() => {
-        getAdmins({
-            setPreloader,
-            setAdmins,
-            token,
-            lang,
-        });
-    }, []);
+        fetchAdmins();
+    }, [fetchAdmins]);
 
     useEffect(() => {
         document.title = `WorkCheck - Dashboard | ${
@@ -50,6 +88,92 @@ const DashboardAdmins = () => {
         }`;
     }, [t]);
 
+    // Create admin
+    const createAdmin = async (e) => {
+        e.preventDefault();
+        setCreateAdminLoading(true);
+        const formData = new FormData();
+        Object.entries(adminData).forEach(([key, val]) => {
+            if (val) formData.append(key, val);
+        });
+
+        try {
+            const response = await axios.post(
+                `${baseURL}/admin/create`,
+                formData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        Accept: lang,
+                    },
+                }
+            );
+            if (response.status === 201) {
+                fetchAdmins();
+                setAdminData(defaultAdminData);
+                showSwal("success", response.data.message);
+            }
+        } catch (error) {
+            showSwal("error", error?.response?.data?.error);
+        } finally {
+            setCreateAdminLoading(false);
+            setCreateAdminModal(false);
+        }
+    };
+
+    // Edit admin
+    const handleGetAdminById = async (id) => {
+        setIsEditModalOpen(true);
+        setGetAdminLoading(true);
+        setEditId(id);
+        try {
+            const { data } = await axios.get(`${baseURL}/admin/${id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            setEditData({
+                name: data.admin.name || "",
+                username: data.admin.username || "",
+                password: "",
+                phone: data.admin.phone || "",
+                role: data.admin.role || "ADMIN",
+                branchId: data.admin.branch?.id || "",
+                image: data.admin.image || null,
+            });
+        } catch (error) {
+            setIsEditModalOpen(false);
+            showSwal("error", error?.response?.data?.error);
+        } finally {
+            setGetAdminLoading(false);
+        }
+    };
+
+    const handleEdit = async (e) => {
+        e.preventDefault();
+        setEditLoading(true);
+        const formData = new FormData();
+        Object.entries(editData).forEach(([key, val]) => {
+            if (val) formData.append(key, val);
+        });
+
+        try {
+            const response = await axios.put(
+                `${baseURL}/admin/${editId}/update`,
+                formData,
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            if (response.status === 200) {
+                showSwal("success", response.data.message);
+                setIsEditModalOpen(false);
+                fetchAdmins();
+            }
+        } catch (error) {
+            showSwal("error", error?.response?.data?.error);
+        } finally {
+            setEditLoading(false);
+        }
+    };
+
+    // Delete admin
     const handleDelete = async (id) => {
         const result = await MySwal.fire({
             title: t("modal_admin_delete_title"),
@@ -64,79 +188,161 @@ const DashboardAdmins = () => {
         });
 
         if (result.isConfirmed) {
+            Swal.fire({
+                title: t("preloader"),
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
             try {
                 const response = await axios.delete(
                     `${baseURL}/admin/${id}/delete`,
-                    {
-                        headers: {
-                            Authorization: `Bearer ${token}`,
-                            "Content-Type": "application/json",
-                        },
-                    }
+                    { headers: { Authorization: `Bearer ${token}"` } }
                 );
-
-                MySwal.fire({
-                    title: `${response.data.message}`,
-                    text: `${response.data.message}`,
-                    icon: "success",
-                    theme: theme == "true" ? "dark" : "light",
-                });
-                getAdmins();
+                Swal.close();
+                showSwal("success", response.data.message);
+                fetchAdmins();
             } catch (error) {
-                Myl({
-                    title: error.response.data.error,
-                    icon: "error",
-                    theme: theme == "true" ? "dark" : "light",
-                });
+                Swal.close();
+                showSwal("error", error?.response?.data?.error);
             }
         }
     };
 
-    // const renderInput = useCallback(
-    //     ({
-    //         id,
-    //         name,
-    //         label,
-    //         type = "text",
-    //         value,
-    //         onChange,
-    //         minLength = 3,
-    //         maxLength = 15,
-    //         required = true,
-    //         placeholder = "",
-    //         autoComplete = "off",
-    //         ...rest
-    //     }) => (
-    //         <div className='flex flex-col gap-1'>
-    //             <label htmlFor={id} className='text-base'>
-    //                 {label}
-    //             </label>
-    //             <input
-    //                 type={type}
-    //                 id={id}
-    //                 name={name}
-    //                 className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-    //                 minLength={minLength}
-    //                 maxLength={maxLength}
-    //                 value={value}
-    //                 onChange={onChange}
-    //                 required={required}
-    //                 placeholder={placeholder}
-    //                 autoComplete={autoComplete}
-    //                 {...rest}
-    //             />
-    //         </div>
-    //     ),
-    //     []
-    // );
+    const showSwal = (icon, title) => {
+        Swal.fire({
+            title,
+            icon,
+            confirmButtonText: t("ok2"),
+            timer: icon === "success" ? 5000 : undefined,
+            theme: theme == "true" ? "dark" : "light",
+        });
+    };
 
-    // const handleFileChange = useCallback((e) => {
-    //     setFileList(e?.target?.files ? Array.from(e.target.files) : []);
-    // }, []);
+    const renderInput = ({
+        id,
+        name,
+        label,
+        type = "text",
+        value,
+        onChange,
+        minLength = 3,
+        maxLength = 15,
+        required = true,
+        placeholder = "",
+        autoComplete = "off",
+        isEdit = false,
+        ...rest
+    }) => {
+        const isPassword = name === "password";
+        const show = isEdit ? showEditPassword : showPassword;
+        const setShow = isEdit ? setShowEditPassword : setShowPassword;
+        return (
+            <div className='flex flex-col gap-1'>
+                <label htmlFor={id} className='text-base'>
+                    {label}
+                </label>
+                <div className='relative'>
+                    <input
+                        type={isPassword ? (show ? "text" : "password") : type}
+                        id={id}
+                        name={name}
+                        className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600 w-full pr-10'
+                        minLength={minLength}
+                        maxLength={maxLength}
+                        value={value}
+                        onChange={onChange}
+                        required={required}
+                        placeholder={placeholder}
+                        autoComplete={autoComplete}
+                        {...rest}
+                    />
+                    {isPassword && (
+                        <button
+                            type='button'
+                            tabIndex={-1}
+                            className='absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+                            onClick={() => setShow((prev) => !prev)}
+                            aria-label={
+                                show ? t("hide_password") : t("show_password")
+                            }>
+                            {show ? (
+                                <Eye size={20} />
+                            ) : (
+                                <EyeOffIcon size={20} />
+                            )}
+                        </button>
+                    )}
+                </div>
+            </div>
+        );
+    };
 
-    // const handleEditFileChage = useCallback((e) => {
-    //     setEditingFileList(URL.createObjectURL(e?.target?.files[0]));
-    // });
+    const renderSelect = ({
+        id,
+        name,
+        label,
+        value,
+        onChange,
+        options,
+        required = true,
+    }) => (
+        <div className='flex flex-col gap-1'>
+            <label htmlFor={id} className='text-base'>
+                {label}
+            </label>
+            <select
+                id={id}
+                name={name}
+                value={value}
+                onChange={onChange}
+                className='border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600 dark:bg-[#0f0f0f]'
+                required={required}>
+                <option disabled value=''>
+                    {t("select_role")}
+                </option>
+                {options.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                    </option>
+                ))}
+            </select>
+        </div>
+    );
+
+    const renderImagePreview = (fileOrUrl, label) => {
+        if (!fileOrUrl) return null;
+        const src =
+            typeof fileOrUrl === "string"
+                ? fileOrUrl
+                : URL.createObjectURL(fileOrUrl);
+        return (
+            <motion.label
+                initial={{ opacity: 0, y: -50 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -50 }}
+                className='block border border-blue-500 bg-blue-300/10 p-4 rounded cursor-pointer mt-4'>
+                <div className='flex gap-4'>
+                    <div className='max-w-1/4'>
+                        <img
+                            src={src}
+                            alt='Admin Image'
+                            className='object-contain rounded-lg w-full h-full'
+                        />
+                    </div>
+                    <div>
+                        <p>{t("image_preview")}:</p>
+                        <img
+                            src={src}
+                            alt='Admin Image'
+                            className='object-cover w-30 h-30 rounded-full p-2'
+                        />
+                    </div>
+                </div>
+            </motion.label>
+        );
+    };
 
     return (
         <motion.div
@@ -169,7 +375,6 @@ const DashboardAdmins = () => {
                             {t("add_admin")}
                         </button>
                     </div>
-
                     <div>
                         {!admins || admins.length === 0 ? (
                             <h1>{t("no_admins_error")}</h1>
@@ -182,217 +387,148 @@ const DashboardAdmins = () => {
                         )}
                     </div>
 
-                    <AdminCreateModal
-                        adminData={adminData}
-                        setAdminData={setAdminData}
-                        createAdminModal={createAdminModal}
-                        fileList={fileList}
-                        setFileList={setFileList}
-                        setCreateAdminModal={setCreateAdminModal}
-                        setShowPassword={setShowPassword}
-                        showPassword={showPassword}
-                    />
-
-                    <AdminEditModal
-                        showPassword={showPassword}
-                        setShowPassword={setShowPassword}
-                    />
-
                     {/* Create admin modal */}
-                    {/* <Modal visible={createAdminModal} title={t("add_admin")}>
+                    <Modal visible={createAdminModal} title={t("add_admin")}>
                         <form onSubmit={createAdmin}>
-                            <div>
-                                <div className='flex gap-10'>
-                                    <div className='w-1/2'>
-                                        {renderInput({
-                                            id: "admin-name",
-                                            name: "name",
-                                            label: t("modal_admin_name") + ":",
-                                            value: adminData.name,
-                                            onChange: handleChange,
-                                            placeholder: "adminbek",
-                                            autoComplete: "name",
-                                        })}
-                                        {renderInput({
-                                            id: "admin-username",
-                                            name: "username",
-                                            label:
-                                                t("modal_admin_username") + ":",
-                                            value: adminData.username,
-                                            onChange: handleChange,
-                                            placeholder: "admin",
-                                            autoComplete: "username",
-                                        })}
-                                        <div className='flex flex-col gap-1 relative'>
-                                            <label
-                                                htmlFor='admin-password'
-                                                className='text-base'>
-                                                Admin password:
-                                            </label>
-                                            <input
-                                                type={
-                                                    showPassword
-                                                        ? "text"
-                                                        : "password"
-                                                }
-                                                id='admin-password'
-                                                name='password'
-                                                className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                                minLength={3}
-                                                maxLength={15}
-                                                value={adminData.password}
-                                                onChange={handleChange}
-                                                required
-                                                placeholder='12345678'
-                                                autoComplete='new-password'
-                                            />
-                                            <button
-                                                name='Show password button'
-                                                aria-label='Show password button'
-                                                title='Show password'
-                                                type='button'
-                                                onClick={() =>
-                                                    setShowPassword(
-                                                        (curr) => !curr
-                                                    )
-                                                }
-                                                className='absolute top-9.5 ml-2 right-3 text-gray-500 hover:text-gray-700'
-                                                tabIndex={-1}
-                                                disabled={createAdminLoading}>
-                                                {showPassword ? (
-                                                    <EyeOff size={20} />
-                                                ) : (
-                                                    <Eye size={20} />
-                                                )}
-                                            </button>
-                                        </div>
-                                        <div className='flex flex-col gap-1'>
-                                            <PhoneInput
-                                                value={adminData.phone}
-                                                onChange={handlePhoneChange}
-                                                label='Admin telefon raqam:'
-                                                name='phone'
-                                                required
-                                            />
-                                        </div>
-                                        <div className='flex flex-col gap-1'>
-                                            <label
-                                                htmlFor='admin-role'
-                                                className='text-base'>
-                                                Admin role:
-                                            </label>
-                                            <select
-                                                multiple={false}
-                                                value={adminData.role}
-                                                onChange={handleChange}
-                                                id='admin-role'
-                                                name='role'
-                                                className='border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600 dark:bg-[#0f0f0f]'
-                                                required>
-                                                <option disabled>
-                                                    Role tanlang...
-                                                </option>
-                                                <option value='ADMIN'>
-                                                    Admin
-                                                </option>
-                                                <option value='SUPERADMIN'>
-                                                    Super-admin
-                                                </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div className='flex-1'>
-                                        <div className='flex flex-col gap-1'>
-                                            <p className='mr-2'>
-                                                Filialni tanlang:
-                                            </p>
-                                            {branch === null ? (
-                                                <Skeleton className='w-full h-10 rounded-lg' />
-                                            ) : (
-                                                <select
-                                                    name='branchId'
-                                                    className='border w-full rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'>
-                                                    {branch?.length > 0 &&
-                                                        branch.map((b) => (
-                                                            <option
-                                                                value={b.id}
-                                                                key={b.id}>
-                                                                {b.name}
-                                                            </option>
-                                                        ))}
-                                                </select>
-                                            )}
-                                        </div>
+                            <div className='flex gap-10'>
+                                <div className='w-1/2'>
+                                    {renderInput({
+                                        id: "admin-name",
+                                        name: "name",
+                                        label: t("modal_admin_name") + ":",
+                                        value: adminData.name,
+                                        onChange: handleInputChange,
+                                        placeholder: "adminbek",
+                                        autoComplete: "name",
+                                    })}
+                                    {renderInput({
+                                        id: "admin-username",
+                                        name: "username",
+                                        label: t("modal_admin_username") + ":",
+                                        value: adminData.username,
+                                        onChange: handleInputChange,
+                                        placeholder: "admin",
+                                        autoComplete: "username",
+                                    })}
+                                    <div className='flex flex-col gap-1 relative'>
                                         <label
-                                            // htmlFor='image'
-                                            className='cursor-pointer flex flex-col md:flex active:scale-[0.95] duration-150'>
-                                            {fileList?.length === 0
-                                                ? "Rasm tanlang:"
-                                                : "Tanlangan rasm:"}
-                                            {fileList?.length === 0 && (
-                                                <motion.div
-                                                    whileTap={{ scale: 0.98 }}
-                                                    className='flex gap-2 px-2 py-5 border border-blue-500 bg-blue-400/20 rounded'>
-                                                    Rasm tanlash uchun joy
-                                                    <UploadIcon />
-                                                </motion.div>
-                                            )}
-                                            <input
-                                                hidden
-                                                id='image'
-                                                type='file'
-                                                name='image'
-                                                onChange={handleFileChange}
-                                                autoComplete='off'
-                                                multiple={false}
-                                            />
+                                            htmlFor='admin-password'
+                                            className='text-base'>
+                                            {t("modal_admin_password")}:
                                         </label>
-                                        {fileList?.length > 0 &&
-                                            fileList[0] && (
-                                                <motion.label
-                                                    htmlFor='image'
-                                                    initial={{
-                                                        opacity: 0,
-                                                        y: -50,
-                                                    }}
-                                                    animate={{
-                                                        opacity: 1,
-                                                        y: 0,
-                                                    }}
-                                                    exit={{
-                                                        opacity: 0,
-                                                        y: -50,
-                                                    }}
-                                                    className='block border border-blue-500 bg-blue-300/10 p-4 rounded cursor-pointer'>
-                                                    <div className='flex gap-4'>
-                                                        <div className='max-w-1/4'>
-                                                            <img
-                                                                src={URL.createObjectURL(
-                                                                    fileList[0]
-                                                                )}
-                                                                alt='Admin Image'
-                                                                className='object-cover rounded-lg w-full h-full'
-                                                            />
-                                                        </div>
-                                                        <div>
-                                                            <p>
-                                                                Tanlagan
-                                                                rasmingiz
-                                                                shunaqa
-                                                                ko'rinadi:
-                                                            </p>
-                                                            <img
-                                                                src={URL.createObjectURL(
-                                                                    fileList[0]
-                                                                )}
-                                                                alt='Admin Image'
-                                                                className='object-cover w-30 h-30 rounded-full p-2'
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </motion.label>
+                                        <input
+                                            type={
+                                                showPassword
+                                                    ? "text"
+                                                    : "password"
+                                            }
+                                            id='admin-password'
+                                            name='password'
+                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                            minLength={3}
+                                            maxLength={15}
+                                            value={adminData.password}
+                                            onChange={handleInputChange}
+                                            required
+                                            placeholder='12345678'
+                                            autoComplete='new-password'
+                                        />
+                                        <button
+                                            type='button'
+                                            onClick={() =>
+                                                setShowPassword((curr) => !curr)
+                                            }
+                                            className='absolute top-9.5 ml-2 right-3 text-gray-500 hover:text-gray-700'
+                                            tabIndex={-1}
+                                            disabled={createAdminLoading}
+                                            aria-label='Show password button'
+                                            title='Show password'>
+                                            {showPassword ? (
+                                                <EyeOff size={20} />
+                                            ) : (
+                                                <Eye size={20} />
                                             )}
+                                        </button>
                                     </div>
+                                    <PhoneInput
+                                        value={adminData.phone}
+                                        onChange={(val) =>
+                                            handlePhoneChange(val)
+                                        }
+                                        label={t("modal_admin_phone") + ":"}
+                                        name='phone'
+                                        required
+                                    />
+                                    {renderSelect({
+                                        id: "admin-role",
+                                        name: "role",
+                                        label: t("modal_admin_role") + ":",
+                                        value: adminData.role,
+                                        onChange: handleInputChange,
+                                        options: [
+                                            { value: "ADMIN", label: "Admin" },
+                                            {
+                                                value: "SUPERADMIN",
+                                                label: "Super-admin",
+                                            },
+                                        ],
+                                    })}
+                                </div>
+                                <div className='flex-1'>
+                                    <div className='flex flex-col gap-1'>
+                                        <p className='mr-2'>
+                                            {t("select_branch")}:
+                                        </p>
+                                        {branch === null ? (
+                                            <Skeleton className='w-full h-10 rounded-lg' />
+                                        ) : (
+                                            <select
+                                                name='branchId'
+                                                className='border w-full rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                                value={adminData.branchId}
+                                                onChange={handleInputChange}>
+                                                <option
+                                                    value=''
+                                                    selected
+                                                    disabled>
+                                                    {t("select_branch")}
+                                                </option>
+                                                {branch?.length > 0 &&
+                                                    branch.map((b) => (
+                                                        <option
+                                                            value={b.id}
+                                                            key={b.id}>
+                                                            {b.name}
+                                                        </option>
+                                                    ))}
+                                            </select>
+                                        )}
+                                    </div>
+                                    <label
+                                        htmlFor='image'
+                                        className='cursor-pointer flex flex-col md:flex'>
+                                        {adminData.image
+                                            ? t("selected_image")
+                                            : t("choose_image")}
+                                        {!adminData.image && (
+                                            <motion.div
+                                                whileTap={{ scale: 0.98 }}
+                                                className='flex gap-2 px-2 py-5 border border-blue-500 bg-blue-400/20 rounded'>
+                                                {t("image_dropzone")}
+                                                <UploadIcon />
+                                            </motion.div>
+                                        )}
+                                        <input
+                                            hidden
+                                            id='image'
+                                            type='file'
+                                            name='image'
+                                            onChange={handleInputChange}
+                                            autoComplete='off'
+                                            multiple={false}
+                                        />
+                                    </label>
+                                    {renderImagePreview(adminData.image)}
                                 </div>
                             </div>
                             <div className='flex justify-end gap-3 mt-4'>
@@ -415,14 +551,25 @@ const DashboardAdmins = () => {
                                     }`}
                                     type='submit'
                                     disabled={createAdminLoading}>
-                                    {t("ok")}
+                                    {createAdminLoading ? (
+                                        <>
+                                            <Loader2Icon
+                                                className='animate-spin'
+                                                style={{
+                                                    animationDuration: "1.5s",
+                                                }}
+                                            />
+                                        </>
+                                    ) : (
+                                        t("ok")
+                                    )}
                                 </button>
                             </div>
                         </form>
-                    </Modal> */}
+                    </Modal>
 
                     {/* Update admin modal */}
-                    {/* <Modal
+                    <Modal
                         title={t("modal_admin_update")}
                         visible={isEditModalOpen}>
                         <AnimatePresence>
@@ -447,290 +594,228 @@ const DashboardAdmins = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    <>
-                                        <form onSubmit={handleEdit}>
-                                            <div className='flex gap-10'>
-                                                <div className='w-1/2'>
-                                                    <div className='flex flex-col gap-1 mt-1'>
-                                                        <label
-                                                            htmlFor='edit-admin-name'
-                                                            className='text-base'>
-                                                            {t(
-                                                                "modal_admin_name"
-                                                            )}
-                                                            :
-                                                        </label>
-                                                        <input
-                                                            type='text'
-                                                            id='edit-admin-name'
-                                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                                            minLength={3}
-                                                            maxLength={15}
-                                                            name='name'
-                                                            value={adminName}
-                                                            onChange={(e) =>
-                                                                setAdminName(
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                            required
-                                                            autoComplete='name'
-                                                        />
-                                                    </div>
-                                                    <div className='flex flex-col gap-1 mt-1'>
-                                                        <label
-                                                            htmlFor='edit-admin-username'
-                                                            className='text-base'>
-                                                            {t(
-                                                                "modal_admin_username"
-                                                            )}
-                                                            :
-                                                        </label>
-                                                        <input
-                                                            type='text'
-                                                            id='edit-admin-username'
-                                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                                            minLength={3}
-                                                            maxLength={15}
-                                                            value={
-                                                                adminUsername
-                                                            }
-                                                            onChange={(e) =>
-                                                                setAdminUsername(
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                            required
-                                                            autoComplete='username'
-                                                            name='username'
-                                                        />
-                                                    </div>
-                                                    <div className='flex flex-col gap-1 mt-1'>
-                                                        <PhoneInput
-                                                            value={adminPhone}
-                                                            onChange={
-                                                                setAdminPhone
-                                                            }
-                                                            label={`${t(
-                                                                "modal_admin_phone"
-                                                            )}:`}
-                                                            name='phone'
-                                                            required
-                                                        />
-                                                    </div>
-                                                    <div className='flex flex-col gap-1 mt-1'>
-                                                        <label
-                                                            htmlFor='edit-admin-role'
-                                                            className='text-base'>
-                                                            Admin role:
-                                                        </label>
+                                    <form onSubmit={handleEdit}>
+                                        <div className='flex gap-10'>
+                                            <div className='w-1/2'>
+                                                {renderInput({
+                                                    id: "edit-admin-name",
+                                                    name: "name",
+                                                    label:
+                                                        t("modal_admin_name") +
+                                                        ":",
+                                                    value: editData.name,
+                                                    onChange: (e) =>
+                                                        handleInputChange(
+                                                            e,
+                                                            true
+                                                        ),
+                                                    autoComplete: "name",
+                                                })}
+                                                {renderInput({
+                                                    id: "edit-admin-username",
+                                                    name: "username",
+                                                    label:
+                                                        t(
+                                                            "modal_admin_username"
+                                                        ) + ":",
+                                                    value: editData.username,
+                                                    onChange: (e) =>
+                                                        handleInputChange(
+                                                            e,
+                                                            true
+                                                        ),
+                                                    autoComplete: "username",
+                                                })}
+                                                <PhoneInput
+                                                    value={editData.phone}
+                                                    onChange={(val) =>
+                                                        handlePhoneChange(
+                                                            val,
+                                                            true
+                                                        )
+                                                    }
+                                                    label={
+                                                        t("modal_admin_phone") +
+                                                        ":"
+                                                    }
+                                                    name='phone'
+                                                    required
+                                                />
+                                                {renderSelect({
+                                                    id: "edit-admin-role",
+                                                    name: "role",
+                                                    label:
+                                                        t("modal_admin_role") +
+                                                        ":",
+                                                    value: editData.role,
+                                                    onChange: (e) =>
+                                                        handleInputChange(
+                                                            e,
+                                                            true
+                                                        ),
+                                                    options: [
+                                                        {
+                                                            value: "ADMIN",
+                                                            label: "Admin",
+                                                        },
+                                                        {
+                                                            value: "SUPERADMIN",
+                                                            label: "Super-admin",
+                                                        },
+                                                    ],
+                                                })}
+                                                {renderInput({
+                                                    id: "edit-admin-password",
+                                                    name: "password",
+                                                    label:
+                                                        t(
+                                                            "modal_admin_password"
+                                                        ) + ":",
+                                                    type: "password",
+                                                    value: editData.password,
+                                                    onChange: (e) =>
+                                                        handleInputChange(
+                                                            e,
+                                                            true
+                                                        ),
+                                                    autoComplete:
+                                                        "current-password",
+                                                    required: false,
+                                                })}
+                                            </div>
+                                            <div className='flex-1'>
+                                                <div className='flex flex-col gap-1'>
+                                                    <p className='mr-2'>
+                                                        {branch === null
+                                                            ? t("select_branch")
+                                                            : t(
+                                                                  "admin_s_branch"
+                                                              )}
+                                                        :
+                                                    </p>
+                                                    {branch === null ? (
+                                                        <Skeleton className='w-full h-10 rounded-lg' />
+                                                    ) : (
                                                         <select
-                                                            multiple={false}
-                                                            value={adminRole}
-                                                            onChange={(e) =>
-                                                                setAdminRole(
-                                                                    e.target
-                                                                        .value
-                                                                )
-                                                            }
-                                                            id='edit-admin-role'
-                                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600'>
-                                                            <option disabled>
-                                                                Role tanlang...
-                                                            </option>
-                                                            <option value='ADMIN'>
-                                                                Admin
-                                                            </option>
-                                                            <option value='SUPERADMIN'>
-                                                                Super-admin
-                                                            </option>
-                                                        </select>
-                                                    </div>
-                                                    <div className='flex flex-col gap-1 mt-1 relative'>
-                                                        <label
-                                                            htmlFor='edit-admin-password'
-                                                            className='text-base'>
-                                                            {t(
-                                                                "modal_admin_password"
-                                                            )}
-                                                            :
-                                                        </label>
-                                                        <input
-                                                            type={
-                                                                showPassword
-                                                                    ? "text"
-                                                                    : "password"
-                                                            }
-                                                            id='edit-admin-password'
-                                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                                            minLength={3}
-                                                            maxLength={15}
-                                                            name='password'
+                                                            name='branchId'
+                                                            className='border w-full rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
                                                             value={
-                                                                adminPassword
+                                                                editData.branchId
                                                             }
                                                             onChange={(e) =>
-                                                                setAdminPassword(
-                                                                    e.target
-                                                                        .value
+                                                                handleInputChange(
+                                                                    e,
+                                                                    true
                                                                 )
-                                                            }
-                                                            autoComplete='current-password'
-                                                        />
-                                                        <button
-                                                            name='Show password button'
-                                                            aria-label='Show password button'
-                                                            title='Show password'
-                                                            type='button'
-                                                            onClick={() =>
-                                                                setShowPassword(
-                                                                    (curr) =>
-                                                                        !curr
-                                                                )
-                                                            }
-                                                            className='absolute top-9.5 ml-2 right-3 text-gray-500 hover:text-gray-700'
-                                                            tabIndex={-1}
-                                                            disabled={
-                                                                createAdminLoading
                                                             }>
-                                                            {showPassword ? (
-                                                                <EyeOff
-                                                                    size={20}
-                                                                />
-                                                            ) : (
-                                                                <Eye
-                                                                    size={20}
-                                                                />
-                                                            )}
-                                                        </button>
-                                                    </div>
+                                                            <option
+                                                                value=''
+                                                                disabled
+                                                                selected>
+                                                                {t(
+                                                                    "select_branch"
+                                                                )}
+                                                            </option>
+                                                            {branch?.length >
+                                                                0 &&
+                                                                branch.map(
+                                                                    (b) => (
+                                                                        <option
+                                                                            value={
+                                                                                b.id
+                                                                            }
+                                                                            key={
+                                                                                b.id
+                                                                            }>
+                                                                            {
+                                                                                b.name
+                                                                            }
+                                                                        </option>
+                                                                    )
+                                                                )}
+                                                        </select>
+                                                    )}
                                                 </div>
-                                                <div className='flex-1'>
-                                                    <div className='flex flex-col gap-1'>
-                                                        <p className='mr-2'>
-                                                            Filialni tanlang:
-                                                        </p>
-                                                        {branchData === null ? (
-                                                            <Skeleton className='w-full h-10 rounded-lg' />
-                                                        ) : (
-                                                            <select
-                                                                name='branchId'
-                                                                className='border w-full rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                                                value={
-                                                                    branchData.name
-                                                                }>
-                                                                {branch?.length >
-                                                                    0 &&
-                                                                    branch.map(
-                                                                        (b) => (
-                                                                            <option
-                                                                                value={
-                                                                                    b.id
-                                                                                }
-                                                                                key={
-                                                                                    b.id
-                                                                                }>
-                                                                                {
-                                                                                    b.name
-                                                                                }
-                                                                            </option>
-                                                                        )
-                                                                    )}
-                                                            </select>
-                                                        )}
-                                                    </div>
+                                                <label
+                                                    htmlFor='edit-image'
+                                                    className='cursor-pointer flex flex-col'>
+                                                    {editData.image
+                                                        ? t("selected_image")
+                                                        : t("choose_image")}
+                                                    {!editData.image && (
+                                                        <motion.div
+                                                            whileTap={{
+                                                                scale: 0.98,
+                                                            }}
+                                                            className='flex gap-2 px-2 py-5 border border-blue-500 bg-blue-400/20 rounded'>
+                                                            {t(
+                                                                "image_dropzone"
+                                                            )}
+                                                            <UploadIcon />
+                                                        </motion.div>
+                                                    )}
                                                     <input
                                                         hidden
-                                                        id='image'
+                                                        id='edit-image'
                                                         type='file'
                                                         name='image'
-                                                        onChange={
-                                                            handleEditFileChage
+                                                        onChange={(e) =>
+                                                            handleInputChange(
+                                                                e,
+                                                                true
+                                                            )
                                                         }
                                                         autoComplete='off'
                                                         multiple={false}
                                                     />
-                                                    {editingFileList && (
-                                                        <motion.label
-                                                            htmlFor='image'
-                                                            initial={{
-                                                                opacity: 0,
-                                                                y: -50,
-                                                            }}
-                                                            animate={{
-                                                                opacity: 1,
-                                                                y: 0,
-                                                            }}
-                                                            exit={{
-                                                                opacity: 0,
-                                                                y: -50,
-                                                            }}
-                                                            className='block border border-blue-500 bg-blue-300/10 p-4 rounded cursor-pointer mt-4'>
-                                                            <div className='flex gap-4'>
-                                                                <div className='flex-1'>
-                                                                    <img
-                                                                        src={
-                                                                            editingFileList
-                                                                        }
-                                                                        alt='Admin Image'
-                                                                        className='object-cover rounded-lg w-full h-full'
-                                                                    />
-                                                                </div>
-                                                                <div>
-                                                                    <p>
-                                                                        Tanlangan
-                                                                        rasm
-                                                                        shunaqa
-                                                                        ko'rinadi:
-                                                                    </p>
-                                                                    <img
-                                                                        src={
-                                                                            editingFileList
-                                                                        }
-                                                                        alt='Admin Image'
-                                                                        className='object-cover w-30 h-30 rounded-full p-2'
-                                                                    />
-                                                                </div>
-                                                            </div>
-                                                        </motion.label>
-                                                    )}
-                                                </div>
+                                                </label>
+                                                {renderImagePreview(
+                                                    editData.image
+                                                )}
                                             </div>
-                                            <div className='flex justify-end gap-3 mt-4'>
-                                                <button
-                                                    type='button'
-                                                    className={`py-2 px-2.5 rounded-lg border-none cursor-pointer bg-red-600/80 hover:bg-red-600 duration-150 text-white w-max active:scale-[0.95] will-change-transform ${
-                                                        editLoading
-                                                            ? "opacity-30 pointer-events-none"
-                                                            : ""
-                                                    }`}
-                                                    onClick={() =>
-                                                        setIsEditModalOpen(
-                                                            false
-                                                        )
-                                                    }
-                                                    disabled={editLoading}>
-                                                    {t("cancel")}
-                                                </button>
-                                                <button
-                                                    className={`py-2 px-2.5 rounded-lg text-white border-none cursor-pointer bg-[#126ac9] duration-150 hover:bg-[#007bff] w-max active:scale-[0.95] will-change-transform ${
-                                                        editLoading
-                                                            ? "opacity-30 pointer-events-none"
-                                                            : ""
-                                                    }`}
-                                                    type='submit'
-                                                    disabled={editLoading}>
-                                                    {t("ok")}
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </>
+                                        </div>
+                                        <div className='flex justify-end gap-3 mt-4'>
+                                            <button
+                                                type='button'
+                                                className={`py-2 px-2.5 rounded-lg border-none cursor-pointer bg-red-600/80 hover:bg-red-600 duration-150 text-white w-max active:scale-[0.95] will-change-transform ${
+                                                    editLoading
+                                                        ? "opacity-30 pointer-events-none"
+                                                        : ""
+                                                }`}
+                                                onClick={() =>
+                                                    setIsEditModalOpen(false)
+                                                }
+                                                disabled={editLoading}>
+                                                {t("cancel")}
+                                            </button>
+                                            <button
+                                                className={`py-2 px-2.5 rounded-lg text-white border-none cursor-pointer bg-[#126ac9] duration-150 hover:bg-[#007bff] w-max active:scale-[0.95] will-change-transform ${
+                                                    editLoading
+                                                        ? "opacity-30 pointer-events-none"
+                                                        : ""
+                                                }`}
+                                                type='submit'
+                                                disabled={editLoading}>
+                                                {editLoading ? (
+                                                    <div className='flex items-center'>
+                                                        <Loader2Icon
+                                                            className='animate-spin'
+                                                            style={{
+                                                                animationDuration:
+                                                                    "1.5s",
+                                                            }}
+                                                        />
+                                                    </div>
+                                                ) : (
+                                                    t("ok")
+                                                )}
+                                            </button>
+                                        </div>
+                                    </form>
                                 )}
                             </motion.div>
                         </AnimatePresence>
-                    </Modal> */}
+                    </Modal>
                 </motion.div>
             )}
         </motion.div>

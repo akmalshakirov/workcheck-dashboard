@@ -48,9 +48,11 @@ const Dropdown = ({ options, placeholder = "Tanlang...", className }) => {
 
     return (
         <div
-            className={`${styles.dropdownContainer} ${className}`}
+            className={`${styles.dropdownContainer} ${className} bg-white text-black dark:bg-neutral-900 dark:text-white`}
             ref={dropdownRef}>
-            <button onClick={handleToggle} className={styles.dropdownButton}>
+            <button
+                onClick={handleToggle}
+                className={`${styles.dropdownButton} bg-white text-black dark:bg-neutral-800 dark:text-white`}>
                 <span>
                     {selectedOption ? selectedOption.label : placeholder}
                 </span>
@@ -73,7 +75,7 @@ const Dropdown = ({ options, placeholder = "Tanlang...", className }) => {
 
             {(isOpen || animateOut) && (
                 <div
-                    className={`dark:bg-black dark:text-white ${
+                    className={`bg-white text-black dark:bg-neutral-900 dark:text-white ${
                         styles.dropdownMenu
                     } ${
                         animateOut
@@ -86,7 +88,7 @@ const Dropdown = ({ options, placeholder = "Tanlang...", className }) => {
                             <li
                                 key={index}
                                 onClick={() => handleOptionClick(option)}
-                                className={styles.dropdownItem}>
+                                className={`${styles.dropdownItem} hover:bg-gray-100 dark:hover:bg-neutral-800`}>
                                 {option.label}
                             </li>
                         ))}

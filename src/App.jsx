@@ -1,11 +1,11 @@
 import React, { Suspense, useEffect } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import Loader from "./components/ui/Loader/Loader";
 import Preloader from "./components/ui/Preloader/Preloader";
-import DashboardBranch from "./pages/Dashboard/DashboardBranch";
 
-const DashboardLayout = React.lazy(() => import("./layout/DashboardLayout"));
+const DashboardLayout = React.lazy(() =>
+    import("./layout/DashboardLayout.jsx")
+);
 const DashboardAdmins = React.lazy(() =>
     import("./pages/Dashboard/DashboardAdmins")
 );
@@ -18,11 +18,14 @@ const DashboardProfile = React.lazy(() =>
 const DashboardHome = React.lazy(() =>
     import("./pages/Dashboard/DashboardHome")
 );
+const DashboardBranch = React.lazy(() =>
+    import("./pages/Dashboard/DashboardBranch.jsx")
+);
 const Login = React.lazy(() => import("./pages/Login/Login"));
 
 export const baseURL = import.meta.env.VITE_API_URL;
 
-const App = () => {
+export const App = () => {
     const token = localStorage.getItem("token");
     const theme = localStorage.getItem("isDark");
     const navigate = useNavigate();
@@ -50,10 +53,7 @@ const App = () => {
             <Routes>
                 <Route path='/login' element={<Login />} />
                 <Route path='/preloader' element={<Preloader />} />
-                <Route path='/loader' element={<Loader />} />
-                <Route
-                    path='/'
-                    element={token ? <DashboardLayout /> : <Login />}>
+                <Route path='/' element={<DashboardLayout />}>
                     <Route index element={<DashboardHome />} />
                     <Route path='admins' element={<DashboardAdmins />} />
                     <Route path='workers' element={<DashboardWorkers />} />
@@ -65,5 +65,3 @@ const App = () => {
         </Suspense>
     );
 };
-
-export default App;

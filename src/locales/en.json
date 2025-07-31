@@ -31,5 +31,13 @@
     "admin_table_role": "Role",
     "admin_table_phone": "Phone number",
     "admin_table_branch": "Branch",
-    "admin_table_action": "Action"
+    "admin_table_action": "Action",
+    "modal_admin_role": "Admin role",
+    "select_role": "Select role",
+    "select_branch": "Select branch",
+    "admin_s_branch": "Admin's branch",
+    "choose_image": "Choose image",
+    "selected_image": "Admin's image",
+    "image_dropzone": "Upload or select image",
+    "image_preview": "Image preview"
 }

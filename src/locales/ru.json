@@ -28,8 +28,16 @@
     "admin_table_img": "Фото",
     "admin_table_name": "Имя",
     "admin_table_username": "Username",
-    "admin_table_role": "Role",
+    "admin_table_role": "Роль",
     "admin_table_phone": "Телефон",
     "admin_table_branch": "Филиал",
-    "admin_table_action": "Действия"
+    "admin_table_action": "Действия",
+    "modal_admin_role": "Роль админа",
+    "select_role": "Выберите роль",
+    "select_branch": "Выберите филиал",
+    "admin_s_branch": "Филиал админа",
+    "choose_image": "Выберите фото",
+    "selected_image": "Фото админа",
+    "image_dropzone": "Загрузите или выберите фото",
+    "image_preview": "Просмотр фото"
 }

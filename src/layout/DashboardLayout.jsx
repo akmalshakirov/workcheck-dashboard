@@ -5,9 +5,9 @@ import { Outlet } from "react-router-dom";
 import { Footer } from "../components/ui/Footer/Footer";
 import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
+import { Skeleton } from "../components/ui/Skeleton/Skeleton";
 import { useAdmin } from "../hooks/useAdmin";
 import { getBranches, getProfile } from "../service/api/api";
-import { Skeleton } from "../components/ui/Skeleton/Skeleton";
 
 const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(
@@ -15,7 +15,6 @@ const DashboardLayout = () => {
     );
     const [adminContent, setAdminContent] = useState(null);
     const token = localStorage.getItem("token");
-    const lang = localStorage.getItem("lang");
     useEffect(() => {
         localStorage.setItem("sidebar", collapsed);
     }, [collapsed]);
@@ -41,7 +40,7 @@ const DashboardLayout = () => {
                     <select
                         name='branchId'
                         className='w-full px-2 border border-gray-400 rounded py-2 outline-none'>
-                        {branch.map((b) => (
+                        {branch?.map((b) => (
                             <option value={b.id} key={b.id}>
                                 {b.name}
                             </option>
