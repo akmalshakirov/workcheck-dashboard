@@ -180,7 +180,7 @@ export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
             <div className='hidden md:flex items-center gap-2.5'>
                 <div
                     ref={langRef}
-                    className={`${styles.item} dark:text-white border dark:border-white/40 border-black/30 rounded-lg`}
+                    className={`${styles.item} relative dark:text-white border dark:border-white/40 border-black/30 rounded-lg`}
                     onClick={() =>
                         toggleDropdown(langOpen, setLangOpen, setLangClosing)
                     }>
@@ -346,7 +346,7 @@ export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
                                 profileClosing
                                     ? styles.dropdownExit
                                     : styles.dropdownEnter
-                            } bg-white whitespace-nowrap dark:bg-[#222] dark:text-white p-1`}>
+                            } bg-white dark:bg-[#222] dark:text-white p-1`}>
                             <div
                                 className='border-b border-b-gray-600/80 mb-1 p-2 flex gap-2.5 cursor-default'
                                 onClick={(e) => e.stopPropagation()}>
@@ -423,7 +423,7 @@ export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
                                 stiffness: 300,
                                 damping: 30,
                             }}
-                            className='bg-white dark:bg-[#111] p-4 flex flex-col gap-4 w-3/4 max-w-xs h-full shadow-lg'
+                            className='bg-white dark:bg-[#111] p-4 flex flex-col gap-4 w-3/4 max-w-xs h-full shadow-lg overflow-auto'
                             onClick={(e) => e.stopPropagation()}>
                             <div className='flex justify-between items-center mb-4'>
                                 <span className='font-bold text-lg'>Menu</span>

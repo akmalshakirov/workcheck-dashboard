@@ -159,7 +159,7 @@ const DashboardAdmins = () => {
             const response = await axios.put(
                 `${baseURL}/admin/${editId}/update`,
                 formData,
-                { headers: { Authorization: `Bearer ${token}` } }
+                { headers: { Authorization: `Bearer ${token}`, Accept: lang } }
             );
             if (response.status === 200) {
                 showSwal("success", response.data.message);
@@ -198,7 +198,12 @@ const DashboardAdmins = () => {
             try {
                 const response = await axios.delete(
                     `${baseURL}/admin/${id}/delete`,
-                    { headers: { Authorization: `Bearer ${token}"` } }
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            Accept: lang,
+                        },
+                    }
                 );
                 Swal.close();
                 showSwal("success", response.data.message);
@@ -287,6 +292,7 @@ const DashboardAdmins = () => {
         onChange,
         options,
         required = true,
+        defaultChecked = false,
     }) => (
         <div className='flex flex-col gap-1'>
             <label htmlFor={id} className='text-base'>
@@ -297,6 +303,7 @@ const DashboardAdmins = () => {
                 name={name}
                 value={value}
                 onChange={onChange}
+                defaultChecked={defaultChecked}
                 className='border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600 dark:bg-[#0f0f0f]'
                 required={required}>
                 <option disabled value=''>
@@ -311,14 +318,14 @@ const DashboardAdmins = () => {
         </div>
     );
 
-    const renderImagePreview = (fileOrUrl, label) => {
+    const renderImagePreview = (fileOrUrl) => {
         if (!fileOrUrl) return null;
         const src =
             typeof fileOrUrl === "string"
                 ? fileOrUrl
                 : URL.createObjectURL(fileOrUrl);
         return (
-            <motion.label
+            <motion.div
                 initial={{ opacity: 0, y: -50 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -50 }}
@@ -340,7 +347,7 @@ const DashboardAdmins = () => {
                         />
                     </div>
                 </div>
-            </motion.label>
+            </motion.div>
         );
     };
 
@@ -483,14 +490,12 @@ const DashboardAdmins = () => {
                                             <Skeleton className='w-full h-10 rounded-lg' />
                                         ) : (
                                             <select
+                                                defaultChecked=''
                                                 name='branchId'
                                                 className='border w-full rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
                                                 value={adminData.branchId}
                                                 onChange={handleInputChange}>
-                                                <option
-                                                    value=''
-                                                    selected
-                                                    disabled>
+                                                <option value='' disabled>
                                                     {t("select_branch")}
                                                 </option>
                                                 {branch?.length > 0 &&
@@ -526,6 +531,7 @@ const DashboardAdmins = () => {
                                             onChange={handleInputChange}
                                             autoComplete='off'
                                             multiple={false}
+                                            accept='image/*'
                                         />
                                     </label>
                                     {renderImagePreview(adminData.image)}
@@ -697,6 +703,7 @@ const DashboardAdmins = () => {
                                                         <Skeleton className='w-full h-10 rounded-lg' />
                                                     ) : (
                                                         <select
+                                                            defaultChecked=''
                                                             name='branchId'
                                                             className='border w-full rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
                                                             value={
@@ -710,8 +717,7 @@ const DashboardAdmins = () => {
                                                             }>
                                                             <option
                                                                 value=''
-                                                                disabled
-                                                                selected>
+                                                                disabled>
                                                                 {t(
                                                                     "select_branch"
                                                                 )}
@@ -767,6 +773,7 @@ const DashboardAdmins = () => {
                                                         }
                                                         autoComplete='off'
                                                         multiple={false}
+                                                        accept='image/*'
                                                     />
                                                 </label>
                                                 {renderImagePreview(

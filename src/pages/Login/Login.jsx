@@ -1,6 +1,6 @@
 import axios from "axios";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, LoaderCircle } from "lucide-react";
+import { Eye, EyeOff, LoaderCircleIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -128,26 +128,35 @@ const Login = () => {
                             )}
                         </button>
                     </div>
-                    <button
-                        name='Submit button'
-                        aria-label='Submit button'
-                        title='Submit'
-                        type='submit'
-                        className={`w-full bg-blue-400 text-white py-2 rounded-lg transition duration-300 flex items-center justify-center ${
-                            loading
-                                ? "opacity-60 cursor-not-allowed!"
-                                : "hover:bg-blue-600"
-                        }`}
-                        disabled={loading}>
+                    <div>
                         {loading ? (
-                            <span className='flex items-center gap-2'>
-                                <LoaderCircle className='animate-spin' />
-                                Tekshirilmoqda...
+                            <span
+                                className={`flex items-center justify-center bg-blue-400 text-white py-2 rounded-lg transition duration-300 ${
+                                    loading
+                                        ? "opacity-60 cursor-not-allowed select-none"
+                                        : "hover:bg-blue-600"
+                                }`}>
+                                <LoaderCircleIcon
+                                    className='animate-spin'
+                                    size={24}
+                                />
                             </span>
                         ) : (
-                            "Kirish"
+                            <button
+                                name='Submit button'
+                                aria-label='Submit button'
+                                title='Submit'
+                                type='submit'
+                                className={`w-full bg-blue-400 text-white py-2 rounded-lg transition duration-300 flex items-center justify-center ${
+                                    loading
+                                        ? "opacity-60 cursor-not-allowed!"
+                                        : "hover:bg-blue-600"
+                                }`}
+                                disabled={loading}>
+                                Kirish
+                            </button>
                         )}
-                    </button>
+                    </div>
                 </form>
             </div>
         </div>
