@@ -40,5 +40,15 @@
     "choose_image": "Выберите фото",
     "selected_image": "Фото админа",
     "image_dropzone": "Загрузите или выберите фото",
-    "image_preview": "Просмотр фото"
+    "image_preview": "Просмотр фото",
+    "edit_profile": "Редактировать профиль",
+    "save": "Сохранить",
+    "saving": "Сохраняется...",
+    "saved_successfully": "Успешно сохранено!",
+    "enter_name": "Введите имя",
+    "enter_username": "Введите username",
+    "enter_password": "Введите новый пароль (необязательно)",
+    "enter_phone": "Введите номер телефона",
+    "role": "Роль",
+    "edit": "Редактировать"
 }

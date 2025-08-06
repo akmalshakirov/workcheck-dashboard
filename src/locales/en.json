@@ -40,5 +40,15 @@
     "choose_image": "Choose image",
     "selected_image": "Admin's image",
     "image_dropzone": "Upload or select image",
-    "image_preview": "Image preview"
+    "image_preview": "Image preview",
+    "edit_profile": "Edit profile",
+    "save": "Save",
+    "saving": "Saving...",
+    "saved_successfully": "Saved successfully!",
+    "enter_name": "Enter your name",
+    "enter_username": "Enter username",
+    "enter_password": "Enter new password (optional)",
+    "enter_phone": "Enter phone number",
+    "role": "Role",
+    "edit": "Edit"
 }

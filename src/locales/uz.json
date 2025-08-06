@@ -41,5 +41,15 @@
     "selected_image": "Rasm tanlandi",
     "image_dropzone": "Rasmni yuklang yoki tanlang",
     "image_preview": "Rasm ko'rinishi",
-    "close": "Yopish"
+    "close": "Yopish",
+    "edit_profile": "Profilni tahrirlash",
+    "save": "Saqlash",
+    "saving": "Saqlanmoqda...",
+    "saved_successfully": "Muvaffaqiyatli saqlandi!",
+    "enter_name": "Ismingizni kiriting",
+    "enter_username": "Username kiriting",
+    "enter_password": "Yangi parol kiriting (ixtiyoriy)",
+    "enter_phone": "Telefon raqam kiriting",
+    "role": "Rol",
+    "edit": "Tahrirlash"
 }

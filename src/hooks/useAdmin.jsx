@@ -12,7 +12,6 @@ export const useAdmin = () => {
         isSuperAdmin: admin?.role === "SUPERADMIN",
         loading,
         setLoading,
-        setIsLoading: setLoading,
         branch,
         setBranch,
     };

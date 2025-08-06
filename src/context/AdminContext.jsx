@@ -5,8 +5,6 @@ export const AdminContext = createContext({
     setAdmin: () => {},
     branch: null,
     setBranch: () => {},
-    loading: false,
-    setLoading: () => {},
 });
 
 export const AdminProvider = ({ children }) => {

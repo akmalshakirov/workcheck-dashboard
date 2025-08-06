@@ -19,20 +19,20 @@ const DashboardLayout = () => {
         localStorage.setItem("sidebar", collapsed);
     }, [collapsed]);
     const { t } = useTranslation();
-    const { setAdmin, setIsLoading, branch, setBranch } = useAdmin();
+    const { setAdmin, setLoading, branch, setBranch } = useAdmin();
 
     useEffect(() => {
         getProfile({
             setAdmin,
             setAdminContent,
-            setIsLoading,
+            setLoading,
             token,
         });
         getBranches({ setBranch });
     }, []);
 
     return (
-        <div className='flex bg-[#5f73e2] dark:bg-[#000] transition-colors duration-200'>
+        <div className='flex bg-[#5f73e2] dark:bg-neutral-950 transition-colors duration-200'>
             <Sidebar collapsed={collapsed} setCollapsed={setCollapsed}>
                 {branch === null ? (
                     <Skeleton className='w-full h-10' />

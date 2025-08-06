@@ -108,7 +108,7 @@ const Login = () => {
                             required
                             className='w-full px-4 py-2 border outline-none transition rounded-lg focus:border-blue-500'
                             autoComplete='new-password'
-                            minLength={3}
+                            minLength={8}
                             maxLength={15}
                             disabled={loading}
                         />
