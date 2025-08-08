@@ -98,7 +98,7 @@ const DashboardProfile = () => {
                     </h1>
                 </div>
 
-                <div className='w-6xl mx-auto'>
+                <div className='max-w-6xl mx-auto'>
                     <div className='grid lg:grid-cols-3 gap-8'>
                         <div className='lg:col-span-1'>
                             <div className='rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8'>
