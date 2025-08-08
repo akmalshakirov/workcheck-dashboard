@@ -4,6 +4,7 @@ import { baseURL } from "../../App";
 const token = localStorage.getItem("token");
 const theme = localStorage.getItem("isDark");
 const lang = localStorage.getItem("lang");
+let isClose = false;
 
 export const getAdmins = async ({ setPreloader, setAdmins, token, lang }) => {
     setPreloader(true);
@@ -49,7 +50,12 @@ export const getProfile = async ({
             setLoading(false);
         }
     } catch (error) {
-        Swal.fire(error.response.data.error, "", "error");
+        Swal.fire({
+            title: error?.response?.data?.error,
+            icon: "error",
+            didClose: isClose,
+            theme: theme == "true" ? "dark" : "light",
+        });
         if (error.code === "ERR_NETWORK") {
             Swal.fire("Internet aloqasi yo'q", "", "error");
         } else if (error?.response?.status === 401) {
@@ -74,6 +80,7 @@ export const getProfile = async ({
                     setAdminContent(response?.data?.admin);
                     setAdmin(response.data.admin);
                     setLoading(false);
+                    isClose = true;
                 }
             }
         }
@@ -93,12 +100,13 @@ export const updateProfile = async ({
     try {
         const response = await axios.put(
             `${baseURL}/profile/update`,
-            {
-                name: profileData.name,
-                username: profileData.username,
-                phone: profileData.phone || "",
-                password: profileData.password || "",
-            },
+            { profileData },
+            // {
+            //     name: profileData.name,
+            //     username: profileData.username,
+            //     phone: profileData.phone || "",
+            //     password: profileData.password || "",
+            // },
             {
                 headers: {
                     Authorization: `Bearer ${token}`,

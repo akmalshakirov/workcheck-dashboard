@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import {
     Building,
     Camera,
@@ -9,12 +10,11 @@ import {
     User,
     XIcon,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import { useAdmin } from "../../hooks/useAdmin";
 import { updateProfile } from "../../service/api/api";
-import { AnimatePresence, motion } from "framer-motion";
 
 const DashboardProfile = () => {
     const token = localStorage.getItem("token");
@@ -29,7 +29,6 @@ const DashboardProfile = () => {
         role: admin?.role || "",
         phone: admin?.phone || "",
     });
-
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
@@ -50,26 +49,27 @@ const DashboardProfile = () => {
                     typeof branch === "object"
                         ? branch?.name || ""
                         : branch || "",
-                image: admin.image || "",
                 role: admin.role || "",
                 phone: admin.phone || "",
             });
+            setFileList(admin.image);
         }
     }, [admin, branch]);
 
-    const handleInputChange = (e) => {
-        const { name, value, files } = e.target;
-        if (files) {
-            setFileList(files[0]);
-        } else {
+    const handleImageChange = useCallback((e) => {
+        setFileList(e?.target?.files[0]);
+    }, []);
+
+    const handleInputChange = useCallback(
+        (e) => {
+            const { name, value } = e.target;
+
             setAdminData((prev) => ({ ...prev, [name]: value }));
-        }
-    };
+        },
+        [adminData, fileList]
+    );
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-
         await updateProfile({
             profileData: adminData,
             setIsSubmitting,
@@ -98,23 +98,23 @@ const DashboardProfile = () => {
                     </h1>
                 </div>
 
-                <div className='max-w-6xl mx-auto'>
+                <div className='w-6xl mx-auto'>
                     <div className='grid lg:grid-cols-3 gap-8'>
                         <div className='lg:col-span-1'>
                             <div className='rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8'>
                                 <div className='text-center'>
                                     <div className='relative inline-block mb-6'>
-                                        {loading || !adminData.image ? (
+                                        {loading || !fileList ? (
                                             <Skeleton className='size-32 rounded-full' />
                                         ) : (
                                             <div className='relative group'>
                                                 <img
                                                     src={
-                                                        adminData.image
-                                                            ? adminData.image
-                                                            : URL.createObjectURL(
+                                                        fileList instanceof Blob
+                                                            ? URL.createObjectURL(
                                                                   fileList
                                                               )
+                                                            : fileList
                                                     }
                                                     alt={
                                                         adminData?.name ||
@@ -135,9 +135,8 @@ const DashboardProfile = () => {
                                                     name='image'
                                                     id='image'
                                                     accept='image/*'
-                                                    onChange={handleInputChange}
-                                                    className='hidden'
-                                                    autoComplete='off'
+                                                    onChange={handleImageChange}
+                                                    hidden
                                                 />
                                             </label>
                                         )}
@@ -162,7 +161,7 @@ const DashboardProfile = () => {
                                     )}
                                 </div>
 
-                                {/* <div className='mt-8'>
+                                <div className='mt-8'>
                                     <div className='bg-gray-50 dark:bg-gray-900 p-6 rounded-lg border border-gray-200 dark:border-gray-600'>
                                         <div className='flex items-center gap-4'>
                                             <div className='w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center'>
@@ -173,15 +172,19 @@ const DashboardProfile = () => {
                                             </div>
                                             <div>
                                                 <p className='text-sm text-gray-600 dark:text-gray-400'>
-                                                    Username
+                                                    Role
                                                 </p>
-                                                <p className='font-semibold text-gray-900 dark:text-white'>
-                                                    {adminData.username || ""}
-                                                </p>
+                                                {adminData.role ? (
+                                                    <p className='font-semibold text-gray-900 dark:text-white'>
+                                                        {adminData?.role}
+                                                    </p>
+                                                ) : (
+                                                    <Skeleton className='w-28 h-6' />
+                                                )}
                                             </div>
                                         </div>
                                     </div>
-                                </div> */}
+                                </div>
                             </div>
                         </div>
 
@@ -230,8 +233,10 @@ const DashboardProfile = () => {
                                                 name='name'
                                                 value={adminData.name || ""}
                                                 onChange={handleInputChange}
-                                                disabled={!isEditing}
-                                                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none ${
+                                                disabled={
+                                                    !isEditing || isSubmitting
+                                                }
+                                                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none ${
                                                     !isEditing
                                                         ? "select-none"
                                                         : ""
@@ -249,10 +254,12 @@ const DashboardProfile = () => {
                                                 name='username'
                                                 value={adminData.username || ""}
                                                 onChange={handleInputChange}
-                                                disabled={!isEditing}
-                                                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none ${
+                                                disabled={
+                                                    !isEditing || isSubmitting
+                                                }
+                                                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none ${
                                                     isEditing
-                                                        ? "select-none bg-red-400"
+                                                        ? "select-none"
                                                         : ""
                                                 }`}
                                                 required
@@ -275,8 +282,10 @@ const DashboardProfile = () => {
                                                 name='password'
                                                 value={adminData.password || ""}
                                                 onChange={handleInputChange}
-                                                disabled={!isEditing}
-                                                className='w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none'
+                                                disabled={
+                                                    !isEditing || isSubmitting
+                                                }
+                                                className='w-full px-4 py-3 pr-12 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none'
                                                 minLength={6}
                                             />
                                             <button
@@ -309,10 +318,12 @@ const DashboardProfile = () => {
                                                 name='phone'
                                                 value={adminData.phone || ""}
                                                 onChange={handleInputChange}
-                                                disabled={!isEditing}
-                                                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none ${
+                                                disabled={
+                                                    !isEditing || isSubmitting
+                                                }
+                                                className={`w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none ${
                                                     isEditing
-                                                        ? "select-none bg-red-400"
+                                                        ? "select-none"
                                                         : ""
                                                 }`}
                                                 pattern='^\d{9}$'
