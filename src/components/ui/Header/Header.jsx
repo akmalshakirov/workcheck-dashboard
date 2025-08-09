@@ -128,18 +128,21 @@ export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
             label: t("dropdown_profile"),
             onClick: () => navigate("/profile"),
             icon: <UserPen size={20} />,
+            danger: false,
         },
         {
             id: "lockscreen",
             label: t("dropdown_lockscreen"),
             onClick: () => alert("Lock screen"),
             icon: <LockKeyhole size={20} />,
+            danger: false,
         },
         {
             id: "logout",
             label: t("dropdown_logout"),
             onClick: () => handleLogout(),
             icon: <LogOut size={20} />,
+            danger: true,
         },
     ];
 
@@ -389,7 +392,11 @@ export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
                                     <li
                                         key={a.id}
                                         onClick={a.onClick}
-                                        className='flex items-center gap-2 dark:hover:bg-white/20 rounded-lg hover:bg-black/10'>
+                                        className={`flex items-center gap-2 rounded-lg ${
+                                            a.danger
+                                                ? "hover:bg-red-600 hover:!text-white"
+                                                : "dark:hover:bg-white/20 hover:bg-black/10"
+                                        }`}>
                                         {a.icon}
                                         {a.label}
                                     </li>

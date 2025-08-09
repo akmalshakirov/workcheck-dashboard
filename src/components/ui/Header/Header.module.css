@@ -3,7 +3,7 @@
     font-weight: 500;
     color: inherit;
     cursor: pointer;
-    transition: background 0.3s ease, transform 0.2s ease, color 0.3s;
+    transition: background 0.3s ease, transform 0.2s ease, color 0.2s ease-in;
 }
 
 .dropdown {
