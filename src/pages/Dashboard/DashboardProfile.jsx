@@ -69,7 +69,7 @@ const DashboardProfile = () => {
         [adminData, fileList]
     );
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async () => {
         await updateProfile({
             profileData: adminData,
             setIsSubmitting,

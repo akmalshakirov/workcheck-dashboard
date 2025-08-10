@@ -155,7 +155,26 @@ export const getBranches = async ({ setBranch }) => {
         setBranch(response.data.branches);
     } catch (error) {
         if (error.code === "ERR_NETWORK") {
-            Swal.fire("Internet aloqasi yo'q", "", "error");
+            Swal.fire({
+                title:
+                    error?.response?.data?.error ||
+                    "Internet aloqasi yo'q" ||
+                    error,
+                icon: "error",
+                timer: 10000,
+                timerProgressBar: true,
+                theme: theme == "true" ? "dark" : "light",
+            });
         }
+        Swal.fire({
+            title:
+                error?.response?.data?.error ||
+                "Internet aloqasi yo'q" ||
+                error,
+            icon: "error",
+            timer: 10000,
+            timerProgressBar: true,
+            theme: theme == "true" ? "dark" : "light",
+        });
     }
 };
