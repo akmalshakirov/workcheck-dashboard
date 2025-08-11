@@ -20,6 +20,7 @@ import PhoneInput from "../../helpers/FormatPhone";
 import { useAdmin } from "../../hooks/useAdmin";
 import { getAdmins } from "../../service/api/api";
 const MySwal = withReactContent(Swal);
+const theme = localStorage.getItem("isDark");
 
 const defaultAdminData = {
     name: "",
@@ -33,7 +34,6 @@ const defaultAdminData = {
 
 const DashboardAdmins = () => {
     const token = localStorage.getItem("token");
-    const theme = localStorage.getItem("isDark");
     const lang = localStorage.getItem("lang");
     const { t } = useTranslation();
     const { branch } = useAdmin();
@@ -80,7 +80,7 @@ const DashboardAdmins = () => {
 
     useEffect(() => {
         fetchAdmins();
-    }, [fetchAdmins]);
+    }, []);
 
     useEffect(() => {
         document.title = `WorkCheck - Dashboard | ${

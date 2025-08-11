@@ -330,7 +330,31 @@ const DashboardProfile = () => {
                                                 autoComplete='billing mobile tel'
                                             />
                                         </div>
-                                        <div>
+                                        {isEditing && (
+                                            <div>
+                                                <button
+                                                    type='submit'
+                                                    disabled={isSubmitting}
+                                                    className='p-5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3'>
+                                                    {isSubmitting ? (
+                                                        <>
+                                                            <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin'></div>
+                                                            <span>
+                                                                {t("saving")}
+                                                            </span>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <Save size={20} />
+                                                            <span>
+                                                                {t("save")}
+                                                            </span>
+                                                        </>
+                                                    )}
+                                                </button>
+                                            </div>
+                                        )}
+                                        {/* <div>
                                             <label className='block text-base font-medium text-gray-700 dark:text-gray-300 mb-2'>
                                                 {t("modal_admin_role")}
                                             </label>
@@ -342,31 +366,8 @@ const DashboardProfile = () => {
                                                 className='w-full outline-none px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed'
                                                 autoComplete='off'
                                             />
-                                        </div>
+                                        </div> */}
                                     </div>
-
-                                    {isEditing && (
-                                        <div className='pt-6 border-t border-gray-200 dark:border-gray-700'>
-                                            <button
-                                                type='submit'
-                                                disabled={isSubmitting}
-                                                className='w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3'>
-                                                {isSubmitting ? (
-                                                    <>
-                                                        <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin'></div>
-                                                        <span>
-                                                            {t("saving")}
-                                                        </span>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Save size={20} />
-                                                        <span>{t("save")}</span>
-                                                    </>
-                                                )}
-                                            </button>
-                                        </div>
-                                    )}
                                 </form>
                             </motion.div>
                         </div>
