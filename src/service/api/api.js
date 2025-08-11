@@ -1,7 +1,13 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import { baseURL } from "../../App";
-const token = localStorage.getItem("token");
+let token;
+
+setTimeout(() => {
+    const refToken = localStorage.getItem("token");
+    token = refToken;
+}, 1000000);
+
 const theme = localStorage.getItem("isDark");
 const lang = localStorage.getItem("lang");
 let isClose = false;
@@ -100,13 +106,7 @@ export const updateProfile = async ({
     try {
         const response = await axios.put(
             `${baseURL}/profile/update`,
-            { profileData },
-            // {
-            //     name: profileData.name,
-            //     username: profileData.username,
-            //     phone: profileData.phone || "",
-            //     password: profileData.password || "",
-            // },
+            profileData,
             {
                 headers: {
                     Authorization: `Bearer ${token}`,

@@ -18,13 +18,12 @@ import { updateProfile } from "../../service/api/api";
 
 const DashboardProfile = () => {
     const token = localStorage.getItem("token");
-    const { admin, branch, setAdmin, loading } = useAdmin();
+    const { admin, setAdmin, loading } = useAdmin();
     const { t } = useTranslation();
     const [adminData, setAdminData] = useState({
         name: admin?.name || "",
         username: admin?.username || "",
         password: "",
-        branch: "",
         image: admin?.image || "",
         role: admin?.role || "",
         phone: admin?.phone || "",
@@ -45,16 +44,11 @@ const DashboardProfile = () => {
                 name: admin.name || "",
                 username: admin.username || "",
                 password: "",
-                branch:
-                    typeof branch === "object"
-                        ? branch?.name || ""
-                        : branch || "",
-                role: admin.role || "",
                 phone: admin.phone || "",
             });
             setFileList(admin.image);
         }
-    }, [admin, branch]);
+    }, [admin]);
 
     const handleImageChange = useCallback((e) => {
         setFileList(e?.target?.files[0]);
@@ -69,7 +63,8 @@ const DashboardProfile = () => {
         [adminData, fileList]
     );
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         await updateProfile({
             profileData: adminData,
             setIsSubmitting,
@@ -148,17 +143,6 @@ const DashboardProfile = () => {
                                     <p className='p-2 w-max mx-auto text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-200 text-green-800 dark:text-green-900 text-center mb-4'>
                                         {adminData.role || "Administrator"}
                                     </p>
-                                    {!admin?.branch ? (
-                                        <Skeleton className='inline-flex items-center w-24 h-9' />
-                                    ) : (
-                                        <div className='inline-flex items-center gap-2 text-base text-black/70 dark:text-gray-400 bg-gray-200 dark:bg-gray-700 px-4 py-2 rounded-lg'>
-                                            <Building size={16} />
-                                            <span>
-                                                {admin?.branch?.name ||
-                                                    admin?.branch}
-                                            </span>
-                                        </div>
-                                    )}
                                 </div>
 
                                 <div className='mt-8'>
@@ -201,11 +185,11 @@ const DashboardProfile = () => {
                                         type='button'
                                         onClick={() => setIsEditing(!isEditing)}
                                         disabled={isSubmitting || loading}
-                                        className={`flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed! disabled:hover:opacity-25 transition-opacity duration-200 px-4 py-2  ${
+                                        className={`flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed! disabled:hover:opacity-25 transition-all duration-200 px-4 py-2 not-disabled:active:scale-95 will-change-transform ${
                                             isEditing
                                                 ? "bg-red-500"
                                                 : "bg-blue-600 hover:bg-blue-700"
-                                        } text-white rounded-lg font-medium transition-colors duration-200`}>
+                                        } text-white rounded-lg font-medium`}>
                                         {isEditing ? (
                                             <>
                                                 <XIcon size={16} />
@@ -331,11 +315,11 @@ const DashboardProfile = () => {
                                             />
                                         </div>
                                         {isEditing && (
-                                            <div>
+                                            <div className='flex'>
                                                 <button
                                                     type='submit'
                                                     disabled={isSubmitting}
-                                                    className='p-5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3'>
+                                                    className='mt-auto max-h-[63%] w-full p-5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3  not-disabled:active:scale-95 will-change-transform'>
                                                     {isSubmitting ? (
                                                         <>
                                                             <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin'></div>
@@ -354,19 +338,6 @@ const DashboardProfile = () => {
                                                 </button>
                                             </div>
                                         )}
-                                        {/* <div>
-                                            <label className='block text-base font-medium text-gray-700 dark:text-gray-300 mb-2'>
-                                                {t("modal_admin_role")}
-                                            </label>
-                                            <input
-                                                type='text'
-                                                name='role'
-                                                value={adminData.role || ""}
-                                                readOnly
-                                                className='w-full outline-none px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-500 dark:text-gray-400 cursor-not-allowed'
-                                                autoComplete='off'
-                                            />
-                                        </div> */}
                                     </div>
                                 </form>
                             </motion.div>
