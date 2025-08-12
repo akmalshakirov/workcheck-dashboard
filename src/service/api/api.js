@@ -1,12 +1,7 @@
 import axios from "axios";
 import Swal from "sweetalert2";
 import { baseURL } from "../../App";
-let token;
-
-setTimeout(() => {
-    const refToken = localStorage.getItem("token");
-    token = refToken;
-}, 1000000);
+const token = localStorage.getItem("token");
 
 const theme = localStorage.getItem("isDark");
 const lang = localStorage.getItem("lang");
