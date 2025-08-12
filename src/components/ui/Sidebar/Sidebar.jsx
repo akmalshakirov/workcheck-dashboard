@@ -8,8 +8,8 @@ const SidearContext = createContext();
 export const Sidebar = ({ children, collapsed }) => {
     return (
         <motion.div
-            initial={collapsed ? { width: "5.8rem" } : { width: "14.3rem" }}
-            animate={collapsed ? { width: "5.8rem" } : { width: "14.3rem" }}
+            initial={collapsed ? { width: "5.8rem" } : { width: "20rem" }}
+            animate={collapsed ? { width: "5.8rem" } : { width: "20rem" }}
             transition={{
                 duration: 0.4,
                 type: "spring",
