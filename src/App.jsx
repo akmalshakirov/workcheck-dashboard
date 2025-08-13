@@ -1,8 +1,17 @@
 import React, { Suspense, useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Preloader from "./components/ui/Preloader/Preloader";
 
+const DashboardBreakOffs = React.lazy(() =>
+    import("./pages/Dashboard/DashboardBreakOff.jsx")
+);
+const DashboardDaysOff = React.lazy(() =>
+    import("./pages/Dashboard/DashboardDaysOff.jsx")
+);
+const DashboardShift = React.lazy(() =>
+    import("./pages/Dashboard/DashboardShift.jsx")
+);
 const DashboardLayout = React.lazy(() =>
     import("./layout/DashboardLayout.jsx")
 );
@@ -59,8 +68,11 @@ export const App = () => {
                     <Route path='workers' element={<DashboardWorkers />} />
                     <Route path='profile' element={<DashboardProfile />} />
                     <Route path='branch' element={<DashboardBranch />} />
+                    <Route path='shift' element={<DashboardShift />} />
+                    <Route path='day-offs' element={<DashboardDaysOff />} />
+                    <Route path='break-offs' element={<DashboardBreakOffs />} />
                 </Route>
-                <Route path='*' element={<h1>Page Not Found</h1>} />
+                <Route path='/*' element={<Navigate to={"/login"} replace />} />
             </Routes>
         </Suspense>
     );

@@ -395,7 +395,10 @@ const DashboardAdmins = () => {
                     </div>
 
                     {/* Create admin modal */}
-                    <Modal visible={createAdminModal} title={t("add_admin")}>
+                    <Modal
+                        visible={createAdminModal}
+                        title={t("add_admin")}
+                        width='70'>
                         <form onSubmit={createAdmin}>
                             <div className='flex gap-10'>
                                 <div className='w-1/2'>
@@ -547,7 +550,7 @@ const DashboardAdmins = () => {
                                     onClick={() => setCreateAdminModal(false)}
                                     type='button'
                                     disabled={createAdminLoading}>
-                                    {t("cancel")}
+                                    {t("close")}
                                 </button>
                                 <button
                                     className={`py-2 px-2.5 rounded-lg text-white border-none cursor-pointer bg-[#126ac9] duration-150 hover:bg-[#007bff] w-max active:scale-[0.95] will-change-transform ${
@@ -577,7 +580,8 @@ const DashboardAdmins = () => {
                     {/* Update admin modal */}
                     <Modal
                         title={t("modal_admin_update")}
-                        visible={isEditModalOpen}>
+                        visible={isEditModalOpen}
+                        width='70'>
                         <AnimatePresence>
                             <motion.div
                                 layout

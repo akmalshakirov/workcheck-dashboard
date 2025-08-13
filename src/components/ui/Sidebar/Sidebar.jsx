@@ -8,8 +8,8 @@ const SidearContext = createContext();
 export const Sidebar = ({ children, collapsed }) => {
     return (
         <motion.div
-            initial={collapsed ? { width: "5.8rem" } : { width: "20rem" }}
-            animate={collapsed ? { width: "5.8rem" } : { width: "20rem" }}
+            initial={collapsed ? { width: "6.5rem" } : { width: "20rem" }}
+            animate={collapsed ? { width: "6.5rem" } : { width: "20rem" }}
             transition={{
                 duration: 0.4,
                 type: "spring",
@@ -30,7 +30,7 @@ export const Sidebar = ({ children, collapsed }) => {
                     </Link>
 
                     <SidearContext.Provider value={{ collapsed }}>
-                        <div className='flex-1 px-3'>{children}</div>
+                        <div className='flex-1 px-5'>{children}</div>
                     </SidearContext.Provider>
                 </nav>
             </aside>

@@ -5,6 +5,9 @@
     "sidebar_workers": "Workers",
     "sidebar_profile": "My profile",
     "sidebar_branch": "Branch",
+    "sidebar_smena": "Shift",
+    "sidebar_day_offs": "Day offs",
+    "sidear_break_offs": "Breaks",
     "dropdown_profile": "My profile",
     "dropdown_lockscreen": "Lock screen",
     "dropdown_logout": "Logout",
@@ -42,6 +45,7 @@
     "image_dropzone": "Upload or select image",
     "image_preview": "Image preview",
     "edit_profile": "Edit profile",
+    "close": "Close",
     "save": "Save",
     "saving": "Saving...",
     "saved_successfully": "Saved successfully!",
@@ -50,5 +54,8 @@
     "enter_password": "Enter new password (optional)",
     "enter_phone": "Enter phone number",
     "role": "Role",
-    "edit": "Edit"
+    "edit": "Edit",
+    "break_off_name": "Name of the break",
+    "break_off_start_time": "Start time",
+    "break_off_end_time": "End time"
 }

@@ -1,10 +1,13 @@
 {
-    "preloader": "Ma'lumotlar yuklanmoqda",
+    "preloader": "Yuklanmoqda",
     "sidebar_dashboard": "Bosh sahifa",
     "sidebar_admins": "Adminlar",
     "sidebar_workers": "Ishchilar",
     "sidebar_profile": "Mening profilim",
     "sidebar_branch": "Filial",
+    "sidebar_smena": "Navbatchilik",
+    "sidebar_day_offs": "Dam olish kunlari",
+    "sidebar_break_offs": "Tanaffuslar",
     "dropdown_profile": "Profilim",
     "dropdown_lockscreen": "Ekranni qulflash",
     "dropdown_logout": "Chiqish",
@@ -51,5 +54,8 @@
     "enter_password": "Yangi parol kiriting (ixtiyoriy)",
     "enter_phone": "Telefon raqam kiriting",
     "role": "Rol",
-    "edit": "Tahrirlash"
+    "edit": "Tahrirlash",
+    "break_off_name": "Tanaffusni nomi",
+    "break_off_start_time": "Boshlash vaqti",
+    "break_off_end_time": "Tugash vaqti"
 }

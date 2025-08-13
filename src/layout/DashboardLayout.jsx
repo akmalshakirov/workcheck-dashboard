@@ -1,4 +1,13 @@
-import { LayoutDashboard, MapPin, ShieldUser, Users } from "lucide-react";
+import {
+    CalendarClock,
+    CalendarPlus,
+    ClockFading,
+    LayoutDashboard,
+    MapPin,
+    ShieldUser,
+    Shuffle,
+    Users,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Outlet } from "react-router-dom";
@@ -50,6 +59,11 @@ const DashboardLayout = () => {
 
                 <hr className='my-3 text-gray-500/50' />
 
+                {!collapsed && (
+                    <ul className='list-disc ml-3 mb-3'>
+                        <li className=' text-indigo-800'>Asosiy</li>
+                    </ul>
+                )}
                 <SidebarItem
                     icon={<LayoutDashboard size={22} />}
                     text={t("sidebar_dashboard")}
@@ -69,6 +83,29 @@ const DashboardLayout = () => {
                     icon={<MapPin size={22} />}
                     text={t("sidebar_branch")}
                     link={"/branch"}
+                />
+
+                {!collapsed && (
+                    <ul className='list-disc ml-3 my-3'>
+                        <li className=' text-indigo-800'>
+                            Qo'shimcha sozlamalar
+                        </li>
+                    </ul>
+                )}
+                <SidebarItem
+                    icon={<Shuffle size={22} />}
+                    text={t("sidebar_smena")}
+                    link={"/shift"}
+                />
+                <SidebarItem
+                    icon={<ClockFading size={22} />}
+                    text={t("sidebar_break_offs")}
+                    link={"/break-offs"}
+                />
+                <SidebarItem
+                    icon={<CalendarClock size={22} />}
+                    text={t("sidebar_day_offs")}
+                    link={"/day-offs"}
                 />
             </Sidebar>
             <div className='flex-1 p-2.5 pl-1'>

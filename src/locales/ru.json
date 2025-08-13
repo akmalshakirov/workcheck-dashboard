@@ -5,6 +5,9 @@
     "sidebar_workers": "Рабочие",
     "sidebar_profile": "Мой профиль",
     "sidebar_branch": "Филиал",
+    "sidebar_smena": "Смена",
+    "sidebar_day_offs": "Выходной",
+    "sidear_break_offs": "Перерывы",
     "dropdown_profile": "Мой профиль",
     "dropdown_lockscreen": "Экран блокировки",
     "dropdown_logout": "Выйти",
@@ -42,6 +45,7 @@
     "image_dropzone": "Загрузите или выберите фото",
     "image_preview": "Просмотр фото",
     "edit_profile": "Редактировать профиль",
+    "close": "Закрыть",
     "save": "Сохранить",
     "saving": "Сохраняется...",
     "saved_successfully": "Успешно сохранено!",
@@ -50,5 +54,8 @@
     "enter_password": "Введите новый пароль (необязательно)",
     "enter_phone": "Введите номер телефона",
     "role": "Роль",
-    "edit": "Редактировать"
+    "edit": "Редактировать",
+    "break_off_name": "Название перерыва",
+    "break_off_start_time": "Время начала",
+    "break_off_end_time": "Время окончания"
 }

@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect } from "react";
 import styles from "./Modal.module.css";
 
-export const Modal = ({ visible, title = "", children }) => {
+export const Modal = ({ visible, title = "", children, width = "" }) => {
     useEffect(() => {
         if (visible) document.documentElement.classList.add("overflow-hidden");
         else document.documentElement.classList.remove("overflow-hidden");
@@ -28,7 +28,8 @@ export const Modal = ({ visible, title = "", children }) => {
                             type: "spring",
                             damping: 30,
                             stiffness: 200,
-                        }}>
+                        }}
+                        style={{ width: `${width}%` }}>
                         <div
                             className={`${styles.header} border-b border-b-gray-600/30 text-lg dark:border-b-[#777]`}>
                             <h1>{title}</h1>

@@ -8,8 +8,8 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
     const { isSuperAdmin } = useAdmin();
 
     return (
-        <div className='w-full overflow-x-auto'>
-            <table className='min-w-full table-auto'>
+        <div className='w-full'>
+            <table className='min-w-full'>
                 <thead className='bg-gray-50 dark:bg-[#222]'>
                     <tr>
                         <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
@@ -70,22 +70,22 @@ function Table({ data, deleteOnClick, editOnClick, editLoading = {} }) {
                                 </div>
                             </td>
                             <td className='px-6 py-4 whitespace-nowrap'>
-                                <div className='text-sm text-gray-500 dark:text-gray-400'>
+                                <div className='text-sm px-2'>
                                     {item?.username}
                                 </div>
                             </td>
                             <td className='px-6 py-4 whitespace-nowrap'>
-                                <span className='px-2 inline-flex text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-200 text-green-800 dark:text-green-900'>
+                                <span className='px-2 text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-200 text-green-800 dark:text-green-900'>
                                     {item?.role}
                                 </span>
                             </td>
                             <td className='px-6 py-4 whitespace-nowrap'>
-                                <span className='px-2 inline-flex text-sm leading-5 font-semibold rounded-full'>
+                                <span className='px-2 text-sm leading-5 font-semibold'>
                                     +998{item?.phone}
                                 </span>
                             </td>
                             <td className='px-6 py-4 whitespace-nowrap'>
-                                <span className='px-2 inline-flex text-sm leading-5 font-semibold rounded-full'>
+                                <span className='px-2 text-sm leading-5 font-semibold'>
                                     {item?.branch?.name}
                                 </span>
                             </td>
