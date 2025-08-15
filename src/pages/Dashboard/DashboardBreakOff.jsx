@@ -1,65 +1,10 @@
-import axios from "axios";
-import { LoaderCircleIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
-import { baseURL } from "../../App";
-import { Modal } from "../../components/ui/Modal/Modal";
-const token = localStorage.getItem("token");
+import { AddBreakOffModal } from "../../helpers/modals/AddBreakOffModal";
 
 const DashboardBreakOffs = () => {
-    const { t } = useTranslation();
     const [addBreakOffModal, setAddBreakOffModal] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [breakOffData, setBreakOffData] = useState({
-        name: "",
-        startTime: "",
-        endTime: "",
-    });
-
-    const handleInputChange = useCallback((e) => {
-        const { name, value } = e.target;
-        setBreakOffData((prev) => ({ ...prev, [name]: value }));
-    }, []);
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-
-        try {
-            const response = await axios.post(
-                `${baseURL}/break-off/create`,
-                breakOffData,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            if (response.status === 200 || response.status === 201) {
-                toast.success(response.data.message);
-                setAddBreakOffModal(false);
-                setBreakOffData((prev) => ({
-                    ...prev,
-                    name: "",
-                    endTime: "",
-                    startTime: "",
-                }));
-            }
-        } catch (error) {
-            toast.error(error.response.data.error);
-            setAddBreakOffModal(false);
-            setBreakOffData((prev) => ({
-                ...prev,
-                name: "",
-                endTime: "",
-                startTime: "",
-            }));
-        } finally {
-            setLoading(false);
-        }
-    };
+    const { t } = useTranslation();
 
     return (
         <div>
@@ -71,7 +16,11 @@ const DashboardBreakOffs = () => {
                     Add break off
                 </button>
             </div>
-            <Modal
+            <AddBreakOffModal
+                addBreakOffModal={addBreakOffModal}
+                setAddBreakOffModal={setAddBreakOffModal}
+            />
+            {/* <Modal
                 visible={addBreakOffModal}
                 title={"ADD BREAK OFF"}
                 width='38'>
@@ -147,7 +96,7 @@ const DashboardBreakOffs = () => {
                         </button>
                     </div>
                 </form>
-            </Modal>
+            </Modal> */}
         </div>
     );
 };
