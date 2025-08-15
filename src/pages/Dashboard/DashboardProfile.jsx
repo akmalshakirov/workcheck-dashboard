@@ -1,15 +1,5 @@
 import { motion } from "framer-motion";
-import {
-    Building,
-    Camera,
-    CheckCircle,
-    Edit3,
-    Eye,
-    EyeOff,
-    Save,
-    User,
-    XIcon,
-} from "lucide-react";
+import { Camera, Edit3, Eye, EyeOff, Save, User, XIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
@@ -18,37 +8,38 @@ import { updateProfile } from "../../service/api/api";
 
 const DashboardProfile = () => {
     const token = localStorage.getItem("token");
-    const { admin, setAdmin, loading } = useAdmin();
+    const { setAdmin, loading } = useAdmin();
     const { t } = useTranslation();
-    const [adminData, setAdminData] = useState({
-        name: admin?.name || "",
-        username: admin?.username || "",
-        password: "",
-        image: admin?.image || "",
-        role: admin?.role || "",
-        phone: admin?.phone || "",
-    });
+    // const [adminData, setAdminData] = useState({
+    //     name: admin?.name || "",
+    //     username: admin?.username || "",
+    //     password: "",
+    //     image: admin?.image || "",
+    //     role: admin?.role || "",
+    //     phone: admin?.phone || "",
+    // });
+    const [adminData, setAdminData] = useState([]);
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [showSuccess, setShowSuccess] = useState(false);
     const [fileList, setFileList] = useState([]);
 
     useEffect(() => {
         document.title = `WorkCheck - Dashboard | ${t("sidebar_profile")}`;
     }, [t]);
 
-    useEffect(() => {
-        if (admin) {
-            setAdminData({
-                name: admin.name || "",
-                username: admin.username || "",
-                password: "",
-                phone: admin.phone || "",
-            });
-            setFileList(admin.image);
-        }
-    }, [admin]);
+    // useEffect(() => {
+    //     if (admin) {
+    //         setAdminData({
+    //             name: admin.name || "",
+    //             username: admin.username || "",
+    //             password: "",
+    //             phone: admin.phone || "",
+    //             role: admin.role || "",
+    //         });
+    //         setFileList(admin.image);
+    //     }
+    // }, [admin]);
 
     const handleImageChange = useCallback((e) => {
         setFileList(e?.target?.files[0]);
@@ -57,7 +48,6 @@ const DashboardProfile = () => {
     const handleInputChange = useCallback(
         (e) => {
             const { name, value } = e.target;
-
             setAdminData((prev) => ({ ...prev, [name]: value }));
         },
         [adminData, fileList]
@@ -68,24 +58,17 @@ const DashboardProfile = () => {
         await updateProfile({
             profileData: adminData,
             setIsSubmitting,
-            setShowSuccess,
             setIsEditing,
             setAdmin,
             token,
+            setAdminData,
         });
     };
 
+    console.log(adminData, "admin data\n wtf?");
+
     return (
         <div>
-            {showSuccess && (
-                <div className='fixed top-4 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 z-50 animate-in slide-in-from-right duration-300'>
-                    <CheckCircle size={20} />
-                    <span className='font-medium'>
-                        {t("saved_successfully")}
-                    </span>
-                </div>
-            )}
-
             <div className='container mx-auto'>
                 <div className='text-center mb-10'>
                     <h1 className='text-3xl font-bold text-gray-900 dark:text-white mb-2'>
@@ -138,10 +121,10 @@ const DashboardProfile = () => {
                                     </div>
 
                                     <h2 className='text-2xl font-semibold text-gray-900 dark:text-white mb-2'>
-                                        {adminData.name || "Admin"}
+                                        {adminData?.name || "Admin"}
                                     </h2>
                                     <p className='p-2 w-max mx-auto text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-200 text-green-800 dark:text-green-900 text-center mb-4'>
-                                        {adminData.role || "Administrator"}
+                                        {adminData?.role || "Administrator"}
                                     </p>
                                 </div>
 
@@ -158,13 +141,14 @@ const DashboardProfile = () => {
                                                 <p className='text-sm text-gray-600 dark:text-gray-400'>
                                                     Role
                                                 </p>
-                                                {adminData.role ? (
+                                                {adminData?.role}
+                                                {/* {adminData?.role ? (
                                                     <p className='font-semibold text-gray-900 dark:text-white'>
                                                         {adminData?.role}
                                                     </p>
                                                 ) : (
                                                     <Skeleton className='w-28 h-6' />
-                                                )}
+                                                )} */}
                                             </div>
                                         </div>
                                     </div>
@@ -319,7 +303,7 @@ const DashboardProfile = () => {
                                                 <button
                                                     type='submit'
                                                     disabled={isSubmitting}
-                                                    className='mt-auto max-h-[63%] w-full p-5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3  not-disabled:active:scale-95 will-change-transform'>
+                                                    className='mt-auto max-h-[63%] w-full p-5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3  not-disabled:active:scale-95 will-change-transform'>
                                                     {isSubmitting ? (
                                                         <>
                                                             <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin'></div>

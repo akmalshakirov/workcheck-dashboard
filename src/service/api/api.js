@@ -18,16 +18,40 @@ export const getAdmins = async ({ setPreloader, setAdmins, token, lang }) => {
         });
         setAdmins(response?.data?.admins);
     } catch (error) {
-        if (error.code === "ERR_NETWORK") {
-            Swal.fire("Internet aloqasi yo'q", "", "error");
-        } else {
+        if (error.response.status !== 401) {
             Swal.fire({
-                title: error?.response?.data?.error || error,
+                title: error?.response?.data?.error,
                 icon: "error",
-                timer: 10000,
-                timerProgressBar: true,
+                didClose: isClose,
                 theme: theme == "true" ? "dark" : "light",
             });
+        } else if (
+            error.code === "ERR_NETWORK" &&
+            error.response.status !== 401
+        ) {
+            Swal.fire("Internet aloqasi yo'q", "", "error");
+        } else if (error?.response?.status === 401) {
+            const refreshResponse = await axios.post(
+                `${baseURL}/refresh`,
+                {},
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (refreshResponse.status === 200) {
+                localStorage.setItem("token", refreshResponse.data.token);
+                const token = localStorage.getItem("token");
+                const response = await axios.get(`${baseURL}/admins`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.status === 200) {
+                    setAdmins(response.data.admins);
+                }
+            }
         }
     } finally {
         setPreloader(false);
@@ -36,6 +60,7 @@ export const getAdmins = async ({ setPreloader, setAdmins, token, lang }) => {
 
 export const getProfile = async ({
     token,
+    setAdminData,
     setAdminContent,
     setAdmin,
     setLoading,
@@ -46,18 +71,24 @@ export const getProfile = async ({
             headers: { Authorization: `Bearer ${token}`, Accept: lang },
         });
         if (response.status === 200) {
+            setAdminData(response.data.admin);
             setAdminContent(response.data.admin);
             setAdmin(response.data.admin);
             setLoading(false);
         }
     } catch (error) {
-        Swal.fire({
-            title: error?.response?.data?.error,
-            icon: "error",
-            didClose: isClose,
-            theme: theme == "true" ? "dark" : "light",
-        });
-        if (error.code === "ERR_NETWORK") {
+        if (error?.response?.status !== 401) {
+            Swal.fire({
+                title: error?.response?.data?.error || error,
+                icon: "error",
+                didClose: isClose,
+                theme: theme == "true" ? "dark" : "light",
+            });
+            console.log(error);
+        } else if (
+            error.code === "ERR_NETWORK" &&
+            error.response.status !== 401
+        ) {
             Swal.fire("Internet aloqasi yo'q", "", "error");
         } else if (error?.response?.status === 401) {
             const refreshResponse = await axios.post(
@@ -78,7 +109,7 @@ export const getProfile = async ({
                 });
 
                 if (response.status === 200) {
-                    setAdminContent(response?.data?.admin);
+                    setAdminData(response?.data?.admin);
                     setAdmin(response.data.admin);
                     setLoading(false);
                     isClose = true;
@@ -91,7 +122,6 @@ export const getProfile = async ({
 export const updateProfile = async ({
     profileData,
     setIsSubmitting,
-    setShowSuccess,
     setIsEditing,
     setAdmin,
     token,
@@ -113,11 +143,10 @@ export const updateProfile = async ({
 
         if (response.status === 200) {
             setAdmin(response.data.admin);
-            setShowSuccess(true);
+
             setIsEditing(false);
-            setTimeout(() => setShowSuccess(false), 3000);
             Swal.fire({
-                title: "Profile updated successfully!",
+                title: response?.data?.message,
                 icon: "success",
                 timer: 3000,
                 timerProgressBar: true,
@@ -126,8 +155,8 @@ export const updateProfile = async ({
         }
     } catch (error) {
         Swal.fire({
-            title: "Error",
-            text: error,
+            title: error?.response?.data?.error,
+            text: error?.response?.data?.error,
             icon: "error",
             timer: 50000,
             timerProgressBar: true,
@@ -149,27 +178,40 @@ export const getBranches = async ({ setBranch }) => {
 
         setBranch(response.data.branches);
     } catch (error) {
-        if (error.code === "ERR_NETWORK") {
+        if (error?.response?.status !== 401) {
             Swal.fire({
-                title:
-                    error?.response?.data?.error ||
-                    "Internet aloqasi yo'q" ||
-                    error,
+                title: error?.response?.data?.error,
                 icon: "error",
-                timer: 10000,
-                timerProgressBar: true,
+                didClose: isClose,
                 theme: theme == "true" ? "dark" : "light",
             });
+        } else if (
+            error.code === "ERR_NETWORK" &&
+            error.response.status !== 401
+        ) {
+            Swal.fire("Internet aloqasi yo'q", "", "error");
+        } else if (error?.response?.status === 401) {
+            const refreshResponse = await axios.post(
+                `${baseURL}/refresh`,
+                {},
+                {
+                    withCredentials: true,
+                }
+            );
+
+            if (refreshResponse.status === 200) {
+                localStorage.setItem("token", refreshResponse.data.token);
+                const token = localStorage.getItem("token");
+                const response = await axios.get(`${baseURL}/branches`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.status === 200) {
+                    setBranch(response.data.admin);
+                }
+            }
         }
-        Swal.fire({
-            title:
-                error?.response?.data?.error ||
-                "Internet aloqasi yo'q" ||
-                error,
-            icon: "error",
-            timer: 10000,
-            timerProgressBar: true,
-            theme: theme == "true" ? "dark" : "light",
-        });
     }
 };

@@ -67,6 +67,30 @@ const DashboardAdmins = () => {
         }
     };
 
+    const defaultList = [
+        {
+            name: t("admin_table_img"),
+        },
+        {
+            name: t("admin_table_name"),
+        },
+        {
+            name: t("admin_table_username"),
+        },
+        {
+            name: t("admin_table_role"),
+        },
+        {
+            name: t("admin_table_phone"),
+        },
+        {
+            name: t("admin_table_branch"),
+        },
+        {
+            name: t("admin_table_action"),
+        },
+    ];
+
     const handlePhoneChange = (value, isEdit = false) => {
         (isEdit ? setEditData : setAdminData)((prev) => ({
             ...prev,
@@ -371,7 +395,7 @@ const DashboardAdmins = () => {
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 0.9 }}>
-                    <div className='flex items-center justify-between mb-5 '>
+                    <div className='flex items-center justify-between mb-5'>
                         <h1 className='text-2xl font-bold'>
                             {t("sidebar_admins")}
                         </h1>
@@ -388,8 +412,10 @@ const DashboardAdmins = () => {
                         ) : (
                             <Table
                                 data={admins}
+                                list={defaultList}
                                 deleteOnClick={handleDelete}
                                 editOnClick={handleGetAdminById}
+                                actions={"UPDATE, DELETE"}
                             />
                         )}
                     </div>

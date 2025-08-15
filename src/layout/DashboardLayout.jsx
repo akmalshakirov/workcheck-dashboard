@@ -1,6 +1,5 @@
 import {
     CalendarClock,
-    CalendarPlus,
     ClockFading,
     LayoutDashboard,
     MapPin,
@@ -99,7 +98,7 @@ const DashboardLayout = () => {
                 />
                 <SidebarItem
                     icon={<ClockFading size={22} />}
-                    text={t("sidebar_break_offs")}
+                    text={t("sidebar_smena")}
                     link={"/break-offs"}
                 />
                 <SidebarItem

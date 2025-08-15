@@ -1,14 +1,127 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { baseURL } from "../../App";
+import Table from "../../components/ui/Table/Table";
 import { AddBreakOffModal } from "../../helpers/modals/AddBreakOffModal";
+import { CustomTable } from "../../components/CustomTable";
+import { LoaderCircleIcon } from "lucide-react";
+import { toast } from "react-toastify";
+import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
+const token = localStorage.getItem("token");
 
 const DashboardBreakOffs = () => {
     const [addBreakOffModal, setAddBreakOffModal] = useState(false);
     const { t } = useTranslation();
+    const [breakOffs, setBreakOffs] = useState([]);
+    const [loading, setLoading] = useState(false);
+
+    const breakOffsList = [
+        {
+            name: "Tanaffus nomi",
+        },
+        {
+            name: "Boshlanish vaqti",
+        },
+        {
+            name: "Tugash vaqti",
+        },
+    ];
+
+    const columns = [
+        {
+            key: "name",
+            header: "Tanaffus nomi",
+        },
+        {
+            key: "startTime",
+            header: "Boshlanish vaqti",
+        },
+        {
+            key: "endTime",
+            header: "Tugash vaqti",
+        },
+    ];
+
+    const getAllBreakOffs = async () => {
+        setLoading(true);
+        try {
+            const response = await axios.get(`${baseURL}/break-offs`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            if (response.status === 200) {
+                setBreakOffs(response.data.breakoffs);
+            }
+        } catch (error) {
+            if (error.response.status !== 401) {
+                Swal.fire({
+                    title: error?.response?.data?.error,
+                    icon: "error",
+                    didClose: isClose,
+                    theme: theme == "true" ? "dark" : "light",
+                });
+            } else if (
+                error.code === "ERR_NETWORK" &&
+                error.response.status !== 401
+            ) {
+                Swal.fire("Internet aloqasi yo'q", "", "error");
+            } else if (error?.response?.status === 401) {
+                const refreshResponse = await axios.post(
+                    `${baseURL}/refresh`,
+                    {},
+                    {
+                        withCredentials: true,
+                    }
+                );
+
+                if (refreshResponse.status === 200) {
+                    localStorage.setItem("token", refreshResponse.data.token);
+                    const token = localStorage.getItem("token");
+                    const response = await axios.get(`${baseURL}/break-offs`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+
+                    if (response.status === 200) {
+                        setAdminContent(response?.data?.admin);
+                        setAdmin(response.data.admin);
+                        setLoading(false);
+                        isClose = true;
+                    }
+                }
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            const response = await axios.delete(
+                `${baseURL}/break-off/${id}/delete`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            if (response.status === 200) toast.success(response.data.message);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getAllBreakOffs();
+    }, []);
 
     return (
         <div>
-            <div className='flex items-center gap-2.5 justify-between'>
+            <div className='flex items-center gap-2.5 justify-between mb-4'>
                 <h1 className='text-2xl font-bold'>{t("sidebar_smena")}</h1>
                 <button
                     className='border rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform'
@@ -20,83 +133,29 @@ const DashboardBreakOffs = () => {
                 addBreakOffModal={addBreakOffModal}
                 setAddBreakOffModal={setAddBreakOffModal}
             />
-            {/* <Modal
-                visible={addBreakOffModal}
-                title={"ADD BREAK OFF"}
-                width='38'>
-                <form
-                    onSubmit={handleSubmit}
-                    className='flex gap-2.5 flex-col justify-start'>
-                    <div className='mb-4'>
-                        <label htmlFor='name' className='block'>
-                            {t("break_off_name")}:
-                        </label>
-                        <input
-                            disabled={loading}
-                            type='text'
-                            inputMode='text'
-                            value={breakOffData.name}
-                            onChange={handleInputChange}
-                            autoComplete='off'
-                            required
-                            name='name'
-                            id='name'
-                            className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-full disabled:opacity-50'
-                        />
+            {/* <Table
+                data={breakOffs}
+                list={breakOffsList}
+                className='mt-7'
+                actions={"DELETE"}
+            /> */}
+            {loading ? (
+                Array.from({ length: 5 }).map((i, index) => (
+                    <div
+                        key={index}
+                        className='flex h-[6vh] gap-1 items-center'>
+                        <Skeleton className='w-full h-10' />
                     </div>
-                    <div className='flex items-center justify-between mb-4'>
-                        <label htmlFor='startTime' className='block'>
-                            {t("break_off_start_time")}:
-                        </label>
-                        <input
-                            disabled={loading}
-                            type='time'
-                            value={breakOffData.startTime}
-                            onChange={handleInputChange}
-                            autoComplete='off'
-                            required
-                            name='startTime'
-                            id='startTime'
-                            className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-1/4 disabled:opacity-50'
-                        />
-                        <label htmlFor='endTime' className='block'>
-                            {t("break_off_end_time")}:
-                        </label>
-                        <input
-                            disabled={loading}
-                            type='time'
-                            value={breakOffData.endTime}
-                            onChange={handleInputChange}
-                            autoComplete='off'
-                            required
-                            name='endTime'
-                            id='endTime'
-                            className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-1/4 disabled:opacity-50'
-                        />
-                    </div>
-                    <div className='flex items-center gap-2.5 justify-end'>
-                        <button
-                            type='reset'
-                            className='py-1.5 px-3 rounded-lg bg-red-600/80 hover:bg-red-600 duration-150 text-white active:scale-[0.95] will-change-transform disabled:opacity-50 disabled:cursor-not-allowed!'
-                            onClick={() => setAddBreakOffModal(false)}
-                            disabled={loading}>
-                            {t("close")}
-                        </button>
-                        <button
-                            type='submit'
-                            className='border rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform disabled:opacity-50 disabled:cursor-not-allowed!'
-                            disabled={loading}>
-                            {loading ? (
-                                <>
-                                    <LoaderCircleIcon className='animate-spin' />
-                                </>
-                            ) : (
-                                t("ok")
-                            )}
-                        </button>
-                    </div>
-                </form>
-            </Modal> */}
+                ))
+            ) : (
+                <CustomTable
+                    columns={columns}
+                    data={breakOffs}
+                    onDelete={handleDelete}
+                    emptyMessage='DNX'
+                    loading={loading}
+                />
+            )}
         </div>
     );
 };

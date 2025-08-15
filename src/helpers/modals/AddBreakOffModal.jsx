@@ -64,7 +64,7 @@ export const AddBreakOffModal = ({ addBreakOffModal, setAddBreakOffModal }) => {
         <Modal visible={addBreakOffModal} title={"ADD BREAK OFF"} width='38'>
             <form
                 onSubmit={handleSubmit}
-                className='flex gap-2.5 flex-col justify-start'>
+                className='flex gap-2.5 flex-col justify-start bg-red-300 sm:bg-green-300'>
                 <div className='mb-4'>
                     <label htmlFor='name' className='block'>
                         {t("break_off_name")}:
@@ -82,7 +82,7 @@ export const AddBreakOffModal = ({ addBreakOffModal, setAddBreakOffModal }) => {
                         className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-full disabled:opacity-50'
                     />
                 </div>
-                <div className='flex items-center justify-between mb-4'>
+                <div className='flex items-center lg:flex-row flex-col justify-between mb-4'>
                     <label htmlFor='startTime' className='block'>
                         {t("break_off_start_time")}:
                     </label>
@@ -95,7 +95,7 @@ export const AddBreakOffModal = ({ addBreakOffModal, setAddBreakOffModal }) => {
                         required
                         name='startTime'
                         id='startTime'
-                        className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-1/4 disabled:opacity-50'
+                        className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-full lg:w-1/4 disabled:opacity-50'
                     />
                     <label htmlFor='endTime' className='block'>
                         {t("break_off_end_time")}:
@@ -109,7 +109,7 @@ export const AddBreakOffModal = ({ addBreakOffModal, setAddBreakOffModal }) => {
                         required
                         name='endTime'
                         id='endTime'
-                        className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-1/4 disabled:opacity-50'
+                        className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-full lg:w-1/4 disabled:opacity-50'
                     />
                 </div>
                 <div className='flex items-center gap-2.5 justify-end'>
