@@ -1,13 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { baseURL } from "../../App";
-import Table from "../../components/ui/Table/Table";
-import { AddBreakOffModal } from "../../helpers/modals/AddBreakOffModal";
-import { CustomTable } from "../../components/CustomTable";
-import { LoaderCircleIcon } from "lucide-react";
 import { toast } from "react-toastify";
+import { baseURL } from "../../App";
+import { CustomTable } from "../../components/CustomTable";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
+import { AddBreakOffModal } from "../../helpers/modals/AddBreakOffModal";
 const token = localStorage.getItem("token");
 
 const DashboardBreakOffs = () => {
@@ -15,18 +13,6 @@ const DashboardBreakOffs = () => {
     const { t } = useTranslation();
     const [breakOffs, setBreakOffs] = useState([]);
     const [loading, setLoading] = useState(false);
-
-    const breakOffsList = [
-        {
-            name: "Tanaffus nomi",
-        },
-        {
-            name: "Boshlanish vaqti",
-        },
-        {
-            name: "Tugash vaqti",
-        },
-    ];
 
     const columns = [
         {
@@ -150,7 +136,7 @@ const DashboardBreakOffs = () => {
             ) : (
                 <CustomTable
                     columns={columns}
-                    data={breakOffs}
+                    data={[]}
                     onDelete={handleDelete}
                     emptyMessage='DNX'
                     loading={loading}

@@ -1,6 +1,5 @@
-// File: CustomTable.jsx
-import React from "react";
 import { Loader2Icon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export const CustomTable = ({
     data,
@@ -21,6 +20,8 @@ export const CustomTable = ({
             </div>
         );
     }
+
+    const { t } = useTranslation();
 
     return (
         <div className={className}>
@@ -47,7 +48,7 @@ export const CustomTable = ({
 
                             {(onEdit || onDelete) && (
                                 <th className='px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300'>
-                                    Actions
+                                    {t("admin_table_action")}
                                 </th>
                             )}
                         </tr>
@@ -61,7 +62,6 @@ export const CustomTable = ({
                                 key={(item && item.id) ?? idx}
                                 className='hover:bg-gray-50 dark:hover:bg-gray-800'>
                                 {columns.map((col) => {
-                                    // prepare cell content (shunchaki funktsiyani qaytarmaymiz, balki natijani hisoblab beradi)
                                     let cellContent = null;
                                     if (col.render) {
                                         cellContent = col.render(item);

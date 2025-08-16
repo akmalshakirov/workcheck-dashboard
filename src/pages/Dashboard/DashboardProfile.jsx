@@ -65,8 +65,6 @@ const DashboardProfile = () => {
         });
     };
 
-    console.log(adminData, "admin data\n wtf?");
-
     return (
         <div>
             <div className='container mx-auto'>

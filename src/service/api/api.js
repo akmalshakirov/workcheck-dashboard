@@ -58,20 +58,18 @@ export const getAdmins = async ({ setPreloader, setAdmins, token, lang }) => {
     }
 };
 
-export const getProfile = async ({
-    token,
-    setAdminData,
-    setAdminContent,
+export const getProfile = async (
     setAdmin,
+    setAdminContent,
     setLoading,
-}) => {
+    token
+) => {
     setLoading(true);
     try {
         const response = await axios.get(`${baseURL}/profile`, {
             headers: { Authorization: `Bearer ${token}`, Accept: lang },
         });
         if (response.status === 200) {
-            setAdminData(response.data.admin);
             setAdminContent(response.data.admin);
             setAdmin(response.data.admin);
             setLoading(false);
@@ -109,7 +107,6 @@ export const getProfile = async ({
                 });
 
                 if (response.status === 200) {
-                    setAdminData(response?.data?.admin);
                     setAdmin(response.data.admin);
                     setLoading(false);
                     isClose = true;
