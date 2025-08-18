@@ -99,7 +99,7 @@ const DashboardAdmins = () => {
     };
 
     const fetchAdmins = useCallback(() => {
-        getAdmins({ setPreloader, setAdmins, token, lang });
+        getAdmins({ setPreloader, setAdmins });
     }, [token]);
 
     useEffect(() => {

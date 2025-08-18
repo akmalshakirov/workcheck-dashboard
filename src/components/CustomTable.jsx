@@ -85,10 +85,6 @@ export const CustomTable = ({
                                                             "avatar"
                                                     )}
                                                     className='w-10 h-10 rounded-md object-cover'
-                                                    onError={(e) => {
-                                                        e.currentTarget.src =
-                                                            "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40'><rect width='100%' height='100%' fill='%23E5E7EB'/></svg>";
-                                                    }}
                                                 />
                                             );
                                         } else if (

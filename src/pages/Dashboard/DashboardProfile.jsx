@@ -4,42 +4,28 @@ import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import { useAdmin } from "../../hooks/useAdmin";
-import { updateProfile } from "../../service/api/api";
+import { useApi } from "../../service/api/api";
 
 const DashboardProfile = () => {
     const token = localStorage.getItem("token");
-    const { setAdmin, loading } = useAdmin();
+    const { admin, setAdmin, loading } = useAdmin();
+    const { updateProfile } = useApi();
     const { t } = useTranslation();
-    // const [adminData, setAdminData] = useState({
-    //     name: admin?.name || "",
-    //     username: admin?.username || "",
-    //     password: "",
-    //     image: admin?.image || "",
-    //     role: admin?.role || "",
-    //     phone: admin?.phone || "",
-    // });
     const [adminData, setAdminData] = useState([]);
     const [showPassword, setShowPassword] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [fileList, setFileList] = useState([]);
+    const [fileList, setFileList] = useState(admin?.image);
+    console.log("x", admin?.image, "x");
 
     useEffect(() => {
         document.title = `WorkCheck - Dashboard | ${t("sidebar_profile")}`;
     }, [t]);
 
-    // useEffect(() => {
-    //     if (admin) {
-    //         setAdminData({
-    //             name: admin.name || "",
-    //             username: admin.username || "",
-    //             password: "",
-    //             phone: admin.phone || "",
-    //             role: admin.role || "",
-    //         });
-    //         setFileList(admin.image);
-    //     }
-    // }, [admin]);
+    useEffect(() => {
+        setAdmin(admin);
+        setFileList(admin?.image);
+    }, [admin]);
 
     const handleImageChange = useCallback((e) => {
         setFileList(e?.target?.files[0]);
@@ -61,7 +47,6 @@ const DashboardProfile = () => {
             setIsEditing,
             setAdmin,
             token,
-            setAdminData,
         });
     };
 
@@ -80,7 +65,7 @@ const DashboardProfile = () => {
                             <div className='rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-8'>
                                 <div className='text-center'>
                                     <div className='relative inline-block mb-6'>
-                                        {loading || !fileList ? (
+                                        {loading || !admin?.image ? (
                                             <Skeleton className='size-32 rounded-full' />
                                         ) : (
                                             <div className='relative group'>
@@ -93,8 +78,7 @@ const DashboardProfile = () => {
                                                             : fileList
                                                     }
                                                     alt={
-                                                        adminData?.name ||
-                                                        "Profile"
+                                                        admin?.name || "Profile"
                                                     }
                                                     className='size-32 rounded-full object-cover border-4 border-gray-200 dark:border-gray-600 shadow-md transition-all duration-200 group-hover:scale-105'
                                                     draggable={false}
@@ -104,7 +88,7 @@ const DashboardProfile = () => {
                                         {isEditing && (
                                             <label
                                                 htmlFor='image'
-                                                className='absolute -bottom-2 -right-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 cursor-pointer shadow-md border-2 border-white dark:border-gray-700 flex items-center justify-center transition-colors duration-200'>
+                                                className='absolute -bottom-2 -right-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-3 cursor-pointer shadow-md border-2 border-white dark:border-gray-700 flex items-center justify-center duration-75 active:scale-90 will-change-transform'>
                                                 <Camera size={16} />
                                                 <input
                                                     type='file'
@@ -119,10 +103,10 @@ const DashboardProfile = () => {
                                     </div>
 
                                     <h2 className='text-2xl font-semibold text-gray-900 dark:text-white mb-2'>
-                                        {adminData?.name || "Admin"}
+                                        {admin?.name || "Admin"}
                                     </h2>
                                     <p className='p-2 w-max mx-auto text-sm leading-5 font-semibold rounded-full bg-green-100 dark:bg-green-200 text-green-800 dark:text-green-900 text-center mb-4'>
-                                        {adminData?.role || "Administrator"}
+                                        {admin?.role || "Administrator"}
                                     </p>
                                 </div>
 
@@ -139,14 +123,7 @@ const DashboardProfile = () => {
                                                 <p className='text-sm text-gray-600 dark:text-gray-400'>
                                                     Role
                                                 </p>
-                                                {adminData?.role}
-                                                {/* {adminData?.role ? (
-                                                    <p className='font-semibold text-gray-900 dark:text-white'>
-                                                        {adminData?.role}
-                                                    </p>
-                                                ) : (
-                                                    <Skeleton className='w-28 h-6' />
-                                                )} */}
+                                                {admin?.role}
                                             </div>
                                         </div>
                                     </div>
@@ -197,7 +174,7 @@ const DashboardProfile = () => {
                                             <input
                                                 type='text'
                                                 name='name'
-                                                value={adminData.name || ""}
+                                                value={admin?.name || ""}
                                                 onChange={handleInputChange}
                                                 disabled={
                                                     !isEditing || isSubmitting
@@ -218,7 +195,7 @@ const DashboardProfile = () => {
                                             <input
                                                 type='text'
                                                 name='username'
-                                                value={adminData.username || ""}
+                                                value={admin?.username || ""}
                                                 onChange={handleInputChange}
                                                 disabled={
                                                     !isEditing || isSubmitting
@@ -246,7 +223,7 @@ const DashboardProfile = () => {
                                                         : "password"
                                                 }
                                                 name='password'
-                                                value={adminData.password || ""}
+                                                value={admin?.password || ""}
                                                 onChange={handleInputChange}
                                                 disabled={
                                                     !isEditing || isSubmitting
@@ -282,7 +259,7 @@ const DashboardProfile = () => {
                                                 id='phone'
                                                 type='text'
                                                 name='phone'
-                                                value={adminData.phone || ""}
+                                                value={admin?.phone || ""}
                                                 onChange={handleInputChange}
                                                 disabled={
                                                     !isEditing || isSubmitting

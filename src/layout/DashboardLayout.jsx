@@ -15,27 +15,22 @@ import { Header } from "../components/ui/Header/Header";
 import { Sidebar, SidebarItem } from "../components/ui/Sidebar/Sidebar";
 import { Skeleton } from "../components/ui/Skeleton/Skeleton";
 import { useAdmin } from "../hooks/useAdmin";
-import { getBranches, getProfile } from "../service/api/api";
+import { useApi } from "../service/api/api";
 
 const DashboardLayout = () => {
+    const { branch, setBranch } = useAdmin();
+    const { getProfile, getBranches } = useApi();
     const [collapsed, setCollapsed] = useState(
         localStorage.getItem("sidebar") == "true"
     );
-    const [adminContent, setAdminContent] = useState(null);
     const token = localStorage.getItem("token");
     useEffect(() => {
         localStorage.setItem("sidebar", collapsed);
     }, [collapsed]);
     const { t } = useTranslation();
-    const { setAdmin, setLoading, branch, setBranch } = useAdmin();
 
     useEffect(() => {
-        getProfile({
-            setAdmin,
-            setAdminContent,
-            setLoading,
-            token,
-        });
+        getProfile();
         getBranches({ setBranch });
     }, []);
 
@@ -98,7 +93,7 @@ const DashboardLayout = () => {
                 />
                 <SidebarItem
                     icon={<ClockFading size={22} />}
-                    text={t("sidebar_smena")}
+                    text={t("sidebar_break_offs")}
                     link={"/break-offs"}
                 />
                 <SidebarItem
@@ -111,7 +106,7 @@ const DashboardLayout = () => {
                 <Header
                     collapsed={collapsed}
                     setCollapsed={setCollapsed}
-                    admin={adminContent}
+                    // admin={adminContent}
                 />
                 <main className='p-5 bg-white rounded-lg mt-3 dark:bg-[#111] dark:text-white text-black duration-200'>
                     <Outlet />

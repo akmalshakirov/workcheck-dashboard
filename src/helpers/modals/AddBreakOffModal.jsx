@@ -64,7 +64,7 @@ export const AddBreakOffModal = ({ addBreakOffModal, setAddBreakOffModal }) => {
         <Modal visible={addBreakOffModal} title={"ADD BREAK OFF"} width='38'>
             <form
                 onSubmit={handleSubmit}
-                className='flex gap-2.5 flex-col justify-start bg-red-300 sm:bg-green-300'>
+                className='flex gap-2.5 flex-col justify-start'>
                 <div className='mb-4'>
                     <label htmlFor='name' className='block'>
                         {t("break_off_name")}:

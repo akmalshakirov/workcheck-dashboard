@@ -21,8 +21,9 @@ import DropdownIcon from "../Icons/Dropdown";
 import { Skeleton } from "../Skeleton/Skeleton";
 import styles from "./Header.module.css";
 import { Search } from "../Search/Search";
+import { useAdmin } from "../../../hooks/useAdmin";
 
-export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
+export const Header = ({ collapsed, setCollapsed }) => {
     const [langOpen, setLangOpen] = useState(false);
     const [langClosing, setLangClosing] = useState(false);
     const [selectedLang, setSelectedLang] = useState({
@@ -52,6 +53,7 @@ export const Header = ({ collapsed, setCollapsed, admin = {} }) => {
     const [mobileNotifOpen, setMobileNotifOpen] = useState(false);
     const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
     const lang = localStorage.getItem("lang");
+    const { admin } = useAdmin();
 
     useEffect(() => {
         localStorage.setItem("lang", selectedLang.code);

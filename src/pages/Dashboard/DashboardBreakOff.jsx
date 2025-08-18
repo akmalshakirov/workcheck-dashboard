@@ -1,7 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 import { baseURL } from "../../App";
 import { CustomTable } from "../../components/CustomTable";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
@@ -84,21 +83,22 @@ const DashboardBreakOffs = () => {
         }
     };
 
-    const handleDelete = async (id) => {
-        try {
-            const response = await axios.delete(
-                `${baseURL}/break-off/${id}/delete`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+    const handleDelete = async (item) => {
+        console.log(item.id);
+        // try {
+        //     const response = await axios.delete(
+        //         `${baseURL}/break-off/${id}/delete`,
+        //         {
+        //             headers: {
+        //                 Authorization: `Bearer ${token}`,
+        //             },
+        //         }
+        //     );
 
-            if (response.status === 200) toast.success(response.data.message);
-        } catch (error) {
-            console.log(error);
-        }
+        //     if (response.status === 200) toast.success(response.data.message);
+        // } catch (error) {
+        //     console.log(error);
+        // }
     };
 
     useEffect(() => {
@@ -108,7 +108,9 @@ const DashboardBreakOffs = () => {
     return (
         <div>
             <div className='flex items-center gap-2.5 justify-between mb-4'>
-                <h1 className='text-2xl font-bold'>{t("sidebar_smena")}</h1>
+                <h1 className='text-2xl font-bold'>
+                    {t("sidebar_break_offs")}
+                </h1>
                 <button
                     className='border rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform'
                     onClick={() => setAddBreakOffModal(!addBreakOffModal)}>
@@ -136,7 +138,7 @@ const DashboardBreakOffs = () => {
             ) : (
                 <CustomTable
                     columns={columns}
-                    data={[]}
+                    data={breakOffs}
                     onDelete={handleDelete}
                     emptyMessage='DNX'
                     loading={loading}
