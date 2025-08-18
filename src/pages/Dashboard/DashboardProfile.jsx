@@ -9,7 +9,7 @@ import { useApi } from "../../service/api/api";
 const DashboardProfile = () => {
     const token = localStorage.getItem("token");
     const { admin, setAdmin, loading } = useAdmin();
-    const { updateProfile } = useApi();
+    const { updateProfile, getProfile } = useApi();
     const { t } = useTranslation();
     const [adminData, setAdminData] = useState([]);
     const [showPassword, setShowPassword] = useState(false);
@@ -19,13 +19,10 @@ const DashboardProfile = () => {
     console.log("x", admin?.image, "x");
 
     useEffect(() => {
-        document.title = `WorkCheck - Dashboard | ${t("sidebar_profile")}`;
-    }, [t]);
-
-    useEffect(() => {
         setAdmin(admin);
         setFileList(admin?.image);
-    }, [admin]);
+        document.title = `WorkCheck - Dashboard | ${t("sidebar_profile")}`;
+    }, [admin, t]);
 
     const handleImageChange = useCallback((e) => {
         setFileList(e?.target?.files[0]);
