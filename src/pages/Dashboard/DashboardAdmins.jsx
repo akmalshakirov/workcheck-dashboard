@@ -18,7 +18,7 @@ import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import Table from "../../components/ui/Table/Table";
 import PhoneInput from "../../helpers/FormatPhone";
 import { useAdmin } from "../../hooks/useAdmin";
-import { getAdmins } from "../../service/api/api";
+import { useApi } from "../../service/api/api";
 const MySwal = withReactContent(Swal);
 const theme = localStorage.getItem("isDark");
 
@@ -45,7 +45,7 @@ const DashboardAdmins = () => {
     const [adminData, setAdminData] = useState(defaultAdminData);
     const [showPassword, setShowPassword] = useState(false);
     const [showEditPassword, setShowEditPassword] = useState(false);
-
+    const { getAdmins } = useApi();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [getAdminLoading, setGetAdminLoading] = useState(true);
     const [editLoading, setEditLoading] = useState(false);
