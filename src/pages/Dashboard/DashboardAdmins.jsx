@@ -47,7 +47,7 @@ const DashboardAdmins = () => {
     const [showEditPassword, setShowEditPassword] = useState(false);
     const { getAdmins } = useApi();
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [getAdminLoading, setGetAdminLoading] = useState(true);
+    const [getAdminLoading, setGetAdminLoading] = useState(false);
     const [editLoading, setEditLoading] = useState(false);
     const [editId, setEditId] = useState(null);
     const [editData, setEditData] = useState(defaultAdminData);
@@ -411,6 +411,9 @@ const DashboardAdmins = () => {
                             <h1>{t("no_admins_error")}</h1>
                         ) : (
                             <Table
+                                columns={defaultList}
+                                enableAnimation
+                                loading={preloader}
                                 data={admins}
                                 list={defaultList}
                                 deleteOnClick={handleDelete}

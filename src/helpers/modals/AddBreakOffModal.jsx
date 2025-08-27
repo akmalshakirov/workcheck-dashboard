@@ -65,8 +65,10 @@ export const AddBreakOffModal = ({ addBreakOffModal, setAddBreakOffModal }) => {
             <form
                 onSubmit={handleSubmit}
                 className='flex gap-2.5 flex-col justify-start'>
-                <div className='mb-4'>
-                    <label htmlFor='name' className='block'>
+                <div className='sm:mb-0 mb-4'>
+                    <label
+                        htmlFor='name'
+                        className='block text-center lg:text-start'>
                         {t("break_off_name")}:
                     </label>
                     <input
@@ -122,7 +124,7 @@ export const AddBreakOffModal = ({ addBreakOffModal, setAddBreakOffModal }) => {
                     </button>
                     <button
                         type='submit'
-                        className='border rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform disabled:opacity-50 disabled:cursor-not-allowed!'
+                        className='rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform disabled:opacity-50 disabled:cursor-not-allowed!'
                         disabled={loading}>
                         {loading ? (
                             <>

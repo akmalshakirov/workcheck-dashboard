@@ -25,31 +25,6 @@ function Table({
                                 {l.name}
                             </th>
                         ))}
-                        {/* <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            {t("admin_table_img")}
-                        </th>
-                        <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            {t("admin_table_name")}
-                        </th>
-                        <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            {t("admin_table_username")}
-                        </th>
-                        <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            {t("admin_table_role")}
-                        </th>
-                        <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            {t("admin_table_phone")}
-                        </th>
-                        <th className='px-6 py-3 text-left text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                            {t("admin_table_branch")}
-                        </th>
-                        {isSuperAdmin && (
-                            <motion.th
-                                layout
-                                className='px-6 py-3 text-center text-sm font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider'>
-                                {t("admin_table_action")}
-                            </motion.th>
-                        )} */}
                         <th></th>
                     </tr>
                 </thead>
@@ -167,7 +142,7 @@ function Table({
                             {/* {actions?.includes("DELETE, UPDATE") &&
                                 isSuperAdmin && (
                                 <motion.td layout className='px-6 py-4'>
-                                    
+
                                         <div className='flex gap-2.5 items-center justify-around'>
                                             <button
                                                 disabled={editLoading[item.id]}

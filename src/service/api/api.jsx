@@ -55,6 +55,13 @@ export const useApi = () => {
                         setAdmins(response.data.admins);
                     }
                 }
+            } else {
+                Swal.fire({
+                    title: error,
+                    icon: "error",
+                    didClose: isClose,
+                    theme: theme == "true" ? "dark" : "light",
+                });
             }
         } finally {
             setPreloader(false);
@@ -108,6 +115,13 @@ export const useApi = () => {
                         isClose = true;
                     }
                 }
+            } else {
+                Swal.fire({
+                    title: error,
+                    icon: "error",
+                    didClose: isClose,
+                    theme: theme == "true" ? "dark" : "light",
+                });
             }
         } finally {
             setLoading(false);
@@ -149,8 +163,8 @@ export const useApi = () => {
             }
         } catch (error) {
             Swal.fire({
-                title: error?.response?.data?.error,
-                text: error?.response?.data?.error,
+                title: error?.response?.data?.error || error,
+                text: error?.response?.data?.error || error,
                 icon: "error",
                 timer: 50000,
                 timerProgressBar: true,
@@ -206,6 +220,13 @@ export const useApi = () => {
                         setBranch(response.data.admin);
                     }
                 }
+            } else {
+                Swal.fire({
+                    title: error,
+                    icon: "error",
+                    didClose: isClose,
+                    theme: theme == "true" ? "dark" : "light",
+                });
             }
         }
     };

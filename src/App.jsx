@@ -1,7 +1,15 @@
+import { AnimatePresence } from "framer-motion";
 import React, { Suspense, useEffect } from "react";
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import {
+    Navigate,
+    Route,
+    Routes,
+    useLocation,
+    useNavigate,
+} from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Preloader from "./components/ui/Preloader/Preloader";
+import { PageWrapper } from "./helpers/PageWrapper.jsx";
 
 const DashboardBreakOffs = React.lazy(() =>
     import("./pages/Dashboard/DashboardBreakOff.jsx")
@@ -38,6 +46,7 @@ export const App = () => {
     const token = localStorage.getItem("token");
     const theme = localStorage.getItem("isDark");
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
         if (!token) {
@@ -59,21 +68,82 @@ export const App = () => {
                 theme={theme === "true" ? "dark" : "light"}
             />
 
-            <Routes>
-                <Route path='/login' element={<Login />} />
-                <Route path='/preloader' element={<Preloader />} />
-                <Route path='/' element={<DashboardLayout />}>
-                    <Route index element={<DashboardHome />} />
-                    <Route path='admins' element={<DashboardAdmins />} />
-                    <Route path='workers' element={<DashboardWorkers />} />
-                    <Route path='profile' element={<DashboardProfile />} />
-                    <Route path='branch' element={<DashboardBranch />} />
-                    <Route path='shift' element={<DashboardShift />} />
-                    <Route path='day-offs' element={<DashboardDaysOff />} />
-                    <Route path='break-offs' element={<DashboardBreakOffs />} />
-                </Route>
-                <Route path='/*' element={<Navigate to={"/login"} replace />} />
-            </Routes>
+            <AnimatePresence mode='popLayout'>
+                <Routes location={location} key={location.pathname}>
+                    <Route path='/login' element={<Login />} />
+                    <Route path='/preloader' element={<Preloader />} />
+                    <Route path='/' element={<DashboardLayout />}>
+                        <Route
+                            index
+                            element={
+                                <PageWrapper>
+                                    <DashboardHome />
+                                </PageWrapper>
+                            }
+                        />
+                        <Route
+                            path='admins'
+                            element={
+                                <PageWrapper>
+                                    <DashboardAdmins />
+                                </PageWrapper>
+                            }
+                        />
+                        <Route
+                            path='workers'
+                            element={
+                                <PageWrapper>
+                                    <DashboardWorkers />
+                                </PageWrapper>
+                            }
+                        />
+                        <Route
+                            path='profile'
+                            element={
+                                <PageWrapper>
+                                    <DashboardProfile />
+                                </PageWrapper>
+                            }
+                        />
+                        <Route
+                            path='branch'
+                            element={
+                                <PageWrapper>
+                                    <DashboardBranch />
+                                </PageWrapper>
+                            }
+                        />
+                        <Route
+                            path='shift'
+                            element={
+                                <PageWrapper>
+                                    <DashboardShift />
+                                </PageWrapper>
+                            }
+                        />
+                        <Route
+                            path='day-offs'
+                            element={
+                                <PageWrapper>
+                                    <DashboardDaysOff />
+                                </PageWrapper>
+                            }
+                        />
+                        <Route
+                            path='break-offs'
+                            element={
+                                <PageWrapper>
+                                    <DashboardBreakOffs />
+                                </PageWrapper>
+                            }
+                        />
+                    </Route>
+                    <Route
+                        path='/*'
+                        element={<Navigate to={"/login"} replace />}
+                    />
+                </Routes>
+            </AnimatePresence>
         </Suspense>
     );
 };

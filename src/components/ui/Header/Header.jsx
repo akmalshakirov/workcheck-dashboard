@@ -1,3 +1,4 @@
+import axios from "axios";
 import { AnimatePresence, motion } from "framer-motion";
 import {
     Bell,
@@ -16,12 +17,13 @@ import {
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { baseURL } from "../../../App";
+import { useAdmin } from "../../../hooks/useAdmin";
 import { useClickOutside } from "../../../hooks/useClickOutside";
 import DropdownIcon from "../Icons/Dropdown";
+import { Search } from "../Search/Search";
 import { Skeleton } from "../Skeleton/Skeleton";
 import styles from "./Header.module.css";
-import { Search } from "../Search/Search";
-import { useAdmin } from "../../../hooks/useAdmin";
 
 export const Header = ({ collapsed, setCollapsed }) => {
     const [langOpen, setLangOpen] = useState(false);
@@ -54,6 +56,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
     const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
     const lang = localStorage.getItem("lang");
     const { admin } = useAdmin();
+    const token = localStorage.getItem("token");
 
     useEffect(() => {
         localStorage.setItem("lang", selectedLang.code);
@@ -109,9 +112,18 @@ export const Header = ({ collapsed, setCollapsed }) => {
         }
     };
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         localStorage.removeItem("token");
         navigate("/login", { replace: true });
+        try {
+            await axios.post(
+                `${baseURL}/logout`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     const languages = [
@@ -421,7 +433,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
                             stiffness: 300,
                             damping: 30,
                         }}
-                        className='fixed inset-0 z-50 bg-black/40 flex md:hidden'
+                        className='fixed inset-0 z-50 bg-black/80 flex md:hidden'
                         onClick={() => setMobileMenuOpen(false)}>
                         <motion.div
                             initial={{ x: -100, opacity: 0 }}

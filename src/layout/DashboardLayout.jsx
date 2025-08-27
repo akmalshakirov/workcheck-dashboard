@@ -55,7 +55,9 @@ const DashboardLayout = () => {
 
                 {!collapsed && (
                     <ul className='list-disc ml-3 mb-3'>
-                        <li className=' text-indigo-800'>Asosiy</li>
+                        <li className='text-indigo-800 dark:text-indigo-400'>
+                            {t("sidebar_main")}
+                        </li>
                     </ul>
                 )}
                 <SidebarItem
@@ -81,8 +83,8 @@ const DashboardLayout = () => {
 
                 {!collapsed && (
                     <ul className='list-disc ml-3 my-3'>
-                        <li className=' text-indigo-800'>
-                            Qo'shimcha sozlamalar
+                        <li className='text-indigo-800 dark:text-indigo-400'>
+                            {t("sidebar_additional")}
                         </li>
                     </ul>
                 )}
@@ -103,11 +105,7 @@ const DashboardLayout = () => {
                 />
             </Sidebar>
             <div className='flex-1 p-2.5 pl-1'>
-                <Header
-                    collapsed={collapsed}
-                    setCollapsed={setCollapsed}
-                    // admin={adminContent}
-                />
+                <Header collapsed={collapsed} setCollapsed={setCollapsed} />
                 <main className='p-5 bg-white rounded-lg mt-3 dark:bg-[#111] dark:text-white text-black duration-200'>
                     <Outlet />
                 </main>
@@ -118,3 +116,45 @@ const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
+
+// {/* <div>
+//     <div className='flex items-center gap-2.5 justify-between mb-4'>
+//         <h1 className='text-2xl font-bold'>{t("sidebar_break_offs")}</h1>
+//         <button
+//             className='border rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform'
+//             onClick={() => setAddBreakOffModal(!addBreakOffModal)}>
+//             Add break off
+//         </button>
+//     </div>
+//     <AddBreakOffModal
+//         addBreakOffModal={addBreakOffModal}
+//         setAddBreakOffModal={setAddBreakOffModal}
+//     />
+//     {/* <Table
+//                 data={breakOffs}
+//                 list={breakOffsList}
+//                 className='mt-7'
+//                 actions={"DELETE"}
+//             /> */}
+//     {loading ? (
+//         <>
+//             {Array.from({ length: 5 }).map((i, index) => (
+//                 <div key={index} className='flex h-[8vh] gap-1 items-center'>
+//                     <Skeleton className='w-full h-10' />
+//                 </div>
+//             ))}
+//         </>
+//     ) : (
+//         <CustomTable
+//             columns={columns}
+//             data={breakOffs}
+//             emptyMessage='DNX'
+//             loading={loading}
+//             onDelete={handleDelete}
+//             onEdit={handleEdit}
+//             deleteIcon={<Delete />}
+//             editIcon={<Edit />}
+//             showIndex
+//         />
+//     )}
+// </div>; */}

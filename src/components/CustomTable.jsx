@@ -1,16 +1,20 @@
-import { Loader2Icon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-export const CustomTable = ({
+export function CustomTable({
     data,
-    columns,
+    columns = [],
     loading = false,
     emptyMessage = "Ma'lumotlar topilmadi",
     onEdit,
     onDelete,
     showHeader = true,
     className = "",
-}) => {
+    deleteIcon,
+    editIcon,
+    showIndex = false,
+}) {
+    const { t } = useTranslation();
+
     const isEmpty = !data || data.length === 0;
 
     if (isEmpty && !loading) {
@@ -21,25 +25,23 @@ export const CustomTable = ({
         );
     }
 
-    const { t } = useTranslation();
-
     return (
         <div className={className}>
-            {loading && (
-                <div className='py-4 flex justify-center'>
-                    <Loader2Icon className='w-6 h-6 animate-spin text-gray-500 dark:text-gray-300' />
-                </div>
-            )}
-
-            <table className='min-w-full divide-y divide-gray-200 dark:divide-gray-700'>
+            <table className='min-w-full overflow-x-scroll lg:overflow-auto'>
                 {showHeader && (
-                    <thead className='bg-white dark:bg-gray-800'>
+                    <thead className='bg-white dark:bg-[#222]'>
                         <tr>
+                            {showIndex && (
+                                <th className='px-4 py-3 text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300 text-center'>
+                                    №
+                                </th>
+                            )}
+
                             {columns?.map((col, idx) => (
                                 <th
                                     key={col.key ?? idx}
                                     scope='col'
-                                    className={`px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300 ${
+                                    className={`px-4 py-3 text-xs font-medium uppercase tracking-wider text-center text-gray-500 dark:text-gray-300 ${
                                         col.width ?? ""
                                     } ${col.className ?? ""}`}>
                                     {col.header}
@@ -55,67 +57,28 @@ export const CustomTable = ({
                     </thead>
                 )}
 
-                <tbody className='bg-white dark:bg-gray-900 divide-y divide-gray-100 dark:divide-gray-800'>
-                    {data &&
-                        data.map((item, idx) => (
+                <tbody className='bg-white dark:bg-[#111] divide-y divide-gray-100 dark:divide-gray-800'>
+                    {data?.map((item, rowIdx) => {
+                        return (
                             <tr
-                                key={(item && item.id) ?? idx}
-                                className='hover:bg-gray-50 dark:hover:bg-gray-800'>
-                                {columns.map((col) => {
-                                    let cellContent = null;
-                                    if (col.render) {
-                                        cellContent = col.render(item);
-                                    } else {
-                                        const value = item
-                                            ? item[col.key]
-                                            : undefined;
-                                        if (
-                                            col.key &&
-                                            String(col.key).toLowerCase() ===
-                                                "image" &&
-                                            value
-                                        ) {
-                                            cellContent = (
-                                                <img
-                                                    src={value}
-                                                    alt={String(
-                                                        (item &&
-                                                            (item.name ||
-                                                                item.username)) ||
-                                                            "avatar"
-                                                    )}
-                                                    className='w-10 h-10 rounded-md object-cover'
-                                                />
-                                            );
-                                        } else if (
-                                            value === null ||
-                                            value === undefined
-                                        ) {
-                                            cellContent = (
-                                                <span className='text-gray-400 dark:text-gray-500'>
-                                                    -
-                                                </span>
-                                            );
-                                        } else if (typeof value === "object") {
-                                            cellContent = (
-                                                <pre className='whitespace-normal text-xs'>
-                                                    {JSON.stringify(value)}
-                                                </pre>
-                                            );
-                                        } else {
-                                            cellContent = (
-                                                <span>{String(value)}</span>
-                                            );
-                                        }
-                                    }
+                                key={item?.id ?? rowIdx}
+                                className='hover:bg-gray-50 dark:hover:bg-[#222] duration-150'>
+                                {showIndex && (
+                                    <td className='px-4 py-3 text-center text-sm text-gray-700 dark:text-gray-200'>
+                                        {rowIdx + 1}
+                                    </td>
+                                )}
 
+                                {columns.map((col) => {
                                     return (
                                         <td
-                                            key={col.key ?? idx}
-                                            className={`px-4 py-3 align-middle text-sm text-gray-700 dark:text-gray-200 ${
+                                            key={col.key ?? rowIdx}
+                                            className={`px-4 py-3 text-center text-sm text-gray-700 dark:text-gray-200 ${
                                                 col.className ?? ""
                                             }`}>
-                                            {cellContent}
+                                            {col.value
+                                                ? col.value(item)
+                                                : item[col.key]}
                                         </td>
                                     );
                                 })}
@@ -127,8 +90,10 @@ export const CustomTable = ({
                                                 <button
                                                     type='button'
                                                     onClick={() => onEdit(item)}
-                                                    className='px-3 py-1.5 rounded-md border border-gray-200 dark:border-gray-700 text-sm bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none'>
-                                                    Edit
+                                                    className='px-2.5 py-1.5 border border-blue-600 bg-blue-600/30 active:bg-blue-600 hover:bg-blue-400 rounded-lg transition active:scale-95'>
+                                                    {editIcon
+                                                        ? editIcon
+                                                        : "Edit"}
                                                 </button>
                                             )}
 
@@ -138,17 +103,20 @@ export const CustomTable = ({
                                                     onClick={() =>
                                                         onDelete(item)
                                                     }
-                                                    className='px-3 py-1.5 rounded-md border border-red-200 dark:border-red-700 text-sm bg-white dark:bg-gray-800 hover:bg-red-50 dark:hover:bg-red-900 text-red-600 dark:text-red-400 focus:outline-none'>
-                                                    Delete
+                                                    className='px-2.5 py-1.5 border border-red-600 bg-red-700/30 active:bg-red-600 hover:bg-red-600/70 rounded-lg transition active:scale-95'>
+                                                    {deleteIcon
+                                                        ? deleteIcon
+                                                        : "Delete"}
                                                 </button>
                                             )}
                                         </div>
                                     </td>
                                 )}
                             </tr>
-                        ))}
+                        );
+                    })}
                 </tbody>
             </table>
         </div>
     );
-};
+}
