@@ -116,10 +116,14 @@ const DashboardAdmins = () => {
     const createAdmin = async (e) => {
         e.preventDefault();
         setCreateAdminLoading(true);
-        const formData = new FormData();
-        Object.entries(adminData).forEach(([key, val]) => {
-            if (val) formData.append(key, val);
-        });
+        const formData = new FormData(e.target);
+        // Object.entries(adminData).forEach(([key, val]) => {
+        //     if (val) formData.append(key, val);
+        // });
+        // difference e.target and this code is on the phone format,
+        // like this:
+        // e.target: (99)-999-99-99 and
+        // this code: 999999999
 
         try {
             const response = await axios.post(

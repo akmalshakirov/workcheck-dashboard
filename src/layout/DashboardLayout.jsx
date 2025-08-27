@@ -23,7 +23,6 @@ const DashboardLayout = () => {
     const [collapsed, setCollapsed] = useState(
         localStorage.getItem("sidebar") == "true"
     );
-    const token = localStorage.getItem("token");
     useEffect(() => {
         localStorage.setItem("sidebar", collapsed);
     }, [collapsed]);
@@ -116,45 +115,3 @@ const DashboardLayout = () => {
 };
 
 export default DashboardLayout;
-
-// {/* <div>
-//     <div className='flex items-center gap-2.5 justify-between mb-4'>
-//         <h1 className='text-2xl font-bold'>{t("sidebar_break_offs")}</h1>
-//         <button
-//             className='border rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform'
-//             onClick={() => setAddBreakOffModal(!addBreakOffModal)}>
-//             Add break off
-//         </button>
-//     </div>
-//     <AddBreakOffModal
-//         addBreakOffModal={addBreakOffModal}
-//         setAddBreakOffModal={setAddBreakOffModal}
-//     />
-//     {/* <Table
-//                 data={breakOffs}
-//                 list={breakOffsList}
-//                 className='mt-7'
-//                 actions={"DELETE"}
-//             /> */}
-//     {loading ? (
-//         <>
-//             {Array.from({ length: 5 }).map((i, index) => (
-//                 <div key={index} className='flex h-[8vh] gap-1 items-center'>
-//                     <Skeleton className='w-full h-10' />
-//                 </div>
-//             ))}
-//         </>
-//     ) : (
-//         <CustomTable
-//             columns={columns}
-//             data={breakOffs}
-//             emptyMessage='DNX'
-//             loading={loading}
-//             onDelete={handleDelete}
-//             onEdit={handleEdit}
-//             deleteIcon={<Delete />}
-//             editIcon={<Edit />}
-//             showIndex
-//         />
-//     )}
-// </div>; */}

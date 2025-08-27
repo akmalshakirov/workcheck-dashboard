@@ -21,19 +21,10 @@ export const useApi = () => {
             });
             setAdmins(response?.data?.admins);
         } catch (error) {
-            if (error.response.status !== 401) {
-                Swal.fire({
-                    title: error?.response?.data?.error,
-                    icon: "error",
-                    didClose: isClose,
-                    theme: theme == "true" ? "dark" : "light",
-                });
-            } else if (
-                error.code === "ERR_NETWORK" &&
-                error.response.status !== 401
-            ) {
+            if (error.code === "ERR_NETWORK") {
                 Swal.fire("Internet aloqasi yo'q", "", "error");
-            } else if (error?.response?.status === 401) {
+            }
+            if (error?.response?.status === 401) {
                 const refreshResponse = await axios.post(
                     `${baseURL}/refresh`,
                     {},
@@ -52,17 +43,16 @@ export const useApi = () => {
                     });
 
                     if (response.status === 200) {
-                        setAdmins(response.data.admins);
+                        setAdmin(response.data.admin);
                     }
                 }
-            } else {
-                Swal.fire({
-                    title: error,
-                    icon: "error",
-                    didClose: isClose,
-                    theme: theme == "true" ? "dark" : "light",
-                });
             }
+            Swal.fire({
+                title: error?.response?.data?.error || error.name,
+                icon: "error",
+                didClose: isClose,
+                theme: theme == "true" ? "dark" : "light",
+            });
         } finally {
             setPreloader(false);
         }
@@ -78,20 +68,10 @@ export const useApi = () => {
                 setAdmin(response.data.admin);
             }
         } catch (error) {
-            if (error?.response?.status !== 401) {
-                Swal.fire({
-                    title: error?.response?.data?.error || error,
-                    icon: "error",
-                    didClose: isClose,
-                    theme: theme == "true" ? "dark" : "light",
-                });
-                console.log(error);
-            } else if (
-                error.code === "ERR_NETWORK" &&
-                error.response.status !== 401
-            ) {
+            if (error.code === "ERR_NETWORK") {
                 Swal.fire("Internet aloqasi yo'q", "", "error");
-            } else if (error?.response?.status === 401) {
+            }
+            if (error?.response?.status === 401) {
                 const refreshResponse = await axios.post(
                     `${baseURL}/refresh`,
                     {},
@@ -110,19 +90,18 @@ export const useApi = () => {
                     });
 
                     if (response.status === 200) {
-                        setAdmin(response.data.admin);
+                        setAdmin(response.data.profile);
                         setLoading(false);
                         isClose = true;
                     }
                 }
-            } else {
-                Swal.fire({
-                    title: error,
-                    icon: "error",
-                    didClose: isClose,
-                    theme: theme == "true" ? "dark" : "light",
-                });
             }
+            Swal.fire({
+                title: error?.response?.data?.error || error.name,
+                icon: "error",
+                didClose: isClose,
+                theme: theme == "true" ? "dark" : "light",
+            });
         } finally {
             setLoading(false);
         }
@@ -186,19 +165,10 @@ export const useApi = () => {
 
             setBranch(response.data.branches);
         } catch (error) {
-            if (error?.response?.status !== 401) {
-                Swal.fire({
-                    title: error?.response?.data?.error,
-                    icon: "error",
-                    didClose: isClose,
-                    theme: theme == "true" ? "dark" : "light",
-                });
-            } else if (
-                error.code === "ERR_NETWORK" &&
-                error.response.status !== 401
-            ) {
+            if (error.code === "ERR_NETWORK") {
                 Swal.fire("Internet aloqasi yo'q", "", "error");
-            } else if (error?.response?.status === 401) {
+            }
+            if (error?.response?.status === 401) {
                 const refreshResponse = await axios.post(
                     `${baseURL}/refresh`,
                     {},
@@ -217,17 +187,16 @@ export const useApi = () => {
                     });
 
                     if (response.status === 200) {
-                        setBranch(response.data.admin);
+                        setBranch(response.data.branches);
                     }
                 }
-            } else {
-                Swal.fire({
-                    title: error,
-                    icon: "error",
-                    didClose: isClose,
-                    theme: theme == "true" ? "dark" : "light",
-                });
             }
+            Swal.fire({
+                title: error?.response?.data?.error || error.name,
+                icon: "error",
+                didClose: isClose,
+                theme: theme == "true" ? "dark" : "light",
+            });
         }
     };
 

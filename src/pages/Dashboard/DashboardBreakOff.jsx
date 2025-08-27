@@ -2,14 +2,16 @@ import axios from "axios";
 import { PencilLine, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import Swal from "sweetalert2";
 import { baseURL } from "../../App";
 import { CustomTable } from "../../components/CustomTable";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import { AddBreakOffModal } from "../../helpers/modals/AddBreakOffModal";
-const token = localStorage.getItem("token");
 
 const DashboardBreakOffs = () => {
     const { t } = useTranslation();
+    const theme = localStorage.getItem("isDark");
+    const token = localStorage.getItem("token");
     const [addBreakOffModal, setAddBreakOffModal] = useState(false);
     const [breakOffs, setBreakOffs] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -49,7 +51,6 @@ const DashboardBreakOffs = () => {
                 Swal.fire({
                     title: error?.response?.data?.error,
                     icon: "error",
-                    didClose: isClose,
                     theme: theme == "true" ? "dark" : "light",
                 });
             } else if (
