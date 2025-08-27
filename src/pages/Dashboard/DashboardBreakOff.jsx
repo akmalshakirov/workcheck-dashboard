@@ -90,16 +90,18 @@ const DashboardBreakOffs = () => {
         const result = await Swal.fire({
             title: `Siz ${item.name} nomli tanaffusni o'chirmoqchimisiz?`,
             icon: "warning",
-            showCancelButton: true,
             allowOutsideClick: true,
-            animation: true,
-            backdrop: true,
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: t("ok2"),
+            cancelButtonText: t("cancel"),
             theme: theme == "true" ? "dark" : "light",
         });
 
         if (result.isConfirmed) {
             Swal.fire({
-                title: "Loading...",
+                title: t("preloader"),
                 allowOutsideClick: false,
                 didOpen: () => {
                     Swal.showLoading();
@@ -169,6 +171,7 @@ const DashboardBreakOffs = () => {
                 <AddBreakOffModal
                     addBreakOffModal={addBreakOffModal}
                     setAddBreakOffModal={setAddBreakOffModal}
+                    getAllBreakOffs={getAllBreakOffs}
                 />
             </div>
             <CustomTable

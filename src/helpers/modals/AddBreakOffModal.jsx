@@ -7,13 +7,18 @@ import { baseURL } from "../../App";
 import { Modal } from "../../components/ui/Modal/Modal";
 const token = localStorage.getItem("token");
 
-export const AddBreakOffModal = ({ addBreakOffModal, setAddBreakOffModal }) => {
+export const AddBreakOffModal = ({
+    addBreakOffModal,
+    setAddBreakOffModal,
+    getAllBreakOffs,
+}) => {
     const { t } = useTranslation();
     const [loading, setLoading] = useState(false);
     const [breakOffData, setBreakOffData] = useState({
         name: "",
         startTime: "",
         endTime: "",
+        lateAllow: "",
     });
 
     const handleInputChange = useCallback((e) => {
@@ -45,6 +50,7 @@ export const AddBreakOffModal = ({ addBreakOffModal, setAddBreakOffModal }) => {
                     endTime: "",
                     startTime: "",
                 }));
+                getAllBreakOffs();
             }
         } catch (error) {
             toast.error(error?.response?.data?.error || error);
@@ -65,7 +71,7 @@ export const AddBreakOffModal = ({ addBreakOffModal, setAddBreakOffModal }) => {
             <form
                 onSubmit={handleSubmit}
                 className='flex gap-2.5 flex-col justify-start'>
-                <div className='sm:mb-0 mb-4'>
+                <div className='flex items-center lg:flex-row flex-col justify-between mb-4'>
                     <label
                         htmlFor='name'
                         className='block text-center lg:text-start'>
@@ -81,7 +87,28 @@ export const AddBreakOffModal = ({ addBreakOffModal, setAddBreakOffModal }) => {
                         required
                         name='name'
                         id='name'
-                        className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-full disabled:opacity-50'
+                        className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-full lg:w-1/4 disabled:opacity-50'
+                    />
+                    <label
+                        htmlFor='lateAllow'
+                        className='block text-center lg:text-start'>
+                        {t("break_off_lateAllow")}:
+                    </label>
+                    <input
+                        disabled={loading}
+                        type='number'
+                        min={10}
+                        minLength={10}
+                        max={30}
+                        maxLength={30}
+                        inputMode='numeric'
+                        value={breakOffData.lateAllow}
+                        onChange={handleInputChange}
+                        autoComplete='off'
+                        required
+                        name='lateAllow'
+                        id='lateAllow'
+                        className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-full lg:w-1/4 disabled:opacity-50'
                     />
                 </div>
                 <div className='flex items-center lg:flex-row flex-col justify-between mb-4'>

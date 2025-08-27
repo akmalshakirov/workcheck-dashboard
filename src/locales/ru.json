@@ -59,5 +59,6 @@
     "edit": "Редактировать",
     "break_off_name": "Название перерыва",
     "break_off_start_time": "Время начала",
-    "break_off_end_time": "Время окончания"
+    "break_off_end_time": "Время окончания",
+    "break_off_lateAllow": "Разрешение остаться допоздна"
 }

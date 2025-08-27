@@ -59,5 +59,6 @@
     "edit": "Edit",
     "break_off_name": "Name of the break",
     "break_off_start_time": "Start time",
-    "break_off_end_time": "End time"
+    "break_off_end_time": "End time",
+    "break_off_lateAllow": "Permission to stay late"
 }
