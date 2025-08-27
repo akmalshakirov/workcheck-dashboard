@@ -68,7 +68,7 @@ export const App = () => {
                 theme={theme === "true" ? "dark" : "light"}
             />
 
-            <AnimatePresence mode='popLayout'>
+            <AnimatePresence>
                 <Routes location={location} key={location.pathname}>
                     <Route path='/login' element={<Login />} />
                     <Route path='/preloader' element={<Preloader />} />
@@ -131,11 +131,7 @@ export const App = () => {
                         />
                         <Route
                             path='break-offs'
-                            element={
-                                <PageWrapper>
-                                    <DashboardBreakOffs />
-                                </PageWrapper>
-                            }
+                            element={<DashboardBreakOffs />}
                         />
                     </Route>
                     <Route

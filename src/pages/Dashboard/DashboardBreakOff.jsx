@@ -7,6 +7,7 @@ import { baseURL } from "../../App";
 import { CustomTable } from "../../components/CustomTable";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import { AddBreakOffModal } from "../../helpers/modals/AddBreakOffModal";
+import { toast } from "react-toastify";
 
 const DashboardBreakOffs = () => {
     const { t } = useTranslation();
@@ -86,24 +87,51 @@ const DashboardBreakOffs = () => {
     };
 
     const handleDelete = async (item) => {
-        console.log(item.id);
-        if (window.confirm(`${item.name} ni ochirmoqchimisiz?`)) {
-            alert("OK");
-        } else alert("NO");
-        // try {
-        //     const response = await axios.delete(
-        //         `${baseURL}/break-off/${id}/delete`,
-        //         {
-        //             headers: {
-        //                 Authorization: `Bearer ${token}`,
-        //             },
-        //         }
-        //     );
+        const result = await Swal.fire({
+            title: `Siz ${item.name} nomli tanaffusni o'chirmoqchimisiz?`,
+            icon: "warning",
+            showCancelButton: true,
+            allowOutsideClick: true,
+            animation: true,
+            backdrop: true,
+            theme: theme == "true" ? "dark" : "light",
+        });
 
-        //     if (response.status === 200) toast.success(response.data.message);
-        // } catch (error) {
-        //     console.log(error);
-        // }
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: "Loading...",
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+                theme: theme == "true" ? "dark" : "light",
+            });
+            try {
+                const response = await axios.delete(
+                    `${baseURL}/break-off/${item.id}/delete`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                Swal.close();
+                Swal.fire({
+                    icon: "success",
+                    title: response.data.message,
+                    theme: theme == "true" ? "dark" : "light",
+                });
+                getAllBreakOffs();
+            } catch (error) {
+                Swal.hideLoading();
+                Swal.fire({
+                    icon: "error",
+                    title: error?.response?.data?.error || error?.name,
+                    theme: theme == "true" ? "dark" : "light",
+                });
+            }
+        }
     };
 
     const handleEdit = async (item) => {
@@ -118,11 +146,13 @@ const DashboardBreakOffs = () => {
     }, []);
 
     return loading ? (
-        Array.from({ length: 5 }).map((i, index) => (
-            <div key={index} className='flex h-[8vh] gap-1 items-center'>
-                <Skeleton className='w-full h-10' />
-            </div>
-        ))
+        <div className='flex flex-col gap-3'>
+            {Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className='flex h-[6vh] gap-1 items-center'>
+                    <Skeleton className='w-full h-full' />
+                </div>
+            ))}
+        </div>
     ) : (
         <>
             <div>
