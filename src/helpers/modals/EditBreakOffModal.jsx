@@ -1,25 +1,38 @@
 import axios from "axios";
 import { LoaderCircleIcon } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
 import { baseURL } from "../../App";
 import { Modal } from "../../components/ui/Modal/Modal";
-const token = localStorage.getItem("token");
+import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
-export const AddBreakOffModal = ({
-    addBreakOffModal,
-    setAddBreakOffModal,
+export const EditBreakOffModal = ({
+    visible,
+    setVisible,
     getAllBreakOffs,
+    item,
 }) => {
     const { t } = useTranslation();
-    const [loading, setLoading] = useState(false);
+    const token = localStorage.getItem("token");
+    const theme = localStorage.getItem("isDark");
+    const [editItemLoading, setEditItemLoading] = useState(false);
     const [breakOffData, setBreakOffData] = useState({
         name: "",
         startTime: "",
         endTime: "",
         lateAllow: "",
     });
+
+    useEffect(() => {
+        if (!item) return;
+        setBreakOffData({
+            name: item?.name,
+            startTime: item?.startTime,
+            endTime: item?.endTime,
+            lateAllow: item?.lateAllow,
+        });
+    }, [item]);
 
     const handleInputChange = useCallback((e) => {
         const { name, value } = e.target;
@@ -28,11 +41,10 @@ export const AddBreakOffModal = ({
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
-
+        setEditItemLoading(true);
         try {
-            const response = await axios.post(
-                `${baseURL}/break-off/create`,
+            const response = await axios.put(
+                `${baseURL}/break-off/${item.id}/update`,
                 breakOffData,
                 {
                     headers: {
@@ -40,34 +52,28 @@ export const AddBreakOffModal = ({
                     },
                 }
             );
-
-            if (response.status === 201) {
-                toast.success(response.data.message);
-                setAddBreakOffModal(false);
-                setBreakOffData((prev) => ({
-                    ...prev,
-                    name: "",
-                    endTime: "",
-                    startTime: "",
-                }));
-                getAllBreakOffs();
-            }
+            toast.success(response.data.message);
         } catch (error) {
-            toast.error(error?.response?.data?.error || error);
-            setAddBreakOffModal(false);
-            setBreakOffData((prev) => ({
-                ...prev,
-                name: "",
-                endTime: "",
-                startTime: "",
-            }));
+            Swal.fire({
+                title: error?.response?.data?.error || error?.name,
+                icon: "error",
+                theme: theme == "true" ? "dark" : "light",
+            });
         } finally {
-            setLoading(false);
+            getAllBreakOffs();
+            setEditItemLoading(false);
+            setVisible(false);
+            setBreakOffData({
+                name: "",
+                startTime: "",
+                endTime: "",
+                lateAllow: "",
+            });
         }
     };
 
     return (
-        <Modal visible={addBreakOffModal} title={"ADD BREAK OFF"} width='45'>
+        <Modal visible={visible} title={"Edit break off"}>
             <form onSubmit={handleSubmit}>
                 <div className='flex items-center lg:flex-row flex-col justify-between mb-4'>
                     <label
@@ -76,7 +82,7 @@ export const AddBreakOffModal = ({
                         {t("break_off_name")}:
                     </label>
                     <input
-                        disabled={loading}
+                        disabled={editItemLoading}
                         type='text'
                         inputMode='text'
                         value={breakOffData.name}
@@ -93,7 +99,7 @@ export const AddBreakOffModal = ({
                         {t("break_off_lateAllow")}:
                     </label>
                     <input
-                        disabled={loading}
+                        disabled={editItemLoading}
                         type='number'
                         min={10}
                         minLength={10}
@@ -114,7 +120,7 @@ export const AddBreakOffModal = ({
                         {t("break_off_start_time")}:
                     </label>
                     <input
-                        disabled={loading}
+                        disabled={editItemLoading}
                         type='time'
                         value={breakOffData.startTime}
                         onChange={handleInputChange}
@@ -128,7 +134,7 @@ export const AddBreakOffModal = ({
                         {t("break_off_end_time")}:
                     </label>
                     <input
-                        disabled={loading}
+                        disabled={editItemLoading}
                         type='time'
                         value={breakOffData.endTime}
                         onChange={handleInputChange}
@@ -143,15 +149,15 @@ export const AddBreakOffModal = ({
                     <button
                         type='reset'
                         className='py-1.5 px-3 rounded-lg bg-red-600/80 hover:bg-red-600 duration-150 text-white active:scale-[0.95] will-change-transform disabled:opacity-50 disabled:cursor-not-allowed!'
-                        onClick={() => setAddBreakOffModal(false)}
-                        disabled={loading}>
+                        onClick={() => setVisible(false)}
+                        disabled={editItemLoading}>
                         {t("close")}
                     </button>
                     <button
                         type='submit'
                         className='rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform disabled:opacity-50 disabled:cursor-not-allowed!'
-                        disabled={loading}>
-                        {loading ? (
+                        disabled={editItemLoading}>
+                        {editItemLoading ? (
                             <>
                                 <LoaderCircleIcon className='animate-spin' />
                             </>

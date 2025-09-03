@@ -29,10 +29,12 @@ export const Modal = ({ visible, title = "", children, width = "" }) => {
                             damping: 30,
                             stiffness: 200,
                         }}
-                        style={{ width: `${width}%` }}>
+                        style={{
+                            width: `${width}%`,
+                        }}>
                         <div
                             className={`${styles.header} border-b border-b-gray-600/30 text-lg dark:border-b-[#777]`}>
-                            <h1>{title}</h1>
+                            <h1>{title || "Modal title"}</h1>
                         </div>
                         <div className={styles.body}>{children}</div>
                     </motion.div>

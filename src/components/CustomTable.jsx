@@ -90,7 +90,7 @@ export function CustomTable({
                                                 <button
                                                     type='button'
                                                     onClick={() => onEdit(item)}
-                                                    className='px-2.5 py-1.5 border border-blue-600 bg-blue-600/30 active:bg-blue-600 hover:bg-blue-400 rounded-lg transition active:scale-95'>
+                                                    className='px-2.5 py-1.5 border border-blue-600 bg-blue-600/80 active:bg-blue-600 hover:bg-blue-600 rounded-lg transition active:scale-95 dark:bg-blue-600/40'>
                                                     {editIcon
                                                         ? editIcon
                                                         : "Edit"}
@@ -103,7 +103,7 @@ export function CustomTable({
                                                     onClick={() =>
                                                         onDelete(item)
                                                     }
-                                                    className='px-2.5 py-1.5 border border-red-600 bg-red-700/30 active:bg-red-600 hover:bg-red-600/70 rounded-lg transition active:scale-95'>
+                                                    className='px-2.5 py-1.5 border border-red-600 bg-red-600/80 active:bg-red-600 hover:bg-red-600 rounded-lg transition active:scale-95 dark:bg-red-600/40'>
                                                     {deleteIcon
                                                         ? deleteIcon
                                                         : "Delete"}

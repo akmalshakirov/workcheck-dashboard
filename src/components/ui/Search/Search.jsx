@@ -14,7 +14,7 @@ export const Search = () => {
     const token = localStorage.getItem("token");
     const lang = localStorage.getItem("lang");
 
-    const fetchResults = async (q) => {
+    const fetchResults = async (q) => { 
         if (!q.trim()) {
             setResults([]);
             return;
@@ -59,6 +59,7 @@ export const Search = () => {
                 placeholder={`${t("search")}...`}
                 name='search'
                 id='search'
+                autoComplete='on'
             />
 
             {(loading !== false || error !== null) && (

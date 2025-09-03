@@ -7,15 +7,17 @@ import { baseURL } from "../../App";
 import { CustomTable } from "../../components/CustomTable";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import { AddBreakOffModal } from "../../helpers/modals/AddBreakOffModal";
-import { toast } from "react-toastify";
+import { EditBreakOffModal } from "../../helpers/modals/EditBreakOffModal";
 
 const DashboardBreakOffs = () => {
     const { t } = useTranslation();
     const theme = localStorage.getItem("isDark");
     const token = localStorage.getItem("token");
     const [addBreakOffModal, setAddBreakOffModal] = useState(false);
+    const [editBreakOffModal, setEditBreakOffModal] = useState(false);
     const [breakOffs, setBreakOffs] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [editItem, setEditItem] = useState(null);
 
     const columns = [
         {
@@ -44,7 +46,7 @@ const DashboardBreakOffs = () => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            if (response.status === 200) {
+            if (response.status === 200 || response.status === 304) {
                 setBreakOffs(response.data.breakoffs);
             }
         } catch (error) {
@@ -118,7 +120,7 @@ const DashboardBreakOffs = () => {
                     }
                 );
 
-                Swal.close();
+                // Swal.close();
                 Swal.fire({
                     icon: "success",
                     title: response.data.message,
@@ -126,7 +128,6 @@ const DashboardBreakOffs = () => {
                 });
                 getAllBreakOffs();
             } catch (error) {
-                Swal.hideLoading();
                 Swal.fire({
                     icon: "error",
                     title: error?.response?.data?.error || error?.name,
@@ -136,11 +137,9 @@ const DashboardBreakOffs = () => {
         }
     };
 
-    const handleEdit = async (item) => {
-        confirm(item.id);
-        // try {
-        // const response = await
-        // } catch (error) {}
+    const handleEdit = (item) => {
+        setEditItem(item);
+        setEditBreakOffModal(true);
     };
 
     useEffect(() => {
@@ -173,6 +172,12 @@ const DashboardBreakOffs = () => {
                     setAddBreakOffModal={setAddBreakOffModal}
                     getAllBreakOffs={getAllBreakOffs}
                 />
+                <EditBreakOffModal
+                    getAllBreakOffs={getAllBreakOffs}
+                    visible={editBreakOffModal}
+                    setVisible={setEditBreakOffModal}
+                    item={editItem}
+                />
             </div>
             <CustomTable
                 columns={columns}
@@ -180,18 +185,8 @@ const DashboardBreakOffs = () => {
                 loading={loading}
                 onDelete={handleDelete}
                 onEdit={handleEdit}
-                deleteIcon={
-                    <Trash
-                        size={20}
-                        className='text-gray-800 dark:text-white'
-                    />
-                }
-                editIcon={
-                    <PencilLine
-                        size={20}
-                        className='text-gray-800 dark:text-white'
-                    />
-                }
+                deleteIcon={<Trash size={20} className='text-white' />}
+                editIcon={<PencilLine size={20} className='text-white' />}
                 showIndex
             />
         </>

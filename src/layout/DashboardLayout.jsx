@@ -34,7 +34,7 @@ const DashboardLayout = () => {
     }, []);
 
     return (
-        <div className='flex bg-[#5f73e2] dark:bg-neutral-950 transition-colors duration-200'>
+        <div className='flex bg-[#5f73e2] dark:bg-neutral-950 transition-colors duration-200 relative'>
             <Sidebar collapsed={collapsed} setCollapsed={setCollapsed}>
                 {branch === null ? (
                     <Skeleton className='w-full h-10' />
