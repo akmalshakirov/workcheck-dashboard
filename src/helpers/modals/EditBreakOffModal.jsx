@@ -2,10 +2,10 @@ import axios from "axios";
 import { LoaderCircleIcon } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { baseURL } from "../../App";
 import { Modal } from "../../components/ui/Modal/Modal";
-import Swal from "sweetalert2";
-import { toast } from "react-toastify";
 
 export const EditBreakOffModal = ({
     visible,
@@ -73,47 +73,51 @@ export const EditBreakOffModal = ({
     };
 
     return (
-        <Modal visible={visible} title={"Edit break off"}>
+        <Modal visible={visible} title={"Edit break off"} width='69'>
             <form onSubmit={handleSubmit}>
-                <div className='flex items-center lg:flex-row flex-col justify-between mb-4'>
-                    <label
-                        htmlFor='name'
-                        className='block text-center lg:text-start'>
-                        {t("break_off_name")}:
-                    </label>
-                    <input
-                        disabled={editItemLoading}
-                        type='text'
-                        inputMode='text'
-                        value={breakOffData.name}
-                        onChange={handleInputChange}
-                        autoComplete='off'
-                        required
-                        name='name'
-                        id='name'
-                        className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-full lg:w-1/4 disabled:opacity-50'
-                    />
-                    <label
-                        htmlFor='lateAllow'
-                        className='block text-center lg:text-start'>
-                        {t("break_off_lateAllow")}:
-                    </label>
-                    <input
-                        disabled={editItemLoading}
-                        type='number'
-                        min={10}
-                        minLength={10}
-                        max={30}
-                        maxLength={30}
-                        inputMode='numeric'
-                        value={breakOffData.lateAllow}
-                        onChange={handleInputChange}
-                        autoComplete='off'
-                        required
-                        name='lateAllow'
-                        id='lateAllow'
-                        className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-full lg:w-1/4 disabled:opacity-50'
-                    />
+                <div className='flex items-center lg:flex-row flex-col justify-between mb-4 gap-2'>
+                    <div className='flex items-center justify-between'>
+                        <label
+                            htmlFor='name'
+                            className='block text-center lg:text-start'>
+                            {t("break_off_name")}:
+                        </label>
+                        <input
+                            disabled={editItemLoading}
+                            type='text'
+                            inputMode='text'
+                            value={breakOffData.name}
+                            onChange={handleInputChange}
+                            autoComplete='off'
+                            required
+                            name='name'
+                            id='name'
+                            className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-full lg:w-1/4 disabled:opacity-50'
+                        />
+                    </div>
+                    <div className='flex items-center justify-between'>
+                        <label
+                            htmlFor='lateAllow'
+                            className='block text-center lg:text-start'>
+                            {t("break_off_lateAllow")}:
+                        </label>
+                        <input
+                            disabled={editItemLoading}
+                            type='number'
+                            min={10}
+                            minLength={10}
+                            max={30}
+                            maxLength={30}
+                            inputMode='numeric'
+                            value={breakOffData.lateAllow}
+                            onChange={handleInputChange}
+                            autoComplete='off'
+                            required
+                            name='lateAllow'
+                            id='lateAllow'
+                            className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-full lg:w-1/4 disabled:opacity-50'
+                        />
+                    </div>
                 </div>
                 <div className='flex items-center lg:flex-row flex-col justify-between mb-4'>
                     <label htmlFor='startTime' className='block'>

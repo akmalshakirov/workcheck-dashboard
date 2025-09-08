@@ -34,7 +34,7 @@ const DashboardLayout = () => {
     }, []);
 
     return (
-        <div className='flex bg-[#5f73e2] dark:bg-neutral-950 transition-colors duration-200 relative'>
+        <div className='min-h-screen flex bg-[#5f73e2] dark:bg-neutral-950 transition-colors duration-200'>
             <Sidebar collapsed={collapsed} setCollapsed={setCollapsed}>
                 {branch === null ? (
                     <Skeleton className='w-full h-10' />
@@ -105,10 +105,10 @@ const DashboardLayout = () => {
             </Sidebar>
             <div className='flex-1 p-2.5 pl-1'>
                 <Header collapsed={collapsed} setCollapsed={setCollapsed} />
-                <main className='p-5 bg-white rounded-lg mt-3 dark:bg-[#111] dark:text-white text-black duration-200'>
+                <main className='p-5 bg-white rounded-lg mt-3 dark:bg-[#111] dark:text-white text-black'>
                     <Outlet />
                 </main>
-                <Footer />
+                <Footer collapsed={collapsed} />
             </div>
         </div>
     );

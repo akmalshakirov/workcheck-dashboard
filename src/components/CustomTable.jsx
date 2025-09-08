@@ -2,15 +2,15 @@ import { useTranslation } from "react-i18next";
 
 export function CustomTable({
     data,
-    columns = [],
+    columns,
     loading = false,
     emptyMessage = "Ma'lumotlar topilmadi",
-    onEdit,
-    onDelete,
+    onEdit = () => {},
+    onDelete = () => {},
     showHeader = true,
     className = "",
-    deleteIcon,
-    editIcon,
+    deleteIcon = "",
+    editIcon = "",
     showIndex = false,
 }) {
     const { t } = useTranslation();
@@ -26,10 +26,10 @@ export function CustomTable({
     }
 
     return (
-        <div className={className}>
-            <table className='min-w-full overflow-x-scroll lg:overflow-auto'>
+        <div className={className ?? ""}>
+            <table className='rounded-lg min-w-full overflow-x-scroll lg:overflow-auto'>
                 {showHeader && (
-                    <thead className='bg-white dark:bg-[#222]'>
+                    <thead className='bg-gray-200 dark:bg-white/20'>
                         <tr>
                             {showIndex && (
                                 <th className='px-4 py-3 text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300 text-center'>
@@ -57,7 +57,7 @@ export function CustomTable({
                     </thead>
                 )}
 
-                <tbody className='bg-white dark:bg-[#111] divide-y divide-gray-100 dark:divide-gray-800'>
+                <tbody className=' divide-y divide-gray-100 dark:divide-gray-800'>
                     {data?.map((item, rowIdx) => {
                         return (
                             <tr
