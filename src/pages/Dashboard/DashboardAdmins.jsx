@@ -19,6 +19,7 @@ import Table from "../../components/ui/Table/Table";
 import PhoneInput from "../../helpers/FormatPhone";
 import { useAdmin } from "../../hooks/useAdmin";
 import { useApi } from "../../service/api/api";
+import { CustomTable } from "../../components/CustomTable";
 const MySwal = withReactContent(Swal);
 const theme = localStorage.getItem("isDark");
 
@@ -69,25 +70,28 @@ const DashboardAdmins = () => {
 
     const defaultList = [
         {
-            name: t("admin_table_img"),
+            header: t("admin_table_img"),
+            key: "image",
         },
         {
-            name: t("admin_table_name"),
+            header: t("admin_table_name"),
+            key: "name",
         },
         {
-            name: t("admin_table_username"),
+            header: t("admin_table_username"),
+            key: "username",
         },
         {
-            name: t("admin_table_role"),
+            header: t("admin_table_role"),
+            key: "role",
         },
         {
-            name: t("admin_table_phone"),
+            header: t("admin_table_phone"),
+            key: "phone",
         },
         {
-            name: t("admin_table_branch"),
-        },
-        {
-            name: t("admin_table_action"),
+            header: t("admin_table_branch"),
+            value: (item) => item?.name,
         },
     ];
 
@@ -150,12 +154,12 @@ const DashboardAdmins = () => {
     };
 
     // Edit admin
-    const handleGetAdminById = async (id) => {
+    const handleGetAdminById = async (item) => {
         setIsEditModalOpen(true);
         setGetAdminLoading(true);
-        setEditId(id);
+        setEditId(item.id);
         try {
-            const { data } = await axios.get(`${baseURL}/admin/${id}`, {
+            const { data } = await axios.get(`${baseURL}/admin/${item.id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             setEditData({
@@ -414,15 +418,22 @@ const DashboardAdmins = () => {
                         {!admins || admins.length === 0 ? (
                             <h1>{t("no_admins_error")}</h1>
                         ) : (
-                            <Table
+                            // <Table
+                            //     columns={defaultList}
+                            //     enableAnimation
+                            //     loading={preloader}
+                            //     data={admins}
+                            //     list={defaultList}
+                            //     deleteOnClick={handleDelete}
+                            //     editOnClick={handleGetAdminById}
+                            //     actions={"UPDATE, DELETE"}
+                            // />
+                            <CustomTable
                                 columns={defaultList}
-                                enableAnimation
                                 loading={preloader}
                                 data={admins}
-                                list={defaultList}
-                                deleteOnClick={handleDelete}
-                                editOnClick={handleGetAdminById}
-                                actions={"UPDATE, DELETE"}
+                                onDelete={handleDelete}
+                                onEdit={handleGetAdminById}
                             />
                         )}
                     </div>

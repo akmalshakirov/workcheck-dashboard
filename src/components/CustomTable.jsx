@@ -9,8 +9,8 @@ export function CustomTable({
     onDelete = () => {},
     showHeader = true,
     className = "",
-    deleteIcon = "",
-    editIcon = "",
+    deleteIcon = "Delete",
+    editIcon = "Edit",
     showIndex = false,
 }) {
     const { t } = useTranslation();
@@ -19,7 +19,7 @@ export function CustomTable({
 
     if (isEmpty && !loading) {
         return (
-            <div className='py-6 text-center text-sm text-gray-600 dark:text-gray-300'>
+            <div className='py-6 text-center text-base text-gray-600 dark:text-gray-300 w-full'>
                 {emptyMessage}
             </div>
         );
@@ -68,6 +68,15 @@ export function CustomTable({
                                         {rowIdx + 1}
                                     </td>
                                 )}
+                                {/* <td className='px-4 py-3 text-center text-sm text-gray-700 dark:text-gray-200'>
+                                    {item.image && (
+                                        <img
+                                            src={item.image}
+                                            alt={item.image}
+                                            className='w-10 h-10 object-cover rounded-full'
+                                        />
+                                    )}
+                                </td> */}
 
                                 {columns.map((col) => {
                                     return (
@@ -91,9 +100,7 @@ export function CustomTable({
                                                     type='button'
                                                     onClick={() => onEdit(item)}
                                                     className='px-2.5 py-1.5 border border-blue-600 bg-blue-600/80 active:bg-blue-600 hover:bg-blue-600 rounded-lg transition active:scale-95 dark:bg-blue-600/40'>
-                                                    {editIcon
-                                                        ? editIcon
-                                                        : "Edit"}
+                                                    {editIcon}
                                                 </button>
                                             )}
 
@@ -104,9 +111,7 @@ export function CustomTable({
                                                         onDelete(item)
                                                     }
                                                     className='px-2.5 py-1.5 border border-red-600 bg-red-600/80 active:bg-red-600 hover:bg-red-600 rounded-lg transition active:scale-95 dark:bg-red-600/40'>
-                                                    {deleteIcon
-                                                        ? deleteIcon
-                                                        : "Delete"}
+                                                    {deleteIcon}
                                                 </button>
                                             )}
                                         </div>

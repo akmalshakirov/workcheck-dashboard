@@ -1,16 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import { baseURL } from "../../App";
 import { CustomTable } from "../../components/CustomTable";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 
 const DashboardDaysOff = () => {
-    const { t } = useTranslation();
     const token = localStorage.getItem("token");
     const theme = localStorage.getItem("isDark");
-    const [dayOffs, setDayOffs] = useState(null);
+    const [dayOffs, setDayOffs] = useState([]);
     const [loading, setLoading] = useState(false);
     const [addDayOffModal, setAddDayOffModal] = useState(false);
 
@@ -38,18 +36,13 @@ const DashboardDaysOff = () => {
 
     const columns = [
         {
-            header: "Header",
+            header: "Day Off Name",
             key: "name",
         },
-        // {
-        //     header: "dates",
-        //     key: "dates",
-        //     value: (item) => {
-        //         return item.dates && item.dates.length
-        //             ? item?.dates?.map((i) => i.date).join(", ")
-        //             : "-";
-        //     },
-        // },
+        {
+            header: "Dates",
+            value: (item) => item.dates.map((i) => i.date).join(", "),
+        },
     ];
 
     useEffect(() => {
@@ -70,17 +63,6 @@ const DashboardDaysOff = () => {
                 </div>
             ) : (
                 <div className='flex gap-2.5'>
-                    {/* console.log(!loading && dayOffs?.[0]?.dates?.map((i) => i)); */}
-                    {/* <div>
-                        {dayOffs?.map((day) => (
-                            <div key={day?.id}>
-                                {day.name}
-                                {day.dates?.map((item, index) => (
-                                    <p key={item.id ?? index}>{item?.date}</p>
-                                ))}
-                            </div>
-                        ))}
-                    </div> */}
                     <CustomTable
                         data={dayOffs}
                         columns={columns}
@@ -88,9 +70,6 @@ const DashboardDaysOff = () => {
                         showIndex
                         className='w-full'
                     />
-                    <div className='bg-emerald-500 rounded-lg p-4 pb-30'>
-                        Calendar...
-                    </div>
                 </div>
             )}
         </>

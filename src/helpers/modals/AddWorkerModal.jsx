@@ -4,7 +4,7 @@ export const AddWorkerModal = ({ worker, isVisible }) => {
     return (
         <>
             {isVisible && (
-                <Modal visible={isVisible}>
+                <Modal visible={isVisible} width='20'>
                     {worker ?? "worker not found!"}
                 </Modal>
             )}
