@@ -4,12 +4,15 @@ import Swal from "sweetalert2";
 import { baseURL } from "../../App";
 import { CustomTable } from "../../components/CustomTable";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
+import { useTranslation } from "react-i18next";
+import { CalendarCog, CalendarX2 } from "lucide-react";
 
 const DashboardDaysOff = () => {
     const token = localStorage.getItem("token");
     const theme = localStorage.getItem("isDark");
     const [dayOffs, setDayOffs] = useState([]);
     const [loading, setLoading] = useState(false);
+    const { t } = useTranslation();
     const [addDayOffModal, setAddDayOffModal] = useState(false);
 
     const getDayOffs = async () => {
@@ -50,7 +53,7 @@ const DashboardDaysOff = () => {
     }, []);
 
     return (
-        <>
+        <div>
             {loading ? (
                 <div className='flex flex-col gap-3'>
                     {Array.from({ length: 5 }).map((_, index) => (
@@ -62,17 +65,29 @@ const DashboardDaysOff = () => {
                     ))}
                 </div>
             ) : (
-                <div className='flex gap-2.5'>
-                    <CustomTable
-                        data={dayOffs}
-                        columns={columns}
-                        emptyMessage="Day offs aren't added yet"
-                        showIndex
-                        className='w-full'
-                    />
-                </div>
+                <>
+                    <div className='flex items-center justify-between mb-5'>
+                        <h1 className='text-2xl font-bold'>
+                            {t("sidebar_day_offs")}
+                        </h1>
+                        <button className='rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform'>
+                            Add day off
+                        </button>
+                    </div>
+                    <div className='flex gap-2.5'>
+                        <CustomTable
+                            data={dayOffs}
+                            columns={columns}
+                            showIndex
+                            className='w-full'
+                            actions={"edit delete"}
+                            editIcon={<CalendarCog className='text-white' />}
+                            deleteIcon={<CalendarX2 className='text-white' />}
+                        />
+                    </div>
+                </>
             )}
-        </>
+        </div>
     );
 };
 

@@ -1,23 +1,25 @@
-import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import { t } from "i18next";
+import { useAdmin } from "../hooks/useAdmin";
 
 export function CustomTable({
     data,
     columns,
-    loading = false,
-    emptyMessage = "Ma'lumotlar topilmadi",
+    actions,
+    emptyMessage = t("no_data"),
     onEdit = () => {},
     onDelete = () => {},
     showHeader = true,
     className = "",
-    deleteIcon = "Delete",
-    editIcon = "Edit",
+    deleteIcon = "Delete" || {},
+    editIcon = "Edit" || {},
     showIndex = false,
 }) {
-    const { t } = useTranslation();
+    const { isSuperAdmin } = useAdmin();
 
     const isEmpty = !data || data.length === 0;
 
-    if (isEmpty && !loading) {
+    if (isEmpty) {
         return (
             <div className='py-6 text-center text-base text-gray-600 dark:text-gray-300 w-full'>
                 {emptyMessage}
@@ -48,16 +50,20 @@ export function CustomTable({
                                 </th>
                             ))}
 
-                            {(onEdit || onDelete) && (
-                                <th className='px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300'>
+                            {isSuperAdmin && actions && (
+                                <motion.th
+                                    layout
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className='px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-300'>
                                     {t("admin_table_action")}
-                                </th>
+                                </motion.th>
                             )}
                         </tr>
                     </thead>
                 )}
 
-                <tbody className=' divide-y divide-gray-100 dark:divide-gray-800'>
+                <tbody className='divide-y divide-gray-100 dark:divide-gray-800'>
                     {data?.map((item, rowIdx) => {
                         return (
                             <tr
@@ -68,15 +74,6 @@ export function CustomTable({
                                         {rowIdx + 1}
                                     </td>
                                 )}
-                                {/* <td className='px-4 py-3 text-center text-sm text-gray-700 dark:text-gray-200'>
-                                    {item.image && (
-                                        <img
-                                            src={item.image}
-                                            alt={item.image}
-                                            className='w-10 h-10 object-cover rounded-full'
-                                        />
-                                    )}
-                                </td> */}
 
                                 {columns.map((col) => {
                                     return (
@@ -92,10 +89,14 @@ export function CustomTable({
                                     );
                                 })}
 
-                                {(onEdit || onDelete) && (
-                                    <td className='px-4 py-3 text-right'>
+                                {isSuperAdmin && actions && (
+                                    <motion.td
+                                        layout
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        className='px-4 py-3 text-right'>
                                         <div className='inline-flex items-center gap-2'>
-                                            {onEdit && (
+                                            {actions.includes("edit") && (
                                                 <button
                                                     type='button'
                                                     onClick={() => onEdit(item)}
@@ -104,7 +105,7 @@ export function CustomTable({
                                                 </button>
                                             )}
 
-                                            {onDelete && (
+                                            {actions.includes("delete") && (
                                                 <button
                                                     type='button'
                                                     onClick={() =>
@@ -115,7 +116,7 @@ export function CustomTable({
                                                 </button>
                                             )}
                                         </div>
-                                    </td>
+                                    </motion.td>
                                 )}
                             </tr>
                         );

@@ -1,5 +1,6 @@
 {
     "preloader": "Loading",
+    "no_data": "No data available!",
     "sidebar_dashboard": "Dashboard",
     "sidebar_admins": "Admins",
     "sidebar_workers": "Workers",

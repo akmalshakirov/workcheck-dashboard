@@ -6,6 +6,8 @@ import {
     EyeOffIcon,
     Loader2Icon,
     UploadIcon,
+    UserRoundMinus,
+    UserRoundPen,
     UserRoundPlus,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -13,13 +15,12 @@ import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { baseURL } from "../../App";
+import { CustomTable } from "../../components/CustomTable";
 import { Modal } from "../../components/ui/Modal/Modal";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
-import Table from "../../components/ui/Table/Table";
 import PhoneInput from "../../helpers/FormatPhone";
 import { useAdmin } from "../../hooks/useAdmin";
 import { useApi } from "../../service/api/api";
-import { CustomTable } from "../../components/CustomTable";
 const MySwal = withReactContent(Swal);
 const theme = localStorage.getItem("isDark");
 
@@ -71,7 +72,15 @@ const DashboardAdmins = () => {
     const defaultList = [
         {
             header: t("admin_table_img"),
-            key: "image",
+            value: (item) => (
+                <img
+                    src={item.image}
+                    alt={item.image}
+                    className='size-15 rounded-full object-cover'
+                    draggable={false}
+                />
+            ),
+            key: "img",
         },
         {
             header: t("admin_table_name"),
@@ -434,6 +443,14 @@ const DashboardAdmins = () => {
                                 data={admins}
                                 onDelete={handleDelete}
                                 onEdit={handleGetAdminById}
+                                showIndex
+                                editIcon={
+                                    <UserRoundPen className='text-white' />
+                                }
+                                deleteIcon={
+                                    <UserRoundMinus className='text-white' />
+                                }
+                                actions={"edit delete"}
                             />
                         )}
                     </div>

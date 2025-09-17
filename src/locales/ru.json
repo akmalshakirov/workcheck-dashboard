@@ -1,5 +1,6 @@
 {
     "preloader": "Загрузка",
+    "no_data": "Данные отсутствуют!",
     "sidebar_dashboard": "Главная",
     "sidebar_admins": "Админы",
     "sidebar_workers": "Рабочие",
