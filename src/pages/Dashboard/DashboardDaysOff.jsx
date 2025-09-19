@@ -1,11 +1,13 @@
 import axios from "axios";
+import { CalendarCog, CalendarX2, CheckCircle, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import { baseURL } from "../../App";
 import { CustomTable } from "../../components/CustomTable";
+import { Button } from "../../components/ui/Button/Button";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
-import { useTranslation } from "react-i18next";
-import { CalendarCog, CalendarX2 } from "lucide-react";
+import AddDayOff from "../../helpers/modals/AddDayOff";
 
 const DashboardDaysOff = () => {
     const token = localStorage.getItem("token");
@@ -14,6 +16,7 @@ const DashboardDaysOff = () => {
     const [loading, setLoading] = useState(false);
     const { t } = useTranslation();
     const [addDayOffModal, setAddDayOffModal] = useState(false);
+    const [addDayOffLoading, setDayOffLoading] = useState(false);
 
     const getDayOffs = async () => {
         setLoading(true);
@@ -70,9 +73,20 @@ const DashboardDaysOff = () => {
                         <h1 className='text-2xl font-bold'>
                             {t("sidebar_day_offs")}
                         </h1>
-                        <button className='rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform'>
-                            Add day off
-                        </button>
+                        <div className='flex gap-2'>
+                            <Button
+                                onClick={(e) => alert(e)}
+                                size='sm'
+                                leftIcon={<PlusCircle size={18} />}
+                                rightIcon={<CheckCircle size={18} />}
+                                variant='ghost'
+                                loading={addDayOffLoading}>
+                                Add day off
+                            </Button>
+                            <button className='rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform'>
+                                Add day off
+                            </button>
+                        </div>
                     </div>
                     <div className='flex gap-2.5'>
                         <CustomTable
@@ -85,6 +99,10 @@ const DashboardDaysOff = () => {
                             deleteIcon={<CalendarX2 className='text-white' />}
                         />
                     </div>
+                    <AddDayOff
+                        visible={addDayOffModal}
+                        setVisible={setAddDayOffModal}
+                    />
                 </>
             )}
         </div>
