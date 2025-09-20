@@ -19,13 +19,13 @@ const variantClasses: Record<ButtonVariant, string> = {
     secondary:
         "bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500 active:bg-gray-800",
     outline:
-        "border-2 border-blue-600 text-blue-600 hover:bg-blue-50 focus:ring-blue-500 active:bg-blue-100",
+        "border-2 border-blue-600 text-blue-600 hover:bg-blue-50 focus:ring-blue-500 active:bg-blue-100 focus:border-transparent",
     ghost: "text-blue-600 hover:bg-blue-50 focus:ring-blue-500 active:bg-blue-100",
     danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 active:bg-red-800",
 };
 
 const sizeClasses: Record<ButtonSize, string> = {
-    sm: "px-3 py-1.5 text-sm",
+    sm: "px-3 py-2 text-sm",
     md: "px-4 py-2 text-base",
     lg: "px-6 py-3 text-lg",
     xl: "px-8 py-4 text-xl",

@@ -16,6 +16,7 @@ import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { baseURL } from "../../App";
 import { CustomTable } from "../../components/CustomTable";
+import { Button } from "../../components/ui/Button/Button";
 import { Modal } from "../../components/ui/Modal/Modal";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import PhoneInput from "../../helpers/FormatPhone";
@@ -100,7 +101,8 @@ const DashboardAdmins = () => {
         },
         {
             header: t("admin_table_branch"),
-            value: (item) => item?.name,
+            key: "branchId",
+            value: (item) => item?.branch?.name,
         },
     ];
 
@@ -416,27 +418,17 @@ const DashboardAdmins = () => {
                         <h1 className='text-2xl font-bold'>
                             {t("sidebar_admins")}
                         </h1>
-                        <button
-                            className='border flex items-center gap-2 rounded-lg border-gray-500/70 p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform'
+                        <Button
+                            size='sm'
+                            leftIcon={<UserRoundPlus size={18} />}
                             onClick={() => setCreateAdminModal(true)}>
-                            <UserRoundPlus size={20} />
                             {t("add_admin")}
-                        </button>
+                        </Button>
                     </div>
                     <div>
                         {!admins || admins.length === 0 ? (
                             <h1>{t("no_admins_error")}</h1>
                         ) : (
-                            // <Table
-                            //     columns={defaultList}
-                            //     enableAnimation
-                            //     loading={preloader}
-                            //     data={admins}
-                            //     list={defaultList}
-                            //     deleteOnClick={handleDelete}
-                            //     editOnClick={handleGetAdminById}
-                            //     actions={"UPDATE, DELETE"}
-                            // />
                             <CustomTable
                                 columns={defaultList}
                                 loading={preloader}

@@ -75,17 +75,12 @@ const DashboardDaysOff = () => {
                         </h1>
                         <div className='flex gap-2'>
                             <Button
-                                onClick={(e) => alert(e)}
                                 size='sm'
                                 leftIcon={<PlusCircle size={18} />}
-                                rightIcon={<CheckCircle size={18} />}
-                                variant='ghost'
+                                variant='primary'
                                 loading={addDayOffLoading}>
                                 Add day off
                             </Button>
-                            <button className='rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform'>
-                                Add day off
-                            </button>
                         </div>
                     </div>
                     <div className='flex gap-2.5'>
