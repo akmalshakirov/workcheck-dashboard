@@ -76,10 +76,8 @@ const DashboardDaysOff = () => {
                         <div className='flex gap-2'>
                             <Button
                                 size='sm'
-                                leftIcon={<PlusCircle size={18} />}
-                                variant='primary'
-                                loading={addDayOffLoading}>
-                                Add day off
+                                leftIcon={<PlusCircle size={18} />}>
+                                {t("add_day_off")}
                             </Button>
                         </div>
                     </div>

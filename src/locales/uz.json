@@ -61,5 +61,6 @@
     "break_off_name": "Tanaffusni nomi",
     "break_off_start_time": "Boshlash vaqti",
     "break_off_end_time": "Tugash vaqti",
-    "break_off_lateAllow": "Kech qolishga ruxsat"
+    "break_off_lateAllow": "Kech qolishga ruxsat",
+    "add_day_off": "Dam olish kunini qoʼshish"
 }
