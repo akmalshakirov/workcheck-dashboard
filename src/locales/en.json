@@ -1,5 +1,6 @@
 {
     "preloader": "Loading",
+    "sending": "Sending",
     "no_data": "No data available!",
     "sidebar_dashboard": "Dashboard",
     "sidebar_admins": "Admins",
@@ -62,5 +63,6 @@
     "break_off_start_time": "Start time",
     "break_off_end_time": "End time",
     "break_off_lateAllow": "Permission to stay late",
-    "add_day_off": "Add day off"
+    "add_day_off": "Add day off",
+    "add_day_off_name": "Day off name"
 }

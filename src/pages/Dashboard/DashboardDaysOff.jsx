@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CalendarCog, CalendarX2, CheckCircle, PlusCircle } from "lucide-react";
+import { CalendarCog, CalendarX2, PlusCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
@@ -7,7 +7,7 @@ import { baseURL } from "../../App";
 import { CustomTable } from "../../components/CustomTable";
 import { Button } from "../../components/ui/Button/Button";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
-import AddDayOff from "../../helpers/modals/AddDayOff";
+import AddDayOffModal from "../../helpers/modals/AddDayOffModal";
 
 const DashboardDaysOff = () => {
     const token = localStorage.getItem("token");
@@ -16,7 +16,6 @@ const DashboardDaysOff = () => {
     const [loading, setLoading] = useState(false);
     const { t } = useTranslation();
     const [addDayOffModal, setAddDayOffModal] = useState(false);
-    const [addDayOffLoading, setDayOffLoading] = useState(false);
 
     const getDayOffs = async () => {
         setLoading(true);
@@ -33,7 +32,7 @@ const DashboardDaysOff = () => {
             Swal.fire({
                 title: error?.response?.data?.error || error?.name,
                 icon: "error",
-                theme: theme ? "light" : "dark",
+                theme: theme == "true" ? "dark" : "light",
             });
         } finally {
             setLoading(false);
@@ -75,7 +74,7 @@ const DashboardDaysOff = () => {
                         </h1>
                         <div className='flex gap-2'>
                             <Button
-                                size='sm'
+                                onClick={() => setAddDayOffModal(true)}
                                 leftIcon={<PlusCircle size={18} />}>
                                 {t("add_day_off")}
                             </Button>
@@ -92,7 +91,8 @@ const DashboardDaysOff = () => {
                             deleteIcon={<CalendarX2 className='text-white' />}
                         />
                     </div>
-                    <AddDayOff
+                    <AddDayOffModal
+                        modalTitle={t("add_day_off")}
                         visible={addDayOffModal}
                         setVisible={setAddDayOffModal}
                     />

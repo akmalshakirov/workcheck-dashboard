@@ -1,5 +1,6 @@
 {
     "preloader": "Загрузка",
+    "sending": "Отправляется",
     "no_data": "Данные отсутствуют!",
     "sidebar_dashboard": "Главная",
     "sidebar_admins": "Админы",
@@ -62,5 +63,6 @@
     "break_off_start_time": "Время начала",
     "break_off_end_time": "Время окончания",
     "break_off_lateAllow": "Разрешение остаться допоздна",
-    "add_day_off": "Добавить выходной"
+    "add_day_off": "Добавить выходной",
+    "add_day_off_name": "Название выходного дня"
 }

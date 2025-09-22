@@ -1,5 +1,6 @@
 {
     "preloader": "Yuklanmoqda",
+    "sending": "Yuborilmoqda",
     "no_data": "Maʼlumotlar mavjud emas!",
     "sidebar_dashboard": "Bosh sahifa",
     "sidebar_admins": "Adminlar",
@@ -62,5 +63,6 @@
     "break_off_start_time": "Boshlash vaqti",
     "break_off_end_time": "Tugash vaqti",
     "break_off_lateAllow": "Kech qolishga ruxsat",
-    "add_day_off": "Dam olish kunini qoʼshish"
+    "add_day_off": "Dam olish kunini qoʼshish",
+    "add_day_off_name": "Dam olish kunining nomi"
 }

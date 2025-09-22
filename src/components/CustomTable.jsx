@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { t } from "i18next";
 import { useAdmin } from "../hooks/useAdmin";
+import { Button } from "./ui/Button/Button";
 
 export function CustomTable({
     data,
@@ -97,23 +98,24 @@ export function CustomTable({
                                         className='px-4 py-3 text-right'>
                                         <div className='inline-flex items-center gap-2'>
                                             {actions.includes("edit") && (
-                                                <button
+                                                <Button
                                                     type='button'
-                                                    onClick={() => onEdit(item)}
-                                                    className='px-2.5 py-1.5 border border-blue-600 bg-blue-600/80 active:bg-blue-600 hover:bg-blue-600 rounded-lg transition active:scale-95 dark:bg-blue-600/40'>
+                                                    onClick={() =>
+                                                        onEdit(item)
+                                                    }>
                                                     {editIcon}
-                                                </button>
+                                                </Button>
                                             )}
 
                                             {actions.includes("delete") && (
-                                                <button
+                                                <Button
                                                     type='button'
                                                     onClick={() =>
                                                         onDelete(item)
                                                     }
-                                                    className='px-2.5 py-1.5 border border-red-600 bg-red-600/80 active:bg-red-600 hover:bg-red-600 rounded-lg transition active:scale-95 dark:bg-red-600/40'>
+                                                    variant='danger'>
                                                     {deleteIcon}
-                                                </button>
+                                                </Button>
                                             )}
                                         </div>
                                     </motion.td>

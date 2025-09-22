@@ -4,7 +4,6 @@ import {
     Eye,
     EyeOff,
     EyeOffIcon,
-    Loader2Icon,
     UploadIcon,
     UserRoundMinus,
     UserRoundPen,
@@ -217,7 +216,7 @@ const DashboardAdmins = () => {
     };
 
     // Delete admin
-    const handleDelete = async (id) => {
+    const handleDelete = async (item) => {
         const result = await MySwal.fire({
             title: t("modal_admin_delete_title"),
             text: t("modal_admin_delete_desc"),
@@ -240,7 +239,7 @@ const DashboardAdmins = () => {
             });
             try {
                 const response = await axios.delete(
-                    `${baseURL}/admin/${id}/delete`,
+                    `${baseURL}/admin/${item.id}/delete`,
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
@@ -419,8 +418,7 @@ const DashboardAdmins = () => {
                             {t("sidebar_admins")}
                         </h1>
                         <Button
-                            size='sm'
-                            leftIcon={<UserRoundPlus size={18} />}
+                            leftIcon={<UserRoundPlus />}
                             onClick={() => setCreateAdminModal(true)}>
                             {t("add_admin")}
                         </Button>
@@ -594,38 +592,23 @@ const DashboardAdmins = () => {
                                 </div>
                             </div>
                             <div className='flex justify-end gap-3 mt-4'>
-                                <button
-                                    className={`py-2 px-2.5 rounded-lg border-none cursor-pointer bg-red-600/80 hover:bg-red-600 duration-150 text-white w-max active:scale-[0.95] will-change-transform ${
-                                        createAdminLoading
-                                            ? "opacity-30 pointer-events-none"
-                                            : ""
-                                    }`}
-                                    onClick={() => setCreateAdminModal(false)}
-                                    type='button'
-                                    disabled={createAdminLoading}>
-                                    {t("close")}
-                                </button>
-                                <button
-                                    className={`py-2 px-2.5 rounded-lg text-white border-none cursor-pointer bg-[#126ac9] duration-150 hover:bg-[#007bff] w-max active:scale-[0.95] will-change-transform ${
-                                        createAdminLoading
-                                            ? "opacity-30 pointer-events-none"
-                                            : ""
-                                    }`}
+                                {!createAdminLoading && (
+                                    <Button
+                                        variant='danger'
+                                        onClick={() =>
+                                            setCreateAdminModal(false)
+                                        }
+                                        type='button'>
+                                        {t("close")}
+                                    </Button>
+                                )}
+                                <Button
                                     type='submit'
-                                    disabled={createAdminLoading}>
-                                    {createAdminLoading ? (
-                                        <>
-                                            <Loader2Icon
-                                                className='animate-spin'
-                                                style={{
-                                                    animationDuration: "1.5s",
-                                                }}
-                                            />
-                                        </>
-                                    ) : (
-                                        t("ok")
-                                    )}
-                                </button>
+                                    loading={createAdminLoading}>
+                                    {createAdminLoading
+                                        ? t("sending")
+                                        : t("ok")}
+                                </Button>
                             </div>
                         </form>
                     </Modal>
@@ -839,41 +822,25 @@ const DashboardAdmins = () => {
                                             </div>
                                         </div>
                                         <div className='flex justify-end gap-3 mt-4'>
-                                            <button
-                                                type='button'
-                                                className={`py-2 px-2.5 rounded-lg border-none cursor-pointer bg-red-600/80 hover:bg-red-600 duration-150 text-white w-max active:scale-[0.95] will-change-transform ${
-                                                    editLoading
-                                                        ? "opacity-30 pointer-events-none"
-                                                        : ""
-                                                }`}
-                                                onClick={() =>
-                                                    setIsEditModalOpen(false)
-                                                }
-                                                disabled={editLoading}>
-                                                {t("cancel")}
-                                            </button>
-                                            <button
-                                                className={`py-2 px-2.5 rounded-lg text-white border-none cursor-pointer bg-[#126ac9] duration-150 hover:bg-[#007bff] w-max active:scale-[0.95] will-change-transform ${
-                                                    editLoading
-                                                        ? "opacity-30 pointer-events-none"
-                                                        : ""
-                                                }`}
+                                            {!editLoading && (
+                                                <Button
+                                                    variant='danger'
+                                                    type='button'
+                                                    onClick={() =>
+                                                        setIsEditModalOpen(
+                                                            false
+                                                        )
+                                                    }>
+                                                    {t("cancel")}
+                                                </Button>
+                                            )}
+                                            <Button
                                                 type='submit'
-                                                disabled={editLoading}>
-                                                {editLoading ? (
-                                                    <div className='flex items-center'>
-                                                        <Loader2Icon
-                                                            className='animate-spin'
-                                                            style={{
-                                                                animationDuration:
-                                                                    "1.5s",
-                                                            }}
-                                                        />
-                                                    </div>
-                                                ) : (
-                                                    t("ok")
-                                                )}
-                                            </button>
+                                                loading={editLoading}>
+                                                {editLoading
+                                                    ? t("sending")
+                                                    : t("ok")}
+                                            </Button>
                                         </div>
                                     </form>
                                 )}

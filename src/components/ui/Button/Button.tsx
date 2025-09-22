@@ -35,7 +35,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     (
         {
             variant = "primary",
-            size = "md",
+            size = "sm",
             loading = false,
             fullWidth = false,
             leftIcon,
