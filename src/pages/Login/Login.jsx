@@ -77,7 +77,7 @@ const Login = () => {
                     className='space-y-5 max-md:space-y-3 max-sm:space-y-2'>
                     <div>
                         <label
-                            className='text-sm font-medium text-gray-700'
+                            className='font-medium text-gray-700'
                             htmlFor='username'>
                             Username
                         </label>
@@ -97,7 +97,7 @@ const Login = () => {
                     </div>
                     <div className='relative'>
                         <label
-                            className='block text-sm font-medium text-gray-700'
+                            className='block font-medium text-gray-700'
                             htmlFor='password'>
                             Parol
                         </label>
@@ -119,7 +119,7 @@ const Login = () => {
                             title='Show password'
                             type='button'
                             onClick={() => setShowPassword(!showPassword)}
-                            className='absolute top-1/2 mt-1 right-2 text-gray-500 hover:text-gray-700'
+                            className='absolute top-1/2 mt-1.5 right-2 text-gray-500 hover:text-gray-700'
                             tabIndex={-1}
                             disabled={loading}>
                             {showPassword ? (
