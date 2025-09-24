@@ -137,11 +137,6 @@ const DashboardBreakOffs = () => {
         }
     };
 
-    const handleEdit = (item) => {
-        setEditItem(item);
-        setEditBreakOffModal(true);
-    };
-
     useEffect(() => {
         getAllBreakOffs();
     }, []);
@@ -184,10 +179,10 @@ const DashboardBreakOffs = () => {
                 data={breakOffs}
                 loading={loading}
                 onDelete={handleDelete}
-                onEdit={handleEdit}
                 deleteIcon={<Trash size={20} className='text-white' />}
                 editIcon={<PencilLine size={20} className='text-white' />}
                 showIndex
+                actions={"delete"}
             />
         </>
     );

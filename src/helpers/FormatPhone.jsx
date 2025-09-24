@@ -7,6 +7,7 @@ const PhoneInput = ({
     required = false,
     name = "",
     placeholder = "",
+    disabled = false,
 }) => {
     const [formattedValue, setFormattedValue] = useState("");
 
@@ -57,7 +58,8 @@ const PhoneInput = ({
                 name={name}
                 value={formattedValue}
                 onChange={handleChange}
-                className='w-full border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600 mb-2'
+                disabled={disabled}
+                className='w-full border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600 disabled:opacity-50 disabled:cursor-not-allowed'
                 required={required}
                 placeholder={placeholder ? placeholder : "+998-(xx)-xxx-xx-xx"}
                 autoComplete='tel'

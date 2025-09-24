@@ -1,10 +1,11 @@
 import axios from "axios";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, LoaderCircleIcon } from "lucide-react";
+import { Eye, EyeOff, LoaderCircleIcon, LogIn } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { baseURL } from "../../App";
+import { Button } from "../../components/ui/Button/Button";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -86,7 +87,7 @@ const Login = () => {
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
-                            className='w-full px-4 py-2 border outline-none transition rounded-lg focus:border-blue-500'
+                            className='border border-gray-500/70 rounded-lg outline-none focus:ring-blue-400 focus:ring-1 px-4 py-2 mt-2 transition disabled:opacity-50 w-full'
                             autoComplete='username'
                             minLength={3}
                             maxLength={15}
@@ -106,7 +107,7 @@ const Login = () => {
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
-                            className='w-full px-4 py-2 border outline-none transition rounded-lg focus:border-blue-500'
+                            className='border border-gray-500/70 rounded-lg outline-none focus:ring-blue-400 focus:ring-1 px-4 py-2 mt-2 transition disabled:opacity-50 w-full'
                             autoComplete='new-password'
                             minLength={8}
                             maxLength={15}
@@ -118,7 +119,7 @@ const Login = () => {
                             title='Show password'
                             type='button'
                             onClick={() => setShowPassword(!showPassword)}
-                            className='absolute top-8 ml-2 right-3 text-gray-500 hover:text-gray-700'
+                            className='absolute top-1/2 mt-1 right-2 text-gray-500 hover:text-gray-700'
                             tabIndex={-1}
                             disabled={loading}>
                             {showPassword ? (
@@ -142,19 +143,19 @@ const Login = () => {
                                 />
                             </span>
                         ) : (
-                            <button
-                                name='Submit button'
-                                aria-label='Submit button'
-                                title='Submit'
-                                type='submit'
-                                className={`w-full bg-blue-400 text-white py-2 rounded-lg transition duration-300 flex items-center justify-center ${
-                                    loading
-                                        ? "opacity-60 cursor-not-allowed!"
-                                        : "hover:bg-blue-600"
-                                }`}
-                                disabled={loading}>
-                                Kirish
-                            </button>
+                            <>
+                                <Button
+                                    name='Submit button'
+                                    aria-label='Submit button'
+                                    title='Submit'
+                                    type='submit'
+                                    loading={loading}
+                                    fullWidth
+                                    className='py-2'
+                                    leftIcon={<LogIn />}>
+                                    Kirish
+                                </Button>
+                            </>
                         )}
                     </div>
                 </form>

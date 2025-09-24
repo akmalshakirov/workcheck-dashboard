@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import { useAdmin } from "../../hooks/useAdmin";
 import { useApi } from "../../service/api/api";
+import { Button } from "../../components/ui/Button/Button";
+import PhoneInput from "../../helpers/FormatPhone";
 
 const DashboardProfile = () => {
     const { admin, setAdmin, loading } = useAdmin();
@@ -195,27 +197,23 @@ const DashboardProfile = () => {
                                 <h3 className='text-2xl font-semibold text-gray-900 dark:text-white'>
                                     {t("edit_profile")}
                                 </h3>
-                                <button
+                                <Button
                                     type='button'
                                     onClick={toggleEdit}
-                                    disabled={isSubmitting || loading}
-                                    className={`flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 px-4 py-2 not-disabled:active:scale-95 will-change-transform ${
-                                        isEditing
-                                            ? "bg-red-500 hover:bg-red-600"
-                                            : "bg-blue-600 hover:bg-blue-700"
-                                    } text-white rounded-lg font-medium`}>
+                                    loading={isSubmitting || loading}
+                                    variant={isEditing ? "danger" : "primary"}>
                                     {isEditing ? (
-                                        <>
+                                        <div className='flex items-center gap-2'>
                                             <XIcon size={16} />
                                             {t("cancel")}
-                                        </>
+                                        </div>
                                     ) : (
-                                        <>
+                                        <div className='flex items-center gap-2'>
                                             <Edit3 size={16} />
                                             {t("edit")}
-                                        </>
+                                        </div>
                                     )}
-                                </button>
+                                </Button>
                             </div>
 
                             <form onSubmit={handleSubmit} className='space-y-6'>
@@ -233,7 +231,7 @@ const DashboardProfile = () => {
                                             value={adminData.name ?? ""}
                                             onChange={handleInputChange}
                                             disabled={isFormDisabled}
-                                            className='w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none'
+                                            className='w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none'
                                             required
                                             autoComplete='name'
                                             aria-required='true'
@@ -253,7 +251,7 @@ const DashboardProfile = () => {
                                             value={adminData.username ?? ""}
                                             onChange={handleInputChange}
                                             disabled={isFormDisabled}
-                                            className='w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none'
+                                            className='w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none'
                                             required
                                             autoComplete='username'
                                             aria-required='true'
@@ -308,45 +306,43 @@ const DashboardProfile = () => {
                                             className='block text-base font-medium text-gray-700 dark:text-gray-300 mb-2'>
                                             {t("modal_admin_phone")}
                                         </label>
-                                        <input
-                                            id='phone'
-                                            type='tel'
+                                        <PhoneInput
+                                            disabled={isFormDisabled}
                                             name='phone'
+                                            required
                                             value={adminData.phone ?? ""}
                                             onChange={handleInputChange}
-                                            disabled={isFormDisabled}
-                                            className='w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-900 dark:text-white bg-white dark:bg-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed outline-none'
-                                            pattern='^\d{9}$'
-                                            autoComplete='tel'
                                         />
                                     </div>
 
-                                    {isEditing && (
-                                        <div className='flex'>
-                                            <button
-                                                type='submit'
-                                                disabled={
-                                                    isSubmitting ||
-                                                    !adminData.name ||
-                                                    !adminData.username
-                                                }
-                                                className='mt-auto w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-3 not-disabled:active:scale-95 will-change-transform'>
-                                                {isSubmitting ? (
-                                                    <>
-                                                        <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin' />
-                                                        <span>
-                                                            {t("saving")}
-                                                        </span>
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Save size={20} />
-                                                        <span>{t("save")}</span>
-                                                    </>
-                                                )}
-                                            </button>
-                                        </div>
-                                    )}
+                                    <div
+                                        className={`flex duration-75 ${
+                                            isEditing
+                                                ? "scale-100 pointer-events-auto opacity-100"
+                                                : "scale-95 pointer-events-none opacity-0"
+                                        }`}>
+                                        <Button
+                                            type='submit'
+                                            loading={
+                                                isSubmitting ||
+                                                !adminData.name ||
+                                                !adminData.username
+                                            }
+                                            fullWidth
+                                            className='mt-auto h-[62%]'>
+                                            {isSubmitting ? (
+                                                <div className='flex items-center gap-2'>
+                                                    <div className='w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin' />
+                                                    <span>{t("saving")}</span>
+                                                </div>
+                                            ) : (
+                                                <div className='flex items-center gap-2'>
+                                                    <Save size={20} />
+                                                    <span>{t("save")}</span>
+                                                </div>
+                                            )}
+                                        </Button>
+                                    </div>
                                 </div>
                             </form>
                         </motion.div>

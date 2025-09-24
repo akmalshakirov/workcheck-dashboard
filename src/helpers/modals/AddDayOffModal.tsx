@@ -1,7 +1,7 @@
-import { FormEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "../../components/ui/Button/Button";
 import { Modal } from "../../components/ui/Modal/Modal";
-import { useTranslation } from "react-i18next";
 
 type AddDayOffProps = {
     visible: boolean;
@@ -16,6 +16,10 @@ const AddDayOffModal = ({
 }: AddDayOffProps) => {
     const { t } = useTranslation();
     const [addDayOffLoading, setDayOffLoading] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(
+        new Date().getDay().toString()
+    );
+
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
         setDayOffLoading(true);
@@ -24,14 +28,19 @@ const AddDayOffModal = ({
             setDayOffLoading(false);
         }, 7777);
     };
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setSelectedDate(e.target.value as any);
+    };
+
     return (
-        <Modal visible={visible} title={modalTitle} width='50'>
-            <form onSubmit={handleSubmit}>
-                <label className='flex items-center gap-2'>
+        <Modal visible={visible} title={modalTitle} width='40'>
+            <form onSubmit={handleSubmit} className='flex flex-col gap-2'>
+                <label className='flex flex-col gap-2'>
                     {t("add_day_off_name")}:
                     <input
                         type='text'
-                        className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition disabled:opacity-50'
+                        className='border border-gray-500/70 rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition disabled:opacity-50'
                         minLength={3}
                         maxLength={20}
                         name='day-off-name'
@@ -41,8 +50,25 @@ const AddDayOffModal = ({
                         title={t("add_day_off_name")}
                     />
                 </label>
-                <div></div>
-                <div className='flex justify-end gap-2 mt-2'>
+                <label className='flex flex-col gap-2'>
+                    Dam olish kunini sana(lar):
+                    <input
+                        multiple
+                        onChange={handleChange}
+                        type='date'
+                        name='dates'
+                        className='border border-gray-500/70 rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition disabled:opacity-50'
+                    />
+                </label>
+                <span
+                    className={`mt-2 w-max border rounded-lg p-2 border-blue-800/50 bg-blue-200 transition-all duration-150 ${
+                        selectedDate.length > 0
+                            ? "opacity-100 pointer-events-auto"
+                            : "opacity-0 pointer-events-none"
+                    }`}>
+                    {selectedDate}
+                </span>
+                <div className='flex justify-end gap-2 mt-5'>
                     {!addDayOffLoading && (
                         <Button
                             variant='danger'
