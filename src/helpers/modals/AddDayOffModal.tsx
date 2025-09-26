@@ -1,5 +1,8 @@
+import axios, { AxiosResponse } from "axios";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import { baseURL } from "../../App";
 import { Button } from "../../components/ui/Button/Button";
 import { Modal } from "../../components/ui/Modal/Modal";
 
@@ -15,22 +18,38 @@ const AddDayOffModal = ({
     modalTitle,
 }: AddDayOffProps) => {
     const { t } = useTranslation();
-    const [addDayOffLoading, setDayOffLoading] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(
-        new Date().getDay().toString()
-    );
+    const [addDayOffLoading, setDayOffLoading] = useState<boolean>(false);
+    const [dayOffData, setDayOffData] = useState<string>("");
+    const [selectedDate, setSelectedDate] = useState<string[]>([]);
+    const token = localStorage.getItem("token");
 
-    const handleSubmit = (e: FormEvent) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setDayOffLoading(true);
-        setTimeout(() => {
-            setVisible(false);
+        const formData = new FormData(e.target as HTMLFormElement);
+        try {
+            const response = await axios.post<AxiosResponse>(
+                `${baseURL}/day-off/create`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    formData,
+                }
+            );
+            if (response.status === 201) {
+                toast.success(response.data as any);
+            }
+        } catch (error) {
+            console.log(error);
+        } finally {
             setDayOffLoading(false);
-        }, 7777);
+        }
     };
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setSelectedDate(e.target.value as any);
+        setSelectedDate([e.target.value]);
+        console.log(e.target.value);
     };
 
     return (
@@ -53,21 +72,24 @@ const AddDayOffModal = ({
                 <label className='flex flex-col gap-2'>
                     Dam olish kunini sana(lar):
                     <input
-                        multiple
+                        value={selectedDate}
                         onChange={handleChange}
                         type='date'
                         name='dates'
                         className='border border-gray-500/70 rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition disabled:opacity-50'
                     />
                 </label>
-                <span
-                    className={`mt-2 w-max border rounded-lg p-2 border-blue-800/50 bg-blue-200 transition-all duration-150 ${
-                        selectedDate.length > 0
-                            ? "opacity-100 pointer-events-auto"
-                            : "opacity-0 pointer-events-none"
-                    }`}>
-                    {selectedDate}
-                </span>
+                {selectedDate.map((d, index) => (
+                    <span
+                        key={index}
+                        className={`mt-2 w-max border rounded-lg p-2 border-blue-800/50 bg-blue-200 transition-all duration-150 ${
+                            selectedDate?.length > 0
+                                ? "opacity-100 pointer-events-auto"
+                                : "opacity-0 pointer-events-none"
+                        }`}>
+                        {d}
+                    </span>
+                ))}
                 <div className='flex justify-end gap-2 mt-5'>
                     {!addDayOffLoading && (
                         <Button

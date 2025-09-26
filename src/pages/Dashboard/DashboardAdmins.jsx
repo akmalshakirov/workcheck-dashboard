@@ -110,6 +110,7 @@ const DashboardAdmins = () => {
             ...prev,
             phone: value,
         }));
+        console.log(value);
     };
 
     const fetchAdmins = useCallback(() => {
@@ -192,10 +193,8 @@ const DashboardAdmins = () => {
     const handleEdit = async (e) => {
         e.preventDefault();
         setEditLoading(true);
-        const formData = new FormData();
-        Object.entries(editData).forEach(([key, val]) => {
-            if (val) formData.append(key, val);
-        });
+        const formData = new FormData(e.target);
+        // Admin phone fixed
 
         try {
             const response = await axios.put(
