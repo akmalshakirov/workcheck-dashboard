@@ -39,6 +39,18 @@ const DashboardDaysOff = () => {
         }
     };
 
+    const handleDelete = async (item) => {
+        alert(item.id);
+        // try {
+        //     const response = await axios.delete(
+        //         `${baseURL}/day-off/${item.id}/delete`
+        //     )
+
+        // } catch (error) {
+        //     console.log(error)
+        // }
+    };
+
     const columns = [
         {
             header: "Day Off Name",
@@ -86,15 +98,17 @@ const DashboardDaysOff = () => {
                             columns={columns}
                             showIndex
                             className='w-full'
-                            actions={"edit delete"}
+                            actions={"delete"}
                             editIcon={<CalendarCog className='text-white' />}
                             deleteIcon={<CalendarX2 className='text-white' />}
+                            onDelete={handleDelete}
                         />
                     </div>
                     <AddDayOffModal
                         modalTitle={t("add_day_off")}
                         visible={addDayOffModal}
                         setVisible={setAddDayOffModal}
+                        getAll={getDayOffs}
                     />
                 </>
             )}

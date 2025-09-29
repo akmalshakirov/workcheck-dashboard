@@ -1,6 +1,6 @@
 import axios from "axios";
 import { X } from "lucide-react";
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { baseURL } from "../../App";
@@ -11,13 +11,15 @@ type AddDayOffProps = {
     visible: boolean;
     setVisible: (v: boolean) => void;
     modalTitle: string;
+    getAll: () => void;
 };
 
-const AddDayOffModal = ({
+const AddDayOffModal: FC<AddDayOffProps> = ({
     visible,
     setVisible,
     modalTitle,
-}: AddDayOffProps) => {
+    getAll,
+}) => {
     const { t } = useTranslation();
     const [addDayOffLoading, setDayOffLoading] = useState<boolean>(false);
     const [selectedDate, setSelectedDate] = useState<string>("");
@@ -25,25 +27,31 @@ const AddDayOffModal = ({
     const [dayOffName, setDayOffName] = useState<string>("");
     const token = localStorage.getItem("token");
 
-    const handleSubmit = async (e: FormEvent) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setDayOffLoading(true);
-        const formData = new FormData();
-        formData.append("name", dayOffName);
-        dates.map((d) => formData.append("dates", d));
 
         try {
-            const response = await axios.post(`${baseURL}/day-off/create`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
+            const response = await axios.post(
+                `${baseURL}/day-off/create`,
+                {
+                    name: dayOffName,
+                    dates,
                 },
-                formData,
-            });
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
             if (response.status === 201) {
-                toast.success(response.data as any);
+                toast.success(response.data.message as string);
+                setVisible(false);
+                getAll();
             }
         } catch (error) {
-            console.log(error);
+            toast.error(error as any);
         } finally {
             setDayOffLoading(false);
         }
@@ -67,7 +75,7 @@ const AddDayOffModal = ({
     };
 
     const handleRemoveDate = (d: string) => {
-        setDates((prev) => prev.filter((x) => x !== d));
+        return setDates((prev) => prev.filter((x) => x !== d));
     };
 
     const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -84,13 +92,14 @@ const AddDayOffModal = ({
                         className='border border-gray-500/70 rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition disabled:opacity-50'
                         minLength={3}
                         maxLength={20}
-                        name='day-off-name'
+                        name='name'
                         required
                         aria-required
                         disabled={addDayOffLoading}
                         title={t("add_day_off_name")}
                         value={dayOffName}
                         onChange={handleInputChange}
+                        autoComplete='on'
                     />
                 </label>
                 <label className='flex flex-col gap-2'>
@@ -104,6 +113,7 @@ const AddDayOffModal = ({
                         className='border border-gray-500/70 rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition disabled:opacity-50'
                         required
                         aria-required
+                        autoComplete='off'
                     />
                 </label>
                 <div className='flex items-center flex-wrap gap-3'>
@@ -114,6 +124,7 @@ const AddDayOffModal = ({
                             {d}
                             <button
                                 className='p-0.5 border rounded-lg border-blue-500 bg-blue-300 active:bg-blue-400 transition'
+                                type='reset'
                                 onClick={() => handleRemoveDate(d)}>
                                 <X size={19} />
                             </button>
