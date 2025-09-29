@@ -29,6 +29,9 @@ const DashboardDaysOff = () => {
                 setDayOffs(response.data.dayOffs);
             }
         } catch (error) {
+            if (error.response.status === 404) {
+                return setDayOffs([]);
+            }
             Swal.fire({
                 title: error?.response?.data?.error || error?.name,
                 icon: "error",
@@ -40,15 +43,53 @@ const DashboardDaysOff = () => {
     };
 
     const handleDelete = async (item) => {
-        alert(item.id);
-        // try {
-        //     const response = await axios.delete(
-        //         `${baseURL}/day-off/${item.id}/delete`
-        //     )
+        const result = await Swal.fire({
+            title: `Siz ${item.name} nomli dam olish kunini o'chirmoqchimisiz?`,
+            icon: "warning",
+            allowOutsideClick: true,
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: t("ok2"),
+            cancelButtonText: t("cancel"),
+            theme: theme == "true" ? "dark" : "light",
+        });
 
-        // } catch (error) {
-        //     console.log(error)
-        // }
+        if (result.isConfirmed) {
+            Swal.fire({
+                title: t("sending"),
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+                theme: theme == "true" ? "dark" : "light",
+            });
+
+            try {
+                const response = await axios.delete(
+                    `${baseURL}/day-offs/${item.id}/delete`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                Swal.fire({
+                    icon: "success",
+                    title: response.data.message,
+                    theme: theme == "true" ? "dark" : "light",
+                });
+            } catch (error) {
+                Swal.fire({
+                    icon: "error",
+                    title: error?.response?.data?.error || error?.name,
+                    theme: theme == "true" ? "dark" : "light",
+                });
+            } finally {
+                getDayOffs();
+            }
+        }
     };
 
     const columns = [

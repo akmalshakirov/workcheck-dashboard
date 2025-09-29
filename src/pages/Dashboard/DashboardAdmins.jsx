@@ -230,7 +230,7 @@ const DashboardAdmins = () => {
 
         if (result.isConfirmed) {
             Swal.fire({
-                title: t("preloader"),
+                title: t("sending"),
                 allowOutsideClick: false,
                 didOpen: () => {
                     Swal.showLoading();
