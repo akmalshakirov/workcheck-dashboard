@@ -30,7 +30,7 @@
     "modal_admin_password": "Пароль админа",
     "modal_admin_update": "Редактировать админа",
     "moda_admin_update_image": "Фото админа",
-    "modal_admin_delete_title": "Вы хотите удалить этого админа?",
+    "modal_admin_delete_title": "Вы хотите удалить администратора по имени {{}}?",
     "modal_admin_delete_desc": "Это действие не может быть отменено!",
     "footer_creator": "Создатель сайта",
     "admin_table_img": "Фото",

@@ -39,7 +39,6 @@ const DashboardAdmins = () => {
     const lang = localStorage.getItem("lang");
     const { t } = useTranslation();
     const { branch } = useAdmin();
-
     const [admins, setAdmins] = useState([]);
     const [preloader, setPreloader] = useState(false);
     const [createAdminModal, setCreateAdminModal] = useState(false);
@@ -110,7 +109,6 @@ const DashboardAdmins = () => {
             ...prev,
             phone: value,
         }));
-        console.log(value);
     };
 
     const fetchAdmins = useCallback(() => {
@@ -131,10 +129,10 @@ const DashboardAdmins = () => {
     const createAdmin = async (e) => {
         e.preventDefault();
         setCreateAdminLoading(true);
-        const formData = new FormData(e.target);
-        // Object.entries(adminData).forEach(([key, val]) => {
-        //     if (val) formData.append(key, val);
-        // });
+        const formData = new FormData();
+        Object.entries(adminData).forEach(([key, val]) => {
+            if (val) formData.append(key, val);
+        });
         // difference e.target and this code is on the phone format,
         // like this:
         // e.target: (99)-999-99-99 and
@@ -158,6 +156,7 @@ const DashboardAdmins = () => {
             }
         } catch (error) {
             showSwal("error", error?.response?.data?.error);
+            setAdminData(defaultAdminData);
         } finally {
             setCreateAdminLoading(false);
             setCreateAdminModal(false);
@@ -217,7 +216,9 @@ const DashboardAdmins = () => {
     // Delete admin
     const handleDelete = async (item) => {
         const result = await MySwal.fire({
-            title: t("modal_admin_delete_title"),
+            title: t("modal_admin_delete_title", {
+                interpolation: "JFIUIJJIij",
+            }),
             text: t("modal_admin_delete_desc"),
             icon: "warning",
             showCancelButton: true,
@@ -294,7 +295,7 @@ const DashboardAdmins = () => {
                         type={isPassword ? (show ? "text" : "password") : type}
                         id={id}
                         name={name}
-                        className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600 w-full pr-10'
+                        className='px-3 py-2 focus:border-blue-400 duration-150 dark:border-gray-600 border border-gray-500/70 rounded-lg outline-none focus:ring-blue-400 focus:ring-1 w-full transition disabled:opacity-50'
                         minLength={minLength}
                         maxLength={maxLength}
                         value={value}
@@ -345,7 +346,7 @@ const DashboardAdmins = () => {
                 value={value}
                 onChange={onChange}
                 defaultChecked={defaultChecked}
-                className='border rounded-lg border-gray-500/70 px-3 py-2 text-base outline-none focus:border-blue-400 duration-150 dark:border-gray-600 dark:bg-[#0f0f0f]'
+                className='px-3 py-2 text-base focus:border-blue-400 duration-150 dark:border-gray-600 dark:bg-[#0f0f0f] border border-gray-500/70 rounded-lg outline-none focus:ring-blue-400 focus:ring-1 transition disabled:opacity-50'
                 required={required}>
                 <option disabled value=''>
                     {t("select_role")}
@@ -450,8 +451,8 @@ const DashboardAdmins = () => {
                         title={t("add_admin")}
                         width='70'>
                         <form onSubmit={createAdmin}>
-                            <div className='flex gap-10'>
-                                <div className='w-1/2'>
+                            <div className='flex space-x-5'>
+                                <div className='w-1/2 space-y-2'>
                                     {renderInput({
                                         id: "admin-name",
                                         name: "name",
@@ -484,8 +485,9 @@ const DashboardAdmins = () => {
                                             }
                                             id='admin-password'
                                             name='password'
-                                            className='border rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
-                                            minLength={3}
+                                            className='px-3 py-2 focus:border-blue-400 duration-150 dark:border-gray-600 border border-gray-500/70 rounded-lg outline-none focus:ring-blue-400 focus:ring-1 w-full transition disabled:opacity-50'
+                                            min={8}
+                                            minLength={8}
                                             maxLength={15}
                                             value={adminData.password}
                                             onChange={handleInputChange}
@@ -498,7 +500,7 @@ const DashboardAdmins = () => {
                                             onClick={() =>
                                                 setShowPassword((curr) => !curr)
                                             }
-                                            className='absolute top-9.5 ml-2 right-3 text-gray-500 hover:text-gray-700'
+                                            className='absolute top-9.5 ml-2 right-3 text-gray-500 hover:text-gray-700 outline-none'
                                             tabIndex={-1}
                                             disabled={createAdminLoading}
                                             aria-label='Show password button'
@@ -545,7 +547,7 @@ const DashboardAdmins = () => {
                                             <select
                                                 defaultChecked=''
                                                 name='branchId'
-                                                className='border w-full rounded-lg border-gray-500/70 px-3 py-2 text-[14px] outline-none focus:border-blue-400 duration-150 dark:border-gray-600'
+                                                className='px-3 py-2 focus:border-blue-400 duration-150 dark:border-gray-600 border border-gray-500/70 rounded-lg outline-none focus:ring-blue-400 focus:ring-1 w-full transition disabled:opacity-50'
                                                 value={adminData.branchId}
                                                 onChange={handleInputChange}>
                                                 <option value='' disabled>

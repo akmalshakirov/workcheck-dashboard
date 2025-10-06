@@ -66,7 +66,7 @@ export const App = () => {
                 draggable
                 pauseOnHover
                 theme={theme === "true" ? "dark" : "light"}
-                newestOnTop
+                stacked
             />
 
             <AnimatePresence>

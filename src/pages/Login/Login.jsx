@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { baseURL } from "../../App";
 import { Button } from "../../components/ui/Button/Button";
+import ResetPasswordModal from "../../helpers/modals/ResetPasswordModal";
 
 const Login = () => {
     const [username, setUsername] = useState("");
@@ -13,6 +14,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const [modal, setModal] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -72,9 +74,11 @@ const Login = () => {
                         {error}
                     </motion.p>
                 )}
+                <ResetPasswordModal visible={modal} setVisible={setModal} />
+
                 <form
                     onSubmit={handleSubmit}
-                    className='space-y-5 max-md:space-y-3 max-sm:space-y-2'>
+                    className='space-y-3 md:space-y-5'>
                     <div>
                         <label
                             className='font-medium text-gray-700'
@@ -129,6 +133,15 @@ const Login = () => {
                             )}
                         </button>
                     </div>
+                    <div className='flex flex-col sm:flex-row items-center justify-between'>
+                        Parolni unutdingizmi?
+                        <Button
+                            type='button'
+                            variant='ghost'
+                            onClick={() => setModal(true)}>
+                            Parolni tiklash
+                        </Button>
+                    </div>
                     <div>
                         {loading ? (
                             <span
@@ -145,7 +158,6 @@ const Login = () => {
                         ) : (
                             <>
                                 <Button
-                                    name='Submit button'
                                     aria-label='Submit button'
                                     title='Submit'
                                     type='submit'

@@ -115,6 +115,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
     const handleLogout = async () => {
         localStorage.removeItem("token");
         navigate("/login", { replace: true });
+        window.location.reload();
         try {
             await axios.post(
                 `${baseURL}/logout`,

@@ -30,7 +30,7 @@
     "modal_admin_password": "Admin parol",
     "modal_admin_update": "Adminni tahrirlash",
     "moda_admin_update_image": "Adminni rasmi",
-    "modal_admin_delete_title": "Bu adminni oʼchirmoqchimisiz?",
+    "modal_admin_delete_title": "{{}} ismli adminni oʻchirmoqchimisiz?",
     "modal_admin_delete_desc": "Bu amalni ortga qaytarib boʼlmaydi!",
     "footer_creator": "Sayt yaratuvchisi",
     "admin_table_img": "Rasm",
