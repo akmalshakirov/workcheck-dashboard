@@ -78,6 +78,7 @@ const PhoneInput = ({
                 placeholder={placeholder ? placeholder : "+998-(xx)-xxx-xx-xx"}
                 autoComplete='tel'
                 autoFocus={focused}
+                inputMode='tel'
             />
         </div>
     );

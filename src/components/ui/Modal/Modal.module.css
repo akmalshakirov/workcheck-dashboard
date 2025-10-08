@@ -1,10 +1,7 @@
 .overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(70, 70, 70, 0.4);
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(5px);
     display: flex;
     justify-content: center;
@@ -27,13 +24,5 @@
 
 .body {
     padding: 15px 20px;
-    flex: 1;
     overflow-y: auto;
-}
-
-.footer {
-    padding: 10px;
-    display: flex;
-    justify-content: flex-end;
-    gap: 8px;
 }
