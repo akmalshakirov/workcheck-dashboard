@@ -68,6 +68,28 @@ const DashboardAdmins = () => {
         }
     };
 
+    // const formatPhone = (e) => {
+    //     e.rep
+    // }
+    const formatPhoneNumber = (e) => {
+        const digitsLength = e?.length;
+        if (!digitsLength) return "(99)-999-99-99";
+
+        if (digitsLength === 0) return "";
+        if (digitsLength <= 2) return `(${e}`;
+        if (digitsLength <= 5)
+            return `(${e?.substring(0, 2)})-${e?.substring(2)}`;
+        if (digitsLength <= 7)
+            return `(${e?.substring(0, 2)})-${e?.substring(
+                2,
+                5
+            )}-${e?.substring(5)}`;
+        return `(${e?.substring(0, 2)})-${e?.substring(2, 5)}-${e?.substring(
+            5,
+            7
+        )}-${e?.substring(7, 9)}`;
+    };
+
     const defaultList = [
         {
             header: t("admin_table_img"),
@@ -95,7 +117,7 @@ const DashboardAdmins = () => {
         },
         {
             header: t("admin_table_phone"),
-            key: "phone",
+            value: (item) => formatPhoneNumber(item.phone),
         },
         {
             header: t("admin_table_branch"),
@@ -130,13 +152,9 @@ const DashboardAdmins = () => {
         e.preventDefault();
         setCreateAdminLoading(true);
         const formData = new FormData();
-        Object.entries(adminData).forEach(([key, val]) => {
-            if (val) formData.append(key, val);
+        Object.entries(adminData).forEach(([val, key]) => {
+            if (val) formData.append(val, key);
         });
-        // difference e.target and this code is on the phone format,
-        // like this:
-        // e.target: (99)-999-99-99 and
-        // this code: 999999999
 
         try {
             const response = await axios.post(
@@ -192,7 +210,10 @@ const DashboardAdmins = () => {
     const handleEdit = async (e) => {
         e.preventDefault();
         setEditLoading(true);
-        const formData = new FormData(e.target);
+        const formData = new FormData();
+        Object.entries(editData).forEach(([val, key]) => {
+            if (val) formData.append(val, key);
+        });
         // Admin phone fixed
 
         try {
@@ -216,9 +237,7 @@ const DashboardAdmins = () => {
     // Delete admin
     const handleDelete = async (item) => {
         const result = await MySwal.fire({
-            title: t("modal_admin_delete_title", {
-                interpolation: "JFIUIJJIij",
-            }),
+            title: t("modal_admin_delete_title"),
             text: t("modal_admin_delete_desc"),
             icon: "warning",
             showCancelButton: true,
@@ -710,6 +729,7 @@ const DashboardAdmins = () => {
                                                             label: "Super-admin",
                                                         },
                                                     ],
+                                                    required: true,
                                                 })}
                                                 {renderInput({
                                                     id: "edit-admin-password",

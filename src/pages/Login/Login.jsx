@@ -126,7 +126,7 @@ const Login = () => {
                             className='absolute top-1/2 mt-1.5 right-2 text-gray-500 hover:text-gray-700'
                             tabIndex={-1}
                             disabled={loading}>
-                            {showPassword ? (
+                            {!showPassword ? (
                                 <EyeOff size={20} />
                             ) : (
                                 <Eye size={20} />
