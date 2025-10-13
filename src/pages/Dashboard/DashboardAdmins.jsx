@@ -137,9 +137,9 @@ const DashboardAdmins = () => {
         getAdmins({ setPreloader, setAdmins });
     }, [token]);
 
-    useEffect(() => {
-        fetchAdmins();
-    }, []);
+    // useEffect(() => {
+    //     fetchAdmins();
+    // }, []);
 
     useEffect(() => {
         document.title = `WorkCheck - Dashboard | ${
@@ -299,6 +299,7 @@ const DashboardAdmins = () => {
         placeholder = "",
         autoComplete = "off",
         isEdit = false,
+        autoFocus = false,
         ...rest
     }) => {
         const isPassword = name === "password";
@@ -322,6 +323,7 @@ const DashboardAdmins = () => {
                         required={required}
                         placeholder={placeholder}
                         autoComplete={autoComplete}
+                        autoFocus={autoFocus}
                         {...rest}
                     />
                     {isPassword && (
@@ -480,6 +482,7 @@ const DashboardAdmins = () => {
                                         onChange: handleInputChange,
                                         placeholder: "adminbek",
                                         autoComplete: "name",
+                                        autoFocus: true,
                                     })}
                                     {renderInput({
                                         id: "admin-username",
@@ -585,14 +588,14 @@ const DashboardAdmins = () => {
                                     </div>
                                     <label
                                         htmlFor='image'
-                                        className='cursor-pointer flex flex-col md:flex'>
+                                        className='cursor-pointer mt-2 flex flex-col md:flex'>
                                         {adminData.image
                                             ? t("selected_image")
                                             : t("choose_image")}
                                         {!adminData.image && (
                                             <motion.div
                                                 whileTap={{ scale: 0.98 }}
-                                                className='flex gap-2 px-2 py-5 border border-blue-500 bg-blue-400/20 rounded'>
+                                                className='flex gap-2 px-2 py-5 border border-blue-500 bg-blue-400/20 rounded mt-1'>
                                                 {t("image_dropzone")}
                                                 <UploadIcon />
                                             </motion.div>

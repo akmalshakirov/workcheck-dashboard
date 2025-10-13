@@ -91,6 +91,7 @@ export const EditBreakOffModal = ({
                             autoComplete='off'
                             required
                             name='name'
+                            autoFocus
                             id='name'
                             className='border border-gray-500/70 text-sm rounded-lg outline-none focus:ring-blue-400 focus:ring-1 p-2 transition w-full lg:w-1/4 disabled:opacity-50'
                         />

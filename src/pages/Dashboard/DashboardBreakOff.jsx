@@ -1,5 +1,5 @@
 import axios from "axios";
-import { PencilLine, Trash } from "lucide-react";
+import { ClockPlus, PencilLine, Trash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
@@ -8,6 +8,7 @@ import { CustomTable } from "../../components/CustomTable";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import { AddBreakOffModal } from "../../helpers/modals/AddBreakOffModal";
 import { EditBreakOffModal } from "../../helpers/modals/EditBreakOffModal";
+import { Button } from "../../components/ui/Button/Button";
 
 const DashboardBreakOffs = () => {
     const { t } = useTranslation();
@@ -156,11 +157,12 @@ const DashboardBreakOffs = () => {
                     <h1 className='text-2xl font-bold'>
                         {t("sidebar_break_offs")}
                     </h1>
-                    <button
+                    <Button
+                        rightIcon={<ClockPlus size={18} />}
                         className='rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform'
                         onClick={() => setAddBreakOffModal(!addBreakOffModal)}>
                         Add break off
-                    </button>
+                    </Button>
                 </div>
                 <AddBreakOffModal
                     addBreakOffModal={addBreakOffModal}
@@ -171,7 +173,7 @@ const DashboardBreakOffs = () => {
                     getAllBreakOffs={getAllBreakOffs}
                     visible={editBreakOffModal}
                     setVisible={setEditBreakOffModal}
-                    item={editItem}
+                    // item={editItem}
                 />
             </div>
             <CustomTable

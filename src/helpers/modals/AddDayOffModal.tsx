@@ -50,8 +50,8 @@ const AddDayOffModal: FC<AddDayOffProps> = ({
                 setVisible(false);
                 getAll();
             }
-        } catch (error) {
-            toast.error(error as any);
+        } catch (error: any) {
+            toast.error(error?.response?.data?.error || error.name);
         } finally {
             setDayOffLoading(false);
         }
@@ -100,6 +100,7 @@ const AddDayOffModal: FC<AddDayOffProps> = ({
                         value={dayOffName}
                         onChange={handleInputChange}
                         autoComplete='on'
+                        autoFocus
                     />
                 </label>
                 <label className='flex flex-col gap-2'>
