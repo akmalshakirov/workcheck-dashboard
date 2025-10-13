@@ -14,7 +14,7 @@ export const Search = () => {
     const token = localStorage.getItem("token");
     const lang = localStorage.getItem("lang");
 
-    const fetchResults = async (q) => { 
+    const fetchResults = async (q) => {
         if (!q.trim()) {
             setResults([]);
             return;
@@ -49,6 +49,8 @@ export const Search = () => {
         }, 500);
     };
 
+    const searchId = Math.random().toString(36).slice(2, 9);
+
     return (
         <div className='max-w-md mx-auto hidden md:block relative'>
             <input
@@ -58,7 +60,7 @@ export const Search = () => {
                 className='px-2 py-1 border border-gray-700 rounded-lg outline-none focus:bg-gray-800/10 transition-colors placeholder-black/30 dark:placeholder-white/30 dark:focus:bg-gray-600/40'
                 placeholder={`${t("search")}...`}
                 name='search'
-                id='search'
+                id={searchId}
                 autoComplete='on'
             />
 

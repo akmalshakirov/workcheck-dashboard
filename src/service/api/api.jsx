@@ -65,7 +65,7 @@ export const useApi = () => {
                 headers: { Authorization: `Bearer ${token}`, Accept: lang },
             });
             if (response.status === 200 || response.status === 304) {
-                setAdmin(response.data.admin);
+                setAdmin(response.data.profile);
             }
         } catch (error) {
             if (error.code === "ERR_NETWORK") {

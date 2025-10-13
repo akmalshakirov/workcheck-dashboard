@@ -97,7 +97,7 @@ const DashboardAdmins = () => {
                 <img
                     src={item.image}
                     alt={item.image}
-                    className='size-15 rounded-full object-cover'
+                    className='size-15 rounded-full object-cover mx-auto'
                     draggable={false}
                 />
             ),

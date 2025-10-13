@@ -161,6 +161,8 @@ export const Header = ({ collapsed, setCollapsed }) => {
         },
     ];
 
+    const switchId = Math.random().toString(35).slice(2, 9);
+
     return (
         <div className='p-2.5 flex-1 flex items-center justify-between max-h-max bg-white rounded-lg !w-full dark:bg-[#111] dark:text-white sticky top-2.5 z-[1] shadow-sm'>
             <div className='flex gap-2.5 items-center'>
@@ -304,11 +306,11 @@ export const Header = ({ collapsed, setCollapsed }) => {
                 </div>
 
                 <label
-                    htmlFor='switch'
+                    htmlFor={switchId + "_sWitchINPUT"}
                     className='border cursor-pointer dark:border-white/40 border-black/30 p-1 py-2 rounded-lg'>
                     <div className={styles.switch}>
                         <input
-                            id='switch'
+                            id={switchId + "_sWitchINPUT"}
                             type='checkbox'
                             checked={isDark}
                             onChange={() => setIsDark((d) => !d)}
