@@ -64,5 +64,6 @@
     "break_off_end_time": "Tugash vaqti",
     "break_off_lateAllow": "Kech qolishga ruxsat",
     "add_day_off": "Dam olish kunini qoʼshish",
-    "add_day_off_name": "Dam olish kunining nomi"
+    "add_day_off_name": "Dam olish kuni nomi(lari)",
+    "day_off_dates": "Sanalar"
 }

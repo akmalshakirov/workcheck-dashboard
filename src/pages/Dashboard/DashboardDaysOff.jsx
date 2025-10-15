@@ -94,11 +94,11 @@ const DashboardDaysOff = () => {
 
     const columns = [
         {
-            header: "Day Off Name",
+            header: t("add_day_off_name"),
             key: "name",
         },
         {
-            header: "Dates",
+            header: t("day_off_dates"),
             value: (item) => item.dates.map((i) => i.date).join(", "),
         },
     ];
