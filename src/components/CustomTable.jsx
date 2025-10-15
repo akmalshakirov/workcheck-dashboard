@@ -22,7 +22,7 @@ export function CustomTable({
 
     if (isEmpty) {
         return (
-            <div className='py-6 text-center text-base text-gray-600 dark:text-gray-300 w-full'>
+            <div className='py-6 text-center text-lg text-gray-600 dark:text-gray-300 w-full'>
                 {emptyMessage}
             </div>
         );

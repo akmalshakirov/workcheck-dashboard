@@ -5,20 +5,19 @@ import { useTranslation } from "react-i18next";
 import Swal from "sweetalert2";
 import { baseURL } from "../../App";
 import { CustomTable } from "../../components/CustomTable";
+import { Button } from "../../components/ui/Button/Button";
 import { Skeleton } from "../../components/ui/Skeleton/Skeleton";
 import { AddBreakOffModal } from "../../helpers/modals/AddBreakOffModal";
-import { EditBreakOffModal } from "../../helpers/modals/EditBreakOffModal";
-import { Button } from "../../components/ui/Button/Button";
+// import { EditBreakOffModal } from "../../helpers/modals/EditBreakOffModal";
 
 const DashboardBreakOffs = () => {
     const { t } = useTranslation();
     const theme = localStorage.getItem("isDark");
     const token = localStorage.getItem("token");
     const [addBreakOffModal, setAddBreakOffModal] = useState(false);
-    const [editBreakOffModal, setEditBreakOffModal] = useState(false);
+    // const [editBreakOffModal, setEditBreakOffModal] = useState(false);
     const [breakOffs, setBreakOffs] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [editItem, setEditItem] = useState(null);
 
     const columns = [
         {
@@ -48,9 +47,12 @@ const DashboardBreakOffs = () => {
                 },
             });
             if (response.status === 200 || response.status === 304) {
-                setBreakOffs(response.data.breakoffs);
+                setBreakOffs(response.data.breakOffs);
             }
         } catch (error) {
+            if (error?.response?.status === 404) {
+                return setBreakOffs([]);
+            }
             if (error?.response?.status !== 401) {
                 Swal.fire({
                     title: error?.response?.data?.error,
@@ -158,8 +160,7 @@ const DashboardBreakOffs = () => {
                         {t("sidebar_break_offs")}
                     </h1>
                     <Button
-                        rightIcon={<ClockPlus size={18} />}
-                        className='rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform'
+                        leftIcon={<ClockPlus size={18} />}
                         onClick={() => setAddBreakOffModal(!addBreakOffModal)}>
                         Add break off
                     </Button>
@@ -169,12 +170,11 @@ const DashboardBreakOffs = () => {
                     setAddBreakOffModal={setAddBreakOffModal}
                     getAllBreakOffs={getAllBreakOffs}
                 />
-                <EditBreakOffModal
+                {/* <EditBreakOffModal
                     getAllBreakOffs={getAllBreakOffs}
                     visible={editBreakOffModal}
                     setVisible={setEditBreakOffModal}
-                    // item={editItem}
-                />
+                /> */}
             </div>
             <CustomTable
                 columns={columns}

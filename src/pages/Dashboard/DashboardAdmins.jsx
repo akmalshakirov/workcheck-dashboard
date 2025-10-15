@@ -137,9 +137,9 @@ const DashboardAdmins = () => {
         getAdmins({ setPreloader, setAdmins });
     }, [token]);
 
-    // useEffect(() => {
-    //     fetchAdmins();
-    // }, []);
+    useEffect(() => {
+        fetchAdmins();
+    }, []);
 
     useEffect(() => {
         document.title = `WorkCheck - Dashboard | ${
@@ -679,6 +679,7 @@ const DashboardAdmins = () => {
                                                             true
                                                         ),
                                                     autoComplete: "name",
+                                                    autoFocus: true,
                                                 })}
                                                 {renderInput({
                                                     id: "edit-admin-username",

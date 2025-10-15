@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { baseURL } from "../../App";
 import { Modal } from "../../components/ui/Modal/Modal";
+import { Button } from "../../components/ui/Button/Button";
 const token = localStorage.getItem("token");
 
 export const AddBreakOffModal = ({
@@ -141,25 +142,17 @@ export const AddBreakOffModal = ({
                     />
                 </div>
                 <div className='flex items-center gap-2.5 justify-end'>
-                    <button
-                        type='reset'
-                        className='py-1.5 px-3 rounded-lg bg-red-600/80 hover:bg-red-600 duration-150 text-white active:scale-[0.95] will-change-transform disabled:opacity-50 disabled:cursor-not-allowed!'
-                        onClick={() => setAddBreakOffModal(false)}
-                        disabled={loading}>
-                        {t("close")}
-                    </button>
-                    <button
-                        type='submit'
-                        className='rounded-lg p-1.5 px-3 bg-blue-600/80 hover:bg-blue-600 text-white active:scale-[0.95] active:bg-blue-700 duration-150 will-change-transform disabled:opacity-50 disabled:cursor-not-allowed!'
-                        disabled={loading}>
-                        {loading ? (
-                            <>
-                                <LoaderCircleIcon className='animate-spin' />
-                            </>
-                        ) : (
-                            t("ok")
-                        )}
-                    </button>
+                    {!loading && (
+                        <Button
+                            variant='danger'
+                            type='reset'
+                            onClick={() => setAddBreakOffModal(false)}>
+                            {t("close")}
+                        </Button>
+                    )}
+                    <Button type='submit' loading={loading}>
+                        {loading ? t("sending") : t("ok")}
+                    </Button>
                 </div>
             </form>
         </Modal>
