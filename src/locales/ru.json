@@ -65,5 +65,7 @@
     "break_off_lateAllow": "Разрешение остаться допоздна",
     "add_day_off": "Добавить выходной",
     "add_day_off_name": "Название выходного дня",
-    "day_off_dates": "Даты"
+    "day_off_dates": "Даты",
+    "shift_add": "Добавить смену",
+    "add_shift_name": "Название смены"
 }

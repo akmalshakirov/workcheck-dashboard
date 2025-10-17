@@ -65,5 +65,7 @@
     "break_off_lateAllow": "Permission to stay late",
     "add_day_off": "Add day off",
     "add_day_off_name": "Day off name",
-    "day_off_dates": "Dates"
+    "day_off_dates": "Dates",
+    "shift_add": "Add a shift",
+    "add_shift_name": "Name of the shift"
 }

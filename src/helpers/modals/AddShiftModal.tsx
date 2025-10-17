@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useCallback, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { baseURL } from "../../App";
@@ -7,33 +7,46 @@ import { Button } from "../../components/ui/Button/Button";
 import { Modal } from "../../components/ui/Modal/Modal";
 const token = localStorage.getItem("token");
 
-export const AddBreakOffModal = ({
-    addBreakOffModal,
-    setAddBreakOffModal,
-    getAllBreakOffs,
-}) => {
+type PageProps = {
+    visible: boolean;
+    setVisible: (v: boolean) => void;
+    getShifts: () => void;
+};
+
+type ShiftProps = {
+    name: string;
+    startTime: string;
+    endTime: string;
+    lateAllow: string;
+};
+
+export const AddShiftModal = ({
+    visible,
+    setVisible,
+    getShifts,
+}: PageProps) => {
     const { t } = useTranslation();
-    const [loading, setLoading] = useState(false);
-    const [breakOffData, setBreakOffData] = useState({
+    const [loading, setLoading] = useState<boolean>(false);
+    const [shiftData, setShiftData] = useState<ShiftProps>({
         name: "",
+        lateAllow: "",
         startTime: "",
         endTime: "",
-        lateAllow: "",
     });
 
-    const handleInputChange = useCallback((e) => {
+    const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setBreakOffData((prev) => ({ ...prev, [name]: value }));
-    }, []);
+        setShiftData((prev) => ({ ...prev, [name]: value }));
+    };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
         setLoading(true);
 
         try {
             const response = await axios.post(
-                `${baseURL}/break-off/create`,
-                breakOffData,
+                `${baseURL}/shift/create`,
+                shiftData,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -43,19 +56,19 @@ export const AddBreakOffModal = ({
 
             if (response.status === 201) {
                 toast.success(response.data.message);
-                setAddBreakOffModal(false);
-                setBreakOffData((prev) => ({
+                setVisible(false);
+                setShiftData((prev) => ({
                     ...prev,
                     name: "",
                     endTime: "",
                     startTime: "",
                 }));
-                getAllBreakOffs();
+                getShifts();
             }
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error?.response?.data?.error || error);
-            setAddBreakOffModal(false);
-            setBreakOffData((prev) => ({
+            setVisible(false);
+            setShiftData((prev) => ({
                 ...prev,
                 name: "",
                 endTime: "",
@@ -67,19 +80,19 @@ export const AddBreakOffModal = ({
     };
 
     return (
-        <Modal visible={addBreakOffModal} title={"ADD BREAK OFF"} width='45'>
+        <Modal visible={visible} title={t("shift_add")} width='45'>
             <form onSubmit={handleSubmit}>
                 <div className='flex items-center lg:flex-row flex-col justify-between mb-4'>
                     <label
                         htmlFor='name'
                         className='block text-center lg:text-start'>
-                        {t("break_off_name")}:
+                        {t("add_shift_name")}:
                     </label>
                     <input
                         disabled={loading}
                         type='text'
                         inputMode='text'
-                        value={breakOffData.name}
+                        value={shiftData.name}
                         onChange={handleInputChange}
                         autoComplete='off'
                         required
@@ -101,7 +114,7 @@ export const AddBreakOffModal = ({
                         max={30}
                         maxLength={30}
                         inputMode='numeric'
-                        value={breakOffData.lateAllow}
+                        value={shiftData.lateAllow}
                         onChange={handleInputChange}
                         autoComplete='off'
                         required
@@ -117,7 +130,7 @@ export const AddBreakOffModal = ({
                     <input
                         disabled={loading}
                         type='time'
-                        value={breakOffData.startTime}
+                        value={shiftData.startTime}
                         onChange={handleInputChange}
                         autoComplete='off'
                         required
@@ -131,7 +144,7 @@ export const AddBreakOffModal = ({
                     <input
                         disabled={loading}
                         type='time'
-                        value={breakOffData.endTime}
+                        value={shiftData.endTime}
                         onChange={handleInputChange}
                         autoComplete='off'
                         required
@@ -145,12 +158,12 @@ export const AddBreakOffModal = ({
                         <Button
                             variant='danger'
                             type='reset'
-                            onClick={() => setAddBreakOffModal(false)}>
+                            onClick={() => setVisible(false)}>
                             {t("close")}
                         </Button>
                     )}
                     <Button type='submit' loading={loading}>
-                        {loading ? t("sending") : t("ok")}
+                        {t("ok")}
                     </Button>
                 </div>
             </form>
